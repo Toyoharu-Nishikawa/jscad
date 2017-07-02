@@ -2,26 +2,103 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>SVG.js</title>
+  <style type="text/css">
+    *{
+      margin:0
+    }
+    html{
+    height: 100%;
+    }
+    body{
+      width:1300px;
+    }
+    #filemenu{
+      width: 100%;
+      height: 30px;
+      background-color: #f06;
+      border: solid #808000;
+    }
+    #tooltag{
+      width: 100%;
+      height: 50px;
+      background-color: #a06;
+      border: solid #100100;
+    }
+    #wrap1{
+        width:1300px;
+        height:530px;
+        float:left;
+        border: solid #100100;
+
+    }
+    #sidebar{
+      width: 200px;
+      height: 530px;
+      background-color: #a06;
+      border: solid #100100;
+      float:left;
+    }
+    #wrap2{
+        width:1080px;
+        height:530px;
+        float:left;
+        border: solid #a01;
+
+    }
+    #main{
+      height:auto;
+      border: solid #100100;
+
+    }
+    #modebar{
+      height: 20px;
+      border: solid #100100;
+    }
+    #log{
+      height: 90px;
+      border: solid #100100;
+    }
+    #statusbar{
+      clear:left;
+      width:100%;
+      height: 20px;
+      background-color: #f06;
+      border: solid #808000;
+    }
+
+  </style>
 </head>
 
 <body>
-<div id="buttonclick">
-  buttonclick
+<div id="filemenu"> file menu </div>
+<div id="tooltag"> tooltag </div>
+<div id="wrap1">
+<div id="sidebar">sidebar</div>
+<div id="wrap2">
+  <div id="main">
+    <div id="drawing"></div>
+  </div>
+  <div id="modebar">modebar</div>
+  <div id="log">
+    <div id="buttonclick">
+      buttonclick
+    </div>
+    <div id="mousepoint">
+      mousepoint
+    </div>
+    <div id="element">
+      element
+    </div>
+    <div id="scalefactor">
+      scalefactor
+    </div>
+    <div id="pan">
+      pan
+    </div>
+  </div>
 </div>
-<div id="mousepoint">
-  mousepoint
 </div>
-<div id="element">
-  element
-</div>
-<div id="scalefactor">
-  scalefactor
-</div>
-<div id="pan">
-  pan
-</div>
-
-<div id="drawing"></div>
+<div id="statusbar">statusbar</div>
 
 <script src="{{ url_for('static', filename='js/svg.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/svg.panzoom.js') }}"></script>
@@ -31,8 +108,8 @@
 <script type="text/javascript">
 
 // make view prototype
-var dafault_width = 900;
-var default_height =500;
+var dafault_width = 1000;
+var default_height =400;
 
 // initialize SVG.js
 var draw = SVG('drawing').style( "border: 1px solid black;").panZoom();
