@@ -35,11 +35,25 @@ var dafault_width = 900;
 var default_height =500;
 
 // initialize SVG.js
-var draw = SVG('drawing').style( "border: 1px solid black;").panZoom();
+//var draw = SVG('drawing').style( 'border: 1px solid red').panZoom();
+var draw = SVG('drawing').panZoom();
+
 draw.width(dafault_width);
 draw.height(default_height);
-draw.attr('preserveAspectRatio', 'xMinYMin slice')
+draw.attr('preserveAspectRatio', 'xMinYMin slice');
+//draw.attr()
+console.log(draw.attr())
 
+var lin = draw.gradient('linear', function(stop) {
+  stop.at(0, '#333')
+  stop.at(1, '#fff')
+})
+//draw.style( {border: '1px solid red', background:"#a06"})
+
+draw.style( {border: '1px solid red', background:'linear-gradient(to bottom, RoyalBlue, white)'})
+
+//draw.style(':root{background-color: red}');
+//gradient.from(0,0).to(dafault_width,default_height);
 //set initial viewbox
 var vb={
   x: 0,
@@ -58,7 +72,7 @@ sheet.push(screen.group());
 
 
 // draw pink square
-var test1 = sheet[0].rect(100, 100).move(100, 50).fill('#f06');
+var test1 = sheet[0].rect(100, 100).move(100, 50).fill(lin);
 var test2 = sheet[0].rect(10, 10).move(10, 5).fill('#f07');
 var rect1 = sheet[0].rect(900, 500).stroke("black").fill("none");
 var line1 = sheet[0].line(0,0,900, 500).stroke("black").selectize({deepSelect:true});
