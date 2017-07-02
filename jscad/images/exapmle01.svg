@@ -1,0 +1,9 @@
+<svg id="figure1" width="300" height="300"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="all">
+    <circle cx="70" cy="250" r="8" id="p1" class="control-point draggable"/>
+    <circle cx="20" cy="110" r="8" id="p2" class="control-point draggable"/>
+    <circle cx="250" cy="50" r="8" id="p3" class="control-point draggable"/>
+  </g>
+</svg>

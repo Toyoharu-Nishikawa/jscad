@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>SVG.js</title>
+</head>
+
+<body>
+<div id="buttonclick">
+  buttonclick
+</div>
+<div id="mousepoint">
+  mousepoint
+</div>
+<div id="element">
+  element
+</div>
+<div id="scalefactor">
+  scalefactor
+</div>
+<div id="pan">
+  pan
+</div>
+
+<div id="drawing"></div>
+
+<script src="{{ url_for('static', filename='js/svg.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/svg.panzoom.js') }}"></script>
+<script src="{{ url_for('static', filename='js/svg.select.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+
+<script type="text/javascript">
+
+// make view prototype
+var dafault_width = 900;
+var default_height =500;
+
+// initialize SVG.js
+var draw = SVG('drawing').style( "border: 1px solid black;").panZoom();
+draw.width(dafault_width);
+draw.height(default_height);
+draw.attr('preserveAspectRatio', 'xMinYMin slice')
+
+//set initial viewbox
+var vb={
+  x: 0,
+  y: 0,
+  width: dafault_width,
+  height: default_height
+}
+draw.viewbox(vb.x, vb.y, vb.width, vb.height);
+
+// make screen
+var screen=draw.group();
+
+//make sheet in screen
+var sheet = [];
+sheet.push(screen.group());
+
+
+// draw pink square
+var test1 = sheet[0].rect(100, 100).move(100, 50).fill('#f06');
+var test2 = sheet[0].rect(10, 10).move(10, 5).fill('#f07');
+var rect1 = sheet[0].rect(900, 500).stroke("black").fill("none");
+var line1 = sheet[0].line(0,0,900, 500).stroke("black").selectize({deepSelect:true});
+var line2 = sheet[0].line(900,0,0, 500).stroke("black");
+</script>
+</body>
+</html>
