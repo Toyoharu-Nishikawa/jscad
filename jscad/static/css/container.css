@@ -1,0 +1,68 @@
+h1 {
+  color:#3e5358;
+  padding: 0 8px;
+  margin: 0;
+  font-size: 100%;
+  background: #d9dfe1;
+}
+h2{
+  color:#008000;
+}
+
+.tabmenu{
+  display: flex;
+  list-style: none;
+  margin: 0;
+  border-bottom: 5px solid #1495b5;
+  padding: 0;
+  background: #d9dfe1;
+  position: relative;
+}
+.tabmenu > li{
+  margin: 0 8px 0 0;
+  border-radius: 6px 6px 0px 0px;
+  background: #d9dfe1;
+}
+.tabmenu > li > a{
+  display: block;
+  padding: 1px 10px;
+  text-decoration: none;
+  color: #3e5358
+}
+.tabmenu > li:hover{
+  background: #1495b5;
+}
+.tabmenu > li > a:hover{
+  color: #ffffff;
+}
+
+.tabmenu > li > ul{
+  display:none;
+  position:absolute;
+  top: 25px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #d9dfe1;
+  border: 1px solid #d9dfff;
+}
+
+.tabmenu > li > ul > li{
+  margin: 0;
+  padding: 0;
+}
+
+.tabmenu > li > ul > li > a{
+  display: block;
+  margin:0;
+  padding: 0px 10px;
+  font-size: 90%;
+}
+
+.tabmenu > li > ul > li:hover{
+  background: #1495b5;
+}
+
+.tabmenu > li > ul > li > a:hover{
+  color: #ffffff;
+}
