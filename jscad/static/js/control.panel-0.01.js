@@ -1,17 +1,48 @@
+var body =  document.getElementsByTagName("body");
+
 var element =  document.querySelectorAll(".tabmenu > li");
 console.log(element.length)
+
+//tabmenuの内容を表示
 for(var i=0; i<element.length; i++){
   console.log(element[i].children[1].style.display="none");
   console.log(element[i].firstElementChild.innerHTML);
 }
+
+var menuCancelListener = false
+//タブメニューをクリックするとメニューを開くように登録
 for(list of element){
   list.addEventListener("click", function(e){
-    if(this.children[1].style.display!="block"){
-      for(others of element)others.children[1].style.display="none";
-      this.children[1].style.display = "block";
-
-    }
     console.log("click " + this.firstElementChild.innerHTML)
+    if(this.children[1].style.display!="block"){
+      //menyuを表示
+      for(any of element)any.children[1].style.display="none";
+      this.children[1].style.display = "block";
+      //別のメニューにマウスを合わせるとそのメニューを開く
+      function mouseovermenu(e){
+        if(this.children[1].style.display!="block"){
+          for(any of element)any.children[1].style.display="none";
+          this.children[1].style.display = "block";
+          e.stopPropagation();
+        }
+      }
+      for(any of element)any.addEventListener("mouseover",mouseovermenu,false);
+      //メニュー以外をクリックしたらメニューを非表示
+      if(!menuCancelListener){
+        let tempThis= this;
+        menuCancelListener = true;
+        console.log("menue mode can be canceld by ckicking other area. " + menuCancelListener);
+        body[0].addEventListener("click",function(e){
+          for(any of element)any.children[1].style.display = "none";
+          body[0].removeEventListener("click",arguments.callee,false);
+          for(any of element)any.removeEventListener("mouseover",mouseovermenu,false);
+          menuCancelListener = false;
+          console.log("menue mode has been canceled. " +  menuCancelListener)
+        }, false);
+      }
+      else console.log("menue mode be canceld by ckicking other area. " + menuCancelListener);
+    }
+    e.stopPropagation();
   }, false);
 }
 
