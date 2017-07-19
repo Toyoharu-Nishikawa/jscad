@@ -1,159 +1,148 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>SVG.js</title>
-  <style type="text/css">
-    *{
-      margin:0
-    }
-    html{
-    height: 100%;
-    }
-    body{
-      width:1300px;
-    }
-    #filemenu{
-      width: 100%;
-      height: 30px;
-      background-color: #f06;
-      border: solid #808000;
-    }
-    #tooltag{
-      width: 100%;
-      height: 50px;
-      background-color: #a06;
-      border: solid #100100;
-    }
-    #wrap1{
-        width:1300px;
-        height:530px;
-        float:left;
-        border: solid #100100;
-
-    }
-    #sidebar{
-      width: 200px;
-      height: 530px;
-      background-color: #a06;
-      border: solid #100100;
-      float:left;
-    }
-    #wrap2{
-        width:1080px;
-        height:530px;
-        float:left;
-        border: solid #a01;
-
-    }
-    #main{
-      height:auto;
-      border: solid #100100;
-
-    }
-    #modebar{
-      height: 20px;
-      border: solid #100100;
-    }
-    #log{
-      height: 90px;
-      border: solid #100100;
-    }
-    #statusbar{
-      clear:left;
-      width:100%;
-      height: 20px;
-      background-color: #f06;
-      border: solid #808000;
-    }
-
-  </style>
+  <title>jscad</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/container.css') }}">
+  <script src="{{ url_for('static', filename='js/svg.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/svg.panzoom.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/svg.select.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.funcResizeBox.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/control.panel-0.01.js') }}"></script>
 </head>
-
 <body>
-<div id="filemenu"> file menu </div>
-<div id="tooltag"> tooltag </div>
-<div id="wrap1">
-<div id="sidebar">sidebar</div>
-<div id="wrap2">
-  <div id="main">
-    <div id="drawing"></div>
+  <header>
+    <h1>jscad</h1>
+    <nav class="maintab">
+      <ul class="tabmenu">
+        <li>
+          <a>File</a>
+          <ul class="submenu" style="display:none">
+            <li><a>New</a></li>
+            <li><a>Open...</a></li>
+            <li><a>Close</a></li>
+            <li><a>Close All</a></li>
+            <li><a>Save</a></li>
+            <li><a>Save As...</a></li>
+            <li><a>Import</a></li>
+            <li><a>Export</a></li>
+            <li><a>Print</a></li>
+            <li><a>Print Preview</a></li>
+            <li><a>Recent Files</a></li>
+            <li><a>Exit</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Edit</a>
+          <ul class="submenu" >
+            <li><a>Undo</a></li>
+            <li><a>Redo</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>View</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Tool</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Macro</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Widow</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>help</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <article>
+      <h2>tool menue</h2>
+      <li>new sketch</li>
+      <li>messure</li>
+      <li>fit screen</li>
+      <li>read file</li>
+    </article>
+    <article>
+      <h2>draw menu</h2>
+      <section>
+        <h3>draw</h3>
+        <li>line</li>
+        <li>polyline</li>
+        <li>circle</li>
+        <li>rectangle</li>
+        <li>point</li>
+      </section>
+      <section>
+        <h3>edit</h3>
+        <li>filet</li>
+        <li>chamfer</li>
+        <li>copy</li>
+        <li>move</li>
+        <li>divide</li>
+      </section>
+      <section>
+        <h3>dimensions</h3>
+        <li>general</li>
+        <li>vertical</li>
+        <li>horizontal</li>
+        <li>parallel</li>
+        <li>right angle</li>
+        <li>angle</li>
+      </section>
+      <section>
+        <h3>constrain</h3>
+        <li >vertical</li>
+        <li>horizontal</li>
+        <li>parallel</li>
+        <li>right angle</li>
+        <li>coincident</li>
+      </section>
+      <section>
+        <h3>general</h3>
+        <li>grid</li>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <small>Copyright July 2017 jscad assosiation</small>
+    <li>coordinate x, coordinate y</li>
+  </footer>
+  <!-- <div class="container">
+    <div class="item box-big1">A</div>
+     <div class="item">B</div>
+     <div class="item">C</div>
+     <div class="item">D</div>
+     <div class="item">E</div>
+     <div class="item box-big2">F</div>
+     <div class="item box-big3">G</div>
+     <div class="item">H</div>
+     <div class="item">I</div>
+     <div class="item">J</div>
+     <div class="item box-big4">K</div>
   </div>
-  <div id="modebar">modebar</div>
-  <div id="log">
-    <div id="buttonclick">
-      buttonclick
-    </div>
-    <div id="mousepoint">
-      mousepoint
-    </div>
-    <div id="element">
-      element
-    </div>
-    <div id="scalefactor">
-      scalefactor
-    </div>
-    <div id="pan">
-      pan
-    </div>
-  </div>
-</div>
-</div>
-<div id="statusbar">statusbar</div>
-
-<script src="{{ url_for('static', filename='js/svg.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/svg.panzoom.js') }}"></script>
-<script src="{{ url_for('static', filename='js/svg.select.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
-
-<script type="text/javascript">
-
-// make view prototype
-var dafault_width = 1000;
-var default_height =400;
-
-// initialize SVG.js
-//var draw = SVG('drawing').style( 'border: 1px solid red').panZoom();
-var draw = SVG('drawing').panZoom();
-
-draw.width(dafault_width);
-draw.height(default_height);
-draw.attr('preserveAspectRatio', 'xMinYMin slice');
-//draw.attr()
-console.log(draw.attr())
-
-var lin = draw.gradient('linear', function(stop) {
-  stop.at(0, '#333')
-  stop.at(1, '#fff')
-})
-//draw.style( {border: '1px solid red', background:"#a06"})
-
-draw.style( {border: '1px solid red', background:'linear-gradient(to bottom, RoyalBlue, white)'})
-
-//draw.style(':root{background-color: red}');
-//gradient.from(0,0).to(dafault_width,default_height);
-//set initial viewbox
-var vb={
-  x: 0,
-  y: 0,
-  width: dafault_width,
-  height: default_height
-}
-draw.viewbox(vb.x, vb.y, vb.width, vb.height);
-
-// make screen
-var screen=draw.group();
-
-//make sheet in screen
-var sheet = [];
-sheet.push(screen.group());
-
-
-// draw pink square
-var test1 = sheet[0].rect(100, 100).move(100, 50).fill(lin);
-var test2 = sheet[0].rect(10, 10).move(10, 5).fill('#f07');
-var rect1 = sheet[0].rect(900, 500).stroke("black").fill("none");
-var line1 = sheet[0].line(0,0,900, 500).stroke("black").selectize({deepSelect:true});
-var line2 = sheet[0].line(900,0,0, 500).stroke("black");
-</script>
+    <div id="drawing"></div> -->
 </body>
 </html>
