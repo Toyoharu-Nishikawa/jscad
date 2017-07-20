@@ -1,69 +1,114 @@
+//viewオブジェクトを作成
 var view = Object.create(null);
 
 view.tempElement = null;
 view.body =  document.getElementsByTagName("body")[0];
-view.menuBar =  {elements: document.querySelectorAll(".tabmenu > li")};
 
-//menuBarの選択時と非選択時の表示を定める
-for(any of view.menuBar.elements){
-  any.notSelected = function(){this.children[1].style.display="none"};
-  any.selected = function(){this.children[1].style.display="block"};
-  any.name  = any.firstElementChild.innerHTML;
-};
-
-//menuBarを選択したときの挙動を定める
-view.menuBar.select = function(e){
-  let currentElement = e.currentTarget;
-  console.log("select " + currentElement.name);
-  if(currentElement != view.tempElement ){
-    if(view.tempElement)view.tempElement.notSelected();
-    currentElement.selected();
-    view.tempElement = currentElement;
-  }
-};
-
-//menuBarにホバーしたときの挙動を定める
-view.menuBar.hover = {
-  select:function(){return function a(e){view.menuBar.select(e)}},
-  on: function(){
-    var tempThis=this;
+//menuBarの設定
+view.menuBar =  {
+  //menuBarのDOM要素を取得
+  elements: document.querySelectorAll(".tabmenu > li"),
+  //menuBarの選択時と非選択時の表示を定める
+  viewSet: function(){
     for(any of view.menuBar.elements){
-      any.addEventListener("mouseover",tempThis.select(),false);
+      any.notSelected = function(){this.children[1].style.display="none"}; //thisはイベント発生した要素
+      any.selected = function(){this.children[1].style.display="block"}; //thisはイベント発生した要素
+      any.name  = any.firstElementChild.innerHTML;
     }
   },
-  off: function(){
-    var tempThis=this;
+  //menuBarを選択したときの挙動を定める
+  select: function(e){
+    let currentElement = e.currentTarget;
+    console.log("select " + currentElement.name);
+    if(currentElement != view.tempElement ){
+      if(view.tempElement)view.tempElement.notSelected();
+      currentElement.selected();
+      view.tempElement = currentElement;
+    }
+  }
+};
+//menuBarをクリックしたときの挙動を定める
+view.menuBar.click ={
+  click: function(){
+    return function(e){
+        //伝搬をストップ
+        e.stopPropagation();
+        //直前に選択していた要素があれが、非選択に切り替える
+        if(view.tempElement)view.tempElement.notSelected();
+        //clickしたタブを表示し、それ以外を非表示
+        view.menuBar.select(e);
+        //マウスをホバーしたタブを表示し、それ以外を非表示
+        view.menuBar.hover.flag = true;
+    };
+  },
+  add: function(){
     for(any of view.menuBar.elements){
-      any.removeEventListener("mouseover",tempThis.select(),false);
+      any.tempClickFunc = this.click()
+      any.addEventListener("click",any.tempClickFunc,false);
+    }
+  },
+  remove: function(){
+    for(any of view.menuBar.elements){
+      any.removeEventListener("mouseover", any.tempClickFunc,false);
+      if("tempClickFunc" in any ) delete any.tempClickFunc;
     }
   }
 }
-//menuBarをクリックで選択できるようにする
-view.menuBar.click = function(){
-  return function(e){
-      //伝搬をストップ
-      e.stopPropagation();
-      //直前に選択していた要素があれが、非選択に切り替える
-      if(view.tempElement)view.tempElement.notSelected();
-      //clickしたタブを表示し、それ以外を非表示
-      view.menuBar.select(e);
-      //マウスをホバーしたタブを表示し、それ以外を非表示
-      view.menuBar.hover.on();
-      //menuBar以外を選択するとmenuBarの選択が解除される。
-      document.addEventListener("click",function(e){
-        if(view.tempElement)view.tempElement.notSelected();
-        view.tempElement = null;
-        view.menuBar.hover.off();
-      },false);
-
-  };
+//menuBarにホバーしたときの挙動を定める
+view.menuBar.hover = {
+  flag: false,
+  hover: function(){
+    return function(e){
+      if(view.menuBar.hover.flag)view.menuBar.select(e);
+    };
+  },
+  add: function(){
+    for(any of view.menuBar.elements){
+      any.tempHoverFunc = this.hover()
+      any.addEventListener("mouseover",any.tempHoverFunc,false);
+    }
+  },
+  remove: function(){
+    for(any of view.menuBar.elements){
+      any.removeEventListener("mouseover", any.tempHoverFunc,false);
+      if("tempHoverFunc" in any ) delete any.tempHoverFunc;
+    }
+  }
 };
-
+//allcancel
+view.allCancel = function(){
+  console.log("AllCancel")
+  if(view.tempElement)view.tempElement.notSelected();
+  view.tempElement = null;
+  view.menuBar.hover.flag = false;
+}
+//keyを押したときの挙動を設定
+view.keydown = function(){
+  return function(e){
+    switch(e.keyCode){
+      //ESCを押したときの挙動
+      case 27:
+        console.log("ESC")
+        view.allCancel();
+        break;
+      default:
+        break;
+    }
+  }
+};
 //maneBarの内容を表示
 for(any of view.menuBar.elements)console.log(any.firstElementChild.innerHTML);
+//menuBarの表示・非表示設定を行う
+view.menuBar.viewSet();
 //menubarをクリックしたときの挙動をイベントリスナーに登録
-for(any of view.menuBar.elements) any.addEventListener("click",view.menuBar.click(),false);
+view.menuBar.click.add();
+//menubarにホバーしたときの挙動をイベントリスナーに登録
+view.menuBar.hover.add();
 
+//menuBar以外を選択するとmenuBarの選択が解除される。
+document.addEventListener("click",function(e){view.allCancel()},false);
+//keyを押したときの挙動をイベントリスナーに登録
+document.addEventListener("keydown", view.keydown(), false)
 
 // for(list of element){
 //   list.addEventListener("click", function(e){
