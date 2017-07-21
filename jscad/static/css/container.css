@@ -158,7 +158,7 @@ h1 {
 /*scriptingの装飾*/
 .contents > div.maincontents > article.scripting{
   background: #FFFFFF;
-  margin: 0;
+  margin: 1px;
   padding: 0;
   border:1px solid #696969;
 }
@@ -169,13 +169,13 @@ footer{
   background: #d9dfe1;
   margin:0;
   padding:0;
+  border-top: 1px solid #708090;
 }
 footer > small{
   flex: 0 0 85%;
   text-align: center;
   border-right: 1px solid #708090;
 }
-
 footer > section{
   flex: 1 0 auto;
   text-align: center;

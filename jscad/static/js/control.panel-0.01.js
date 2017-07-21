@@ -1,6 +1,7 @@
 //viewオブジェクトを作成
 var view = Object.create(null);
 
+//viewにタグ要素を設定
 view ={
   windowWidth: window.innerWidth,
   windowHeight: window.innerHeight,
@@ -8,8 +9,13 @@ view ={
   header: {element: document.getElementsByTagName("header")[0]},
   main: {element: document.getElementsByTagName("main")[0]},
   toolBar: {element: document.getElementsByClassName("toolBar")[0]},
+  contents: {element: document.getElementsByClassName("contents")[0]},
   aside: {element: document.getElementsByTagName("aside")[0]},
+  drawmenu: {element: document.getElementsByClassName("drawmenu")[0]},
+  property: {element: document.getElementsByClassName("property")[0]},
   maincontents: {element: document.getElementsByClassName("maincontents")[0]},
+  drawing: {element: document.getElementById("drawing")},
+  scripting: {element: document.getElementsByClassName("scripting")[0]},
   footer: {element: document.getElementsByTagName("footer")[0]},
   tempElement: null,
   logWidthHeight: function(){
@@ -23,15 +29,25 @@ view ={
     console.log("main height is " + view.main.element.getBoundingClientRect().height);
     console.log("toolBar width is " + view.toolBar.element.getBoundingClientRect().width);
     console.log("toolBar height is " + view.toolBar.element.getBoundingClientRect().height);
+    console.log("contents width is " + view.contents.element.getBoundingClientRect().width);
+    console.log("contents height is " + view.contents.element.getBoundingClientRect().height);
     console.log("aside width is " + view.aside.element.getBoundingClientRect().width);
     console.log("aside height is " + view.aside.element.getBoundingClientRect().height);
+    console.log("drawmenu width is " + view.drawmenu.element.getBoundingClientRect().width);
+    console.log("drawmenu height is " + view.drawmenu.element.getBoundingClientRect().height);
+    console.log("property width is " + view.property.element.getBoundingClientRect().width);
+    console.log("property height is " + view.property.element.getBoundingClientRect().height);
     console.log("maincontents width is " + view.maincontents.element.getBoundingClientRect().width);
     console.log("maincontents height is " + view.maincontents.element.getBoundingClientRect().height);
+    console.log("drawing width is " + view.drawing.element.getBoundingClientRect().width);
+    console.log("drawing height is " + view.drawing.element.getBoundingClientRect().height);
+    console.log("scripting width is " + view.scripting.element.getBoundingClientRect().width);
+    console.log("scripting height is " + view.scripting.element.getBoundingClientRect().height);
     console.log("footer width is " + view.footer.element.getBoundingClientRect().width);
     console.log("footer height is " + view.footer.element.getBoundingClientRect().height);
   }
 };
-//maeinに描画設定を追加
+//maein要素に描画設定を追加
 view.main.element = Object.assign(view.main.element,{
   setHeight: function(){
     var height = view.windowHeight
@@ -39,25 +55,93 @@ view.main.element = Object.assign(view.main.element,{
       - view.footer.element.getBoundingClientRect().height
       - view.body.borderWidth*2;
     view.main.element.style.height = height +"px";
-    console.log(height)
   }
 })
 
-view.main.element = Object.assign(view.main.element,{
+//contents要素に描画設定を追加
+view.contents.element = Object.assign(view.contents.element,{
   setHeight: function(){
+    var height = view.main.element.getBoundingClientRect().height
+      - view.toolBar.element.getBoundingClientRect().height;
+    view.contents.element.style.height = height +"px";
+  }
+})
+
+//aside, drawmenu, property, drawing, scripting要素に高さ, 幅設定関数を追加
+for(any of ["aside","drawmenu", "property", "drawing", "scripting"]){
+  let obj = view[any].element;
+  obj = Object.assign(obj,{
+    setHeight: function(height){
+      obj.style.height = height +"px";
+    },
+    setWidth: function(width){
+      obj.style.width = width +"px";
+    }
+  });
+}
+view.drawmenu.element = Object.assign(view.drawmenu.element, {
+  margin:2,
+  setWidthAuto: function(){
+    var width = view.aside.element.getBoundingClientRect().width
+      - this.margin*2;
+    view.drawmenu.element.setWidth(width);
+  }
+});
+view.property.element = Object.assign(view.property.element,{
+  margin:2,
+  setHeightWidthAuto: function(){
     var height = view.windowHeight
       - view.header.element.getBoundingClientRect().height
+      - view.toolBar.element.getBoundingClientRect().height
+      - view.drawmenu.element.getBoundingClientRect().height
       - view.footer.element.getBoundingClientRect().height
+      - view.drawmenu.element.margin*2
+      - this.margin*2
       - view.body.borderWidth*2;
-    view.main.element.style.height = height +"px";
-    console.log(height)
+    var width = view.drawmenu.element.getBoundingClientRect().width;
+    view.property.element.setHeight(height);
+    view.property.element.setWidth(width);
   }
-})
-
+});
+view.drawing.element = Object.assign(view.drawing.element, {
+  setWidthAuto: function(){
+    var width = view.windowWidth
+      - view.aside.element.getBoundingClientRect().width
+      - view.body.borderWidth*2;
+    view.drawing.element.setWidth(width);
+  }
+});
+view.scripting.element = Object.assign(view.scripting.element,{
+  margin:2,
+  setHeightWidthAuto: function(){
+    var height = view.windowHeight
+      - view.header.element.getBoundingClientRect().height
+      - view.toolBar.element.getBoundingClientRect().height
+      - view.drawing.element.getBoundingClientRect().height
+      - view.footer.element.getBoundingClientRect().height
+      - this.margin*2
+      - view.body.borderWidth*2;
+    var width = view.drawing.element.getBoundingClientRect().width
+      - this.margin*2;
+    view.scripting.element.setHeight(height);
+    view.scripting.element.setWidth(width);
+  }
+});
 
 //初期描画......ユーザがアクセスしてすぐに反映されるようにするため、コードの上部に記述
 //mainの高さを設定し、縦スクロール無しにする
 view.main.element.setHeight();
+//contentsの高さを設定する
+view.contents.element.setHeight();
+
+view.aside.element.setWidth(150);
+view.drawmenu.element.setWidthAuto();
+view.drawmenu.element.setHeight(315);
+view.property.element.setHeightWidthAuto();
+view.drawing.element.setHeight(450);
+view.drawing.element.setWidthAuto();
+view.scripting.element.setHeightWidthAuto();
+
 
 //menuBarの設定
 view.menuBar =  {
@@ -132,7 +216,7 @@ view.menuBar.hover = {
 };
 
 //drawmenuの設定
-view.drawmenu =  {
+view.drawmenu =  Object.assign(view.drawmenu, {
   elements: document.querySelectorAll(".contents > aside > article.drawmenu > section"),
   activeElement: null,
   viewSet: function(){
@@ -152,7 +236,7 @@ view.drawmenu =  {
       this.activeElement = currentElement;
     }
   }
-};
+});
 //drawmenuをクリックしたときの挙動を定める
 view.drawmenu.click ={
   click: function(){
@@ -231,8 +315,8 @@ document.addEventListener("keydown", view.keydown(), false)
   var default_height =400;
   var draw = SVG('drawing').panZoom();
 
-  draw.width(view.maincontents.element.getBoundingClientRect().width);
-  draw.height(view.maincontents.element.getBoundingClientRect().height);
+  draw.width(view.drawing.element.getBoundingClientRect().width);
+  draw.height(view.drawing.element.getBoundingClientRect().height);
   draw.attr('preserveAspectRatio', 'xMinYMin slice');
   draw.style( {
     border: '1px solid #F5F5F5',
