@@ -6,7 +6,6 @@
   <script src="{{ url_for('static', filename='js/svg.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/svg.panzoom.js') }}"></script>
   <script src="{{ url_for('static', filename='js/svg.select.min.js') }}"></script>
-  <!-- <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script> -->
   <script defer src="{{ url_for('static', filename='js/control.panel-0.01.js') }}"></script>
 </head>
 <body>
@@ -77,71 +76,88 @@
     </nav>
   </header>
   <main>
-    <article>
-      <h2>tool menue</h2>
-      <li>new sketch</li>
-      <li>messure</li>
-      <li>fit screen</li>
-      <li>read file</li>
-    </article>
-    <article>
-      <h2>draw menu</h2>
-      <section>
-        <h3>draw</h3>
-        <li>line</li>
-        <li>polyline</li>
-        <li>circle</li>
-        <li>rectangle</li>
-        <li>point</li>
-      </section>
-      <section>
-        <h3>edit</h3>
-        <li>filet</li>
-        <li>chamfer</li>
-        <li>copy</li>
-        <li>move</li>
-        <li>divide</li>
-      </section>
-      <section>
-        <h3>dimensions</h3>
-        <li>general</li>
-        <li>vertical</li>
-        <li>horizontal</li>
-        <li>parallel</li>
-        <li>right angle</li>
-        <li>angle</li>
-      </section>
-      <section>
-        <h3>constrain</h3>
-        <li >vertical</li>
-        <li>horizontal</li>
-        <li>parallel</li>
-        <li>right angle</li>
-        <li>coincident</li>
-      </section>
-      <section>
-        <h3>general</h3>
-        <li>grid</li>
-      </section>
-    </article>
+    <div class="toolBar">
+      <article>
+        <h2>tool menue</h2>
+        <nav>
+          <ul>
+            <li>new sketch</li>
+            <li>messure</li>
+            <li>fit screen</li>
+            <li>read file</li>
+          </ul>
+        </nav>
+      </article>
+    </div>
+    <div class="contents">
+      <aside class="sidemenu">
+        <article class="drawmenu">
+          <h2>draw menu</h2>
+          <section>
+            <h3>draw</h3>
+            <ul style="display:block;">
+              <li>line</li>
+              <li>polyline</li>
+              <li>circle</li>
+              <li>rectangle</li>
+              <li>point</li>
+            </ul>
+          </section>
+          <section>
+            <h3>edit</h3>
+            <ul>
+              <li>filet</li>
+              <li>chamfer</li>
+              <li>copy</li>
+              <li>move</li>
+              <li>divide</li>
+            </ul>
+          </section>
+          <section>
+            <h3>dimensions</h3>
+            <ul>
+              <li>general</li>
+              <li>vertical</li>
+              <li>horizontal</li>
+              <li>parallel</li>
+              <li>right angle</li>
+              <li>angle</li>
+            </ul>
+          </section>
+          <section>
+            <h3>constrain</h3>
+            <ul>
+              <li >vertical</li>
+              <li>horizontal</li>
+              <li>parallel</li>
+              <li>right angle</li>
+              <li>coincident</li>
+            </ul>
+          </section>
+          <section>
+            <h3>general</h3>
+            <ul>
+              <li>grid</li>
+            </ul>
+          </section>
+        </article>
+        <article class="property">
+          <h2>property</h2>
+          <ul>
+            <li>L1</li>
+            <li>L2</li>
+          </ul>
+        </article>
+      </aside>
+      <div class="maincontents">
+        <article id="drawing"></article>
+        <article class="scripting">script</article>
+      </div>
+    </div>
   </main>
   <footer>
     <small>Copyright July 2017 jscad assosiation</small>
-    <li>coordinate x, coordinate y</li>
+    <section><small>x: 600, y: 500</small></section>
   </footer>
-  <!-- <div class="container">
-    <div class="item box-big1">A</div>
-     <div class="item">B</div>
-     <div class="item">C</div>
-     <div class="item">D</div>
-     <div class="item">E</div>
-     <div class="item box-big2">F</div>
-     <div class="item box-big3">G</div>
-     <div class="item">H</div>
-     <div class="item">I</div>
-     <div class="item">J</div>
-     <div class="item box-big4">K</div>
-  </div>
-    <div id="drawing"></div> -->
 </body>
 </html>
