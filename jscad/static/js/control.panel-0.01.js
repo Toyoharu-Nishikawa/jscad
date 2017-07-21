@@ -291,8 +291,8 @@ view.keydown = function(){
   }
 };
 
-/*****************初期化*****************/
-//初期描画......ユーザがアクセスしてすぐに反映されるようにするため、コードの上部に記述
+/*****************viewの設定を有効にする*****************/
+//ツールバーなどの各要素の分割調整及び画面サイズ変更に対応
 view.initialize();
 //menuBarの表示・非表示設定を行う
 view.menuBar.viewSet();
@@ -300,12 +300,10 @@ view.menuBar.viewSet();
 view.menuBar.click.add();
 //menubarにホバーしたときの挙動をイベントリスナーに登録
 view.menuBar.hover.add();
-
 //drawmenurの表示・非表示設定を行う
 view.drawmenu.viewSet();
 //drawmenuをクリックしたときの挙動をイベントリスナーに登録
 view.drawmenu.click.add();
-
 
 //menuBar以外を選択するとmenuBarの選択が解除される。
 document.addEventListener("click",function(e){view.allCancel()},false);
