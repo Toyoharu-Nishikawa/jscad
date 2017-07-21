@@ -6,6 +6,8 @@
 body{
   margin:0;
   border: 2px solid #708090;
+  overflow-x:hidden;
+  overflow-y:hidden;
 }
 /*h1の装飾*/
 h1 {
@@ -133,16 +135,45 @@ h1 {
 }
 
 .contents > aside > article.drawmenu > section > ul{
-  display:none;
+  display: none;
+  list-style: none;
+  margin:0;
+  padding:0;
 }
+.contents > aside > article.drawmenu > section > ul > li{
+  margin:0;
+  padding: 0 10px;
+  display: block;
+  border: 1px solid #FFFFFF;
+}
+.contents > aside > article.drawmenu > section > ul > li:hover{
+  background: #F0FFF0;
+  border: 1px solid #7FFFD4;
+  border-radius: 6px 6px 6px 6px;
+}
+
 
 
 /*propertyの装飾*/
 .contents > aside > article.property{
   margin:2px;
+  padding:0;
+  background: #FFFFFF;
+  border:1px solid #696969;
+}
+.contents > aside > article.property > h2{
+  margin:0;
+  padding:0 10px;
+  font-size:100%;
   background: #d9dfe1;
   border:1px solid #696969;
 }
+.contents > aside > article.property > ul{
+  margin:0;
+  padding:0 10px;
+  list-style:none;
+}
+
 /*maincontentsの装飾*/
 .contents > div.maincontents{
   flex:1 0 auto;

@@ -3,8 +3,6 @@ var view = Object.create(null);
 
 //viewにタグ要素を設定
 view ={
-  windowWidth: window.innerWidth,
-  windowHeight: window.innerHeight,
   body: {element: document.body, borderWidth: 2},
   header: {element: document.getElementsByTagName("header")[0]},
   main: {element: document.getElementsByTagName("main")[0]},
@@ -47,25 +45,6 @@ view ={
     console.log("footer height is " + view.footer.element.getBoundingClientRect().height);
   }
 };
-//maein要素に描画設定を追加
-view.main.element = Object.assign(view.main.element,{
-  setHeight: function(){
-    var height = view.windowHeight
-      - view.header.element.getBoundingClientRect().height
-      - view.footer.element.getBoundingClientRect().height
-      - view.body.borderWidth*2;
-    view.main.element.style.height = height +"px";
-  }
-})
-
-//contents要素に描画設定を追加
-view.contents.element = Object.assign(view.contents.element,{
-  setHeight: function(){
-    var height = view.main.element.getBoundingClientRect().height
-      - view.toolBar.element.getBoundingClientRect().height;
-    view.contents.element.style.height = height +"px";
-  }
-})
 
 //aside, drawmenu, property, drawing, scripting要素に高さ, 幅設定関数を追加
 for(any of ["aside","drawmenu", "property", "drawing", "scripting"]){
@@ -90,7 +69,7 @@ view.drawmenu.element = Object.assign(view.drawmenu.element, {
 view.property.element = Object.assign(view.property.element,{
   margin:2,
   setHeightWidthAuto: function(){
-    var height = view.windowHeight
+    var height = window.innerHeight
       - view.header.element.getBoundingClientRect().height
       - view.toolBar.element.getBoundingClientRect().height
       - view.drawmenu.element.getBoundingClientRect().height
@@ -105,7 +84,7 @@ view.property.element = Object.assign(view.property.element,{
 });
 view.drawing.element = Object.assign(view.drawing.element, {
   setWidthAuto: function(){
-    var width = view.windowWidth
+    var width = window.innerWidth
       - view.aside.element.getBoundingClientRect().width
       - view.body.borderWidth*2;
     view.drawing.element.setWidth(width);
@@ -114,7 +93,7 @@ view.drawing.element = Object.assign(view.drawing.element, {
 view.scripting.element = Object.assign(view.scripting.element,{
   margin:2,
   setHeightWidthAuto: function(){
-    var height = view.windowHeight
+    var height = window.innerHeight
       - view.header.element.getBoundingClientRect().height
       - view.toolBar.element.getBoundingClientRect().height
       - view.drawing.element.getBoundingClientRect().height
@@ -128,20 +107,36 @@ view.scripting.element = Object.assign(view.scripting.element,{
   }
 });
 
-//初期描画......ユーザがアクセスしてすぐに反映されるようにするため、コードの上部に記述
-//mainの高さを設定し、縦スクロール無しにする
-view.main.element.setHeight();
-//contentsの高さを設定する
-view.contents.element.setHeight();
-
-view.aside.element.setWidth(150);
-view.drawmenu.element.setWidthAuto();
-view.drawmenu.element.setHeight(315);
-view.property.element.setHeightWidthAuto();
-view.drawing.element.setHeight(450);
-view.drawing.element.setWidthAuto();
-view.scripting.element.setHeightWidthAuto();
-
+//画面サイズ変更時の挙動を設定
+view = Object.assign(view,{
+  svgResize: document.createEvent("HTMLEvents"),
+  realizeTimer: null,
+  interval: Math.floor(1000 / 60 * 1),
+  setview: function(){
+    view.aside.element.setWidth(150);
+    view.drawmenu.element.setWidthAuto();
+    view.drawmenu.element.setHeight(330);
+    view.property.element.setHeightWidthAuto();
+    view.drawing.element.setHeight(450);
+    view.drawing.element.setWidthAuto();
+    view.scripting.element.setHeightWidthAuto();
+    document.dispatchEvent(view.svgResize);
+  },
+  initialize: function(){
+    this.svgResize.initEvent("svgResize",true,false);
+    this.setview();
+    window.addEventListener('resize', function (e) {
+      console.log('resizing width:'+ window.innerWidth + "height:" + window.innerHeight);
+      if (view.resizeTimer !== false) {
+        clearTimeout(view.resizeTimer);
+      }
+      view.resizeTimer = setTimeout(function () {
+        console.log('resized width:'+ window.innerWidth + "height:" + window.innerHeight);
+        view.setview();
+      }, view.interval);
+    },false);
+  }
+});
 
 //menuBarの設定
 view.menuBar =  {
@@ -225,6 +220,9 @@ view.drawmenu =  Object.assign(view.drawmenu, {
       any.selected = function(){this.children[1].style.display="block"}; //thisはイベント発生した要素
       any.name  = any.firstElementChild.innerHTML;
     }
+    //drawmenuの初期状態を設定
+    view.drawmenu.elements[0].selected();
+    this.activeElement = view.drawmenu.elements[0];
   },
   //drawmenuを選択したときの挙動を定める
   select: function(e){
@@ -282,6 +280,11 @@ view.keydown = function(){
       //Lを押したときの挙動
       case 76:
         view.logWidthHeight();
+      //spacを押したときの挙動
+      case 32:
+        view.setview()
+        console.log("forcibly resized")
+        break;
       default:
         break;
     }
@@ -289,6 +292,8 @@ view.keydown = function(){
 };
 
 /*****************初期化*****************/
+//初期描画......ユーザがアクセスしてすぐに反映されるようにするため、コードの上部に記述
+view.initialize();
 //menuBarの表示・非表示設定を行う
 view.menuBar.viewSet();
 //menubarをクリックしたときの挙動をイベントリスナーに登録
@@ -296,8 +301,6 @@ view.menuBar.click.add();
 //menubarにホバーしたときの挙動をイベントリスナーに登録
 view.menuBar.hover.add();
 
-//drawmenuの初期状態を設定
-view.drawmenu.activeElement = view.drawmenu.elements[0];
 //drawmenurの表示・非表示設定を行う
 view.drawmenu.viewSet();
 //drawmenuをクリックしたときの挙動をイベントリスナーに登録
@@ -311,28 +314,33 @@ document.addEventListener("keydown", view.keydown(), false)
 
 
 /*****************SVG***************************/
-  var dafault_width = 600;
-  var default_height =400;
-  var draw = SVG('drawing').panZoom();
+var dafault_width = 600;
+var default_height =400;
+var draw = SVG('drawing').panZoom();
 
+draw.width(view.drawing.element.getBoundingClientRect().width);
+draw.height(view.drawing.element.getBoundingClientRect().height);
+draw.attr('preserveAspectRatio', 'xMinYMin slice');
+draw.style( {
+  border: '1px solid #F5F5F5',
+  margin:0,
+  padding:0,
+  background:'linear-gradient(to bottom, RoyalBlue, white)'
+});
+document.addEventListener("svgResize",function(){
   draw.width(view.drawing.element.getBoundingClientRect().width);
   draw.height(view.drawing.element.getBoundingClientRect().height);
-  draw.attr('preserveAspectRatio', 'xMinYMin slice');
-  draw.style( {
-    border: '1px solid #F5F5F5',
-    margin:0,
-    padding:0,
-    background:'linear-gradient(to bottom, RoyalBlue, white)'
-  });
+  console.log("resize svg")
+},false);
 
-  var vb={
-    x: 0,
-    y: 0,
-    width: dafault_width,
-    height: default_height
-  }
-  draw.viewbox(vb.x, vb.y, vb.width, vb.height);
+var vb={
+  x: 0,
+  y: 0,
+  width: dafault_width,
+  height: default_height
+}
+draw.viewbox(vb.x, vb.y, vb.width, vb.height);
 
-  var screen=draw.group();
-  var sheet = [];
-  sheet.push(screen.group());
+var screen=draw.group();
+var sheet = [];
+sheet.push(screen.group());
