@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script defer type="text/javascript">
+var input = document.getElementById("input")
+var go = document.getElementById("go")
+go.addEventListener("click",function(e),{
+  e.preventDefault();
+  window.location.href = "jscad";
+}false);
+</script>
+</head>
+<body>
+  <form method="post" action='jscad'>
+    <input type="text" id="input"></input>
+    <input type="submit" value="送信" id="go"></input>
+  </form>
+</body>
+</html>

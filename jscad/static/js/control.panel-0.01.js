@@ -1,6 +1,19 @@
-//viewオブジェクトを作成
-var view = Object.create(null);
+var jscad = {view:null,draw:null,req:null,control:null};
+//jscad 名前空間開始
+{
+//view, req, control, drawオブジェクトを作成
+let view = jscad.view;
+let draw = jscad.draw;
+let req = jscad.req;
+let control = jscad.control;
 
+//オプション読み込み
+control = {readOption: jscadReadOption()}
+console.log(control.readOption)
+
+/**************************************************/
+/*                 view                           */
+/**************************************************/
 //viewにタグ要素を設定
 view ={
   body: {element: document.body, borderWidth: 2},
@@ -138,7 +151,123 @@ view = Object.assign(view,{
   }
 });
 
-//menuBarの設定
+//ツールバーなどの各要素の分割調整及び画面サイズ変更に対応
+view.initialize();
+
+/**********************************************/
+/*                 model                      */
+/**********************************************/
+var dafault_width = 600;
+var default_height =400;
+draw = SVG('drawing').panZoom();
+
+
+draw.width(view.drawing.element.getBoundingClientRect().width);
+draw.height(view.drawing.element.getBoundingClientRect().height);
+draw.attr('preserveAspectRatio', 'xMinYMin slice');
+draw.style( {
+  border: '1px solid #F5F5F5',
+  margin:0,
+  padding:0,
+  background:'linear-gradient(to bottom, RoyalBlue, white)'
+});
+document.addEventListener("svgResize",function(){
+  draw.width(view.drawing.element.getBoundingClientRect().width);
+  draw.height(view.drawing.element.getBoundingClientRect().height);
+  console.log("resize svg")
+},false);
+
+var vb={
+  x: 0,
+  y: 0,
+  width: dafault_width,
+  height: default_height
+}
+draw.viewbox(vb.x, vb.y, vb.width, vb.height);
+
+draw.screen=draw.group();
+draw.screen.sheet = [];
+draw.screen.sheet.push(draw.screen.group());
+//draw.screen.sheet[0].rect(100,100).move(50,50).fill("none").stroke({color:'black',opacity: 1.0,width:1});
+//draw.screen.sheet[0].line(0,0,100,100).stroke({color:'black',opacity: 1.0,width:1});
+
+
+
+/**********************************************/
+/*          communication                     */
+/**********************************************/
+req =new XMLHttpRequest();
+
+
+/******************************************************/
+/*                control                             */
+/******************************************************/
+control.resJsonObj = Object.create(null);
+control.reqJsonObj = Object.create(null);
+control.func = {
+  new: {
+    execute: function(e){
+      console.log("new file");
+      draw.screen.svg("");
+    }
+  },
+  open: {
+    execute: function(e){
+      req.open("POST", "/jscad/open",true);
+      req.addEventListener("load",function(e){
+        console.log("open file");
+        control.resJsonObj = req.response;
+        draw.screen.svg(control.resJsonObj.contents);
+        document.removeEventListener("load",arguments.callee,false)
+      },false)
+      req.setRequestHeader("content-type","application/json");
+      req.responseType="json";
+      //control.reqJsonObj = JSON.stringify({name:"temp"});
+      req.send(control.reqJsonObj);
+      return this;
+    }
+  },
+  save: {
+    execute: function(e){
+      req.open("POST", "/jscad/save",true);
+      req.addEventListener("load",function(e){
+        console.log("save file");
+        document.removeEventListener("load",arguments.callee,false)
+      },false)
+      req.setRequestHeader("content-type","application/json");
+      control.reqJsonObj = JSON.stringify({name:"temp", contents:draw.screen.svg()})
+      req.send(control.reqJsonObj);
+      return this;
+    }
+  },
+  saveAs:{
+    execute: function(e){console.log("Wow!!!!!!!!")}
+  }
+}
+//各イベントリスナーの登録と削除のメソッドを設定
+for(any in control.func){
+  control.func[any].name = any;
+  control.func[any].available = true;
+  control.func[any].add = function(){
+    console.log("add: " + any);
+    var name = this.name
+    var func = this.execute;
+    this.abailable = true;
+    document.addEventListener(name,func,false)
+    return this;
+  };
+  control.func[any].remove = function(){
+    console.log("remove: " + any);
+    var name = this.name
+    var func = this.execute;
+    this.abailable = false;
+    document.removeEventListener(name,func,false);
+    return this;
+  };
+}
+
+
+//menuBarのコントロール設定
 view.menuBar =  {
   //menuBarのDOM要素を取得
   elements: document.querySelectorAll(".tabmenu > li"),
@@ -209,8 +338,7 @@ view.menuBar.hover = {
     }
   }
 };
-
-//drawmenuの設定
+//drawmenuのコントロール設定
 view.drawmenu =  Object.assign(view.drawmenu, {
   elements: document.querySelectorAll(".contents > aside > article.drawmenu > section"),
   activeElement: null,
@@ -285,15 +413,49 @@ view.keydown = function(){
         view.setview()
         console.log("forcibly resized")
         break;
+      //ctr+nを押したときの挙動(New)
+      case 78:
+        var New = document.createEvent("HTMLEvents");
+        New.initEvent("new", true, false);
+        document.dispatchEvent(New);
+        break;
+      //ctr+oを押したときの挙動(Open)
+      case 79:
+        var open = document.createEvent("HTMLEvents");
+        open.initEvent("open", true, false);
+        document.dispatchEvent(open);
+        break;
+      //ctr+sを押したときの挙動(Save)
+      case 83:
+//        if(e.ctrKey){
+          var save = document.createEvent("HTMLEvents");
+          save.initEvent("save", true, false);
+          document.dispatchEvent(save);
+          return false;
+  //      }
+        break;
+      //enterを押したときの挙動
+      case 13:
+        console.log("save has been removed")
+        control.save.remove();
+        break;
       default:
         break;
     }
   }
 };
 
+//読み込みオプションの挙動を設定
+control.initRead = function(){
+  if(control.readOption.inifile){
+    control.reqJsonObj = JSON.stringify({name:control.readOption.inifile});
+    var open = document.createEvent("HTMLEvents");
+    open.initEvent("open", true, false);
+    document.dispatchEvent(open);
+  }
+};
+
 /*****************viewの設定を有効にする*****************/
-//ツールバーなどの各要素の分割調整及び画面サイズ変更に対応
-view.initialize();
 //menuBarの表示・非表示設定を行う
 view.menuBar.viewSet();
 //menubarをクリックしたときの挙動をイベントリスナーに登録
@@ -304,41 +466,15 @@ view.menuBar.hover.add();
 view.drawmenu.viewSet();
 //drawmenuをクリックしたときの挙動をイベントリスナーに登録
 view.drawmenu.click.add();
-
 //menuBar以外を選択するとmenuBarの選択が解除される。
 document.addEventListener("click",function(e){view.allCancel()},false);
-//keyを押したときの挙動をイベントリスナーに登録
+
+/************各modeイベントの挙動をイベントリスナーに登録************/
+for(any in control.func)if(control.func[any].available)control.func[any].add();
+
+/************keyを押したときの挙動をイベントリスナーに登録***********/
 document.addEventListener("keydown", view.keydown(), false)
 
-
-/*****************SVG***************************/
-var dafault_width = 600;
-var default_height =400;
-var draw = SVG('drawing').panZoom();
-
-draw.width(view.drawing.element.getBoundingClientRect().width);
-draw.height(view.drawing.element.getBoundingClientRect().height);
-draw.attr('preserveAspectRatio', 'xMinYMin slice');
-draw.style( {
-  border: '1px solid #F5F5F5',
-  margin:0,
-  padding:0,
-  background:'linear-gradient(to bottom, RoyalBlue, white)'
-});
-document.addEventListener("svgResize",function(){
-  draw.width(view.drawing.element.getBoundingClientRect().width);
-  draw.height(view.drawing.element.getBoundingClientRect().height);
-  console.log("resize svg")
-},false);
-
-var vb={
-  x: 0,
-  y: 0,
-  width: dafault_width,
-  height: default_height
-}
-draw.viewbox(vb.x, vb.y, vb.width, vb.height);
-
-var screen=draw.group();
-var sheet = [];
-sheet.push(screen.group());
+/************読み込みオプションを実行する***************************/
+control.initRead();
+}//jscad 名前空間終了

@@ -6,7 +6,11 @@
   <script src="{{ url_for('static', filename='js/svg.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/svg.panzoom.js') }}"></script>
   <script src="{{ url_for('static', filename='js/svg.select.min.js') }}"></script>
+  <script type="text/javascript">
+    function jscadReadOption(){return JSON.parse({{jscadOption|tojson|safe}})}
+  </script>
   <script defer src="{{ url_for('static', filename='js/control.panel-0.01.js') }}"></script>
+
 </head>
 <body>
   <header>
