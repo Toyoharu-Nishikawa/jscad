@@ -9,7 +9,8 @@ let control = jscad.control;
 
 //オプション読み込み
 control = {readOption: jscadReadOption()}
-console.log(control.readOption)
+console.log("contorl.readOption: ");
+console.log(control.readOption);
 
 /**************************************************/
 /*                 view                           */
@@ -437,7 +438,7 @@ view.keydown = function(){
       //enterを押したときの挙動
       case 13:
         console.log("save has been removed")
-        control.save.remove();
+        control.func.save.remove();
         break;
       default:
         break;
@@ -448,6 +449,7 @@ view.keydown = function(){
 //読み込みオプションの挙動を設定
 control.initRead = function(){
   if(control.readOption.inifile){
+    console.log("inifile is " + control.readOption.inifile)
     control.reqJsonObj = JSON.stringify({name:control.readOption.inifile});
     var open = document.createEvent("HTMLEvents");
     open.initEvent("open", true, false);

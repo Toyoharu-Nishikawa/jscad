@@ -19,6 +19,8 @@ def jscad():
     if request.method == 'POST':
         if request.headers['Content-Type'] == 'application/json':
             jsonOp = request.json
+    if request.method == "GET":
+        jsonOp = json.dumps({'inifile':request.args.get('inifile')})
     # jsonOp= json.dumps({'editable':True, 'inifile':''})
     print(jsonOp)
     return render_template('index.html', jscadOption=jsonOp)
