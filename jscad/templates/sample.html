@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style>
+#go{
+  border:1px solid black;
+  width:100px;
+  height:30px;
+  text-align:center;
+  background: black;
+  color:white;
+}
+#go:hover{
+  font-size:110%;
+}
+</style>
+<script defer type="text/javascript">
+window.onload =function(){
+var go = document.getElementById("go");
+  console.log(go)
+  go.addEventListener("click",function(e){
+    e.preventDefault();
+    var reqJsonObj =JSON.stringify({inifile: document.forms.form.inifile.value});
+    //document.forms.form.inputText.value =reqJsonObj;
+    console.log(reqJsonObj);
+    document.forms.form.submit();
+  },false);
+}
+</script>
+</head>
+<body>
+<form name="form" method="get" action="/jscad">
+<input type="text" name="inifile"></input>
+</form>
+<div id="go">go</div>
+</body>
+</html>

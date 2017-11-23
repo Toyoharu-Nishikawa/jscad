@@ -1,0 +1,213 @@
+*{
+  box-sizing: border-box;
+}
+
+/*bodyの装飾*/
+body{
+  margin:0;
+  border: 2px solid #708090;
+  overflow-x:hidden;
+  overflow-y:hidden;
+}
+/*h1の装飾*/
+h1 {
+  color:#3e5358;
+  padding: 0 8px;
+  margin: 0;
+  font-size: 100%;
+  background: #d9dfe1;
+}
+
+/*menuの装飾*/
+.tabmenu{
+  display: flex;
+  list-style: none;
+  margin: 0;
+  border-bottom: 5px solid #1495b5;
+  padding: 0;
+  background: #d9dfe1;
+  position: relative;
+}
+.tabmenu > li{
+  margin: 0 8px 0 0;
+  border-radius: 6px 6px 0px 0px;
+  background: #d9dfe1;
+}
+.tabmenu > li > a{
+  display: block;
+  padding: 1px 10px;
+  text-decoration: none;
+  color: #3e5358
+}
+.tabmenu > li:hover{
+  background: #1495b5;
+}
+.tabmenu > li > a:hover{
+  color: #ffffff;
+}
+.tabmenu > li > ul{
+  display:none;
+  position:absolute;
+  top: 25px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #d9dfe1;
+  border: 1px solid #d9dfff;
+}
+.tabmenu > li > ul > li{
+  margin: 0;
+  padding: 0;
+}
+.tabmenu > li > ul > li > a{
+  display: block;
+  margin:0;
+  padding: 0px 10px;
+  font-size: 90%;
+}
+.tabmenu > li > ul > li:hover{
+  background: #1495b5;
+}
+.tabmenu > li > ul > li > a:hover{
+  color: #ffffff;
+}
+
+/*ToolBarの装飾*/
+.toolBar > article > h2{
+  color:#008000;
+  display: none;
+}
+.toolBar > article > nav > ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  background: #F5F5F5;
+  border-bottom: 1px solid #696969;
+}
+.toolBar > article > nav > ul > li {
+  flex:0 0 auto;
+  padding: 0px 10px;
+  border: 1px solid #F5F5F5;
+}
+.toolBar > article > nav > ul > li:hover {
+  background: #F0FFF0;
+  border: 1px solid #7FFFD4;
+  border-radius: 6px 6px 6px 6px;
+}
+
+/*contentsの装飾*/
+.contents{
+  display:flex;
+}
+/*sidemuneの装飾*/
+.contents > aside{
+  flex:0 0 20%;
+  background: #F5F5F5;
+  display: flex;
+  flex-flow:column nowrap;;
+}
+/*draw toolの装飾*/
+.contents > aside > article.drawmenu{
+  margin:2px;
+  background: #FFFFFF;
+  border:1px solid #696969;
+}
+.contents > aside > article.drawmenu > h2{
+  margin:0;
+  padding:0 10px;
+  font-size:100%;
+  background: #d9dfe1;
+  border:1px solid #696969;
+}
+.contents > aside > article.drawmenu > section > h3{
+  margin:0;
+  padding: 2px 10px;
+  font-size:90%;
+  display: block;
+  border: 1px solid #696969;
+  background:#FFFFFF;
+}
+.contents > aside > article.drawmenu > section > h3:hover {
+  background: #F0FFF0;
+  border: 1px solid #7FFFD4;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.contents > aside > article.drawmenu > section > ul{
+  display: none;
+  list-style: none;
+  margin:0;
+  padding:0;
+}
+.contents > aside > article.drawmenu > section > ul > li{
+  margin:0;
+  padding: 0 10px;
+  display: block;
+  border: 1px solid #FFFFFF;
+}
+.contents > aside > article.drawmenu > section > ul > li:hover{
+  background: #F0FFF0;
+  border: 1px solid #7FFFD4;
+  border-radius: 6px 6px 6px 6px;
+}
+
+
+
+/*propertyの装飾*/
+.contents > aside > article.property{
+  margin:2px;
+  padding:0;
+  background: #FFFFFF;
+  border:1px solid #696969;
+}
+.contents > aside > article.property > h2{
+  margin:0;
+  padding:0 10px;
+  font-size:100%;
+  background: #d9dfe1;
+  border:1px solid #696969;
+}
+.contents > aside > article.property > ul{
+  margin:0;
+  padding:0 10px;
+  list-style:none;
+}
+
+/*maincontentsの装飾*/
+.contents > div.maincontents{
+  flex:1 0 auto;
+  background: #FFFFFF;
+  margin: 0;
+  padding: 0;
+}
+/*drawingの装飾*/
+#drawing{
+  margin:0;
+  padding: 0;
+}
+/*scriptingの装飾*/
+.contents > div.maincontents > article.scripting{
+  background: #FFFFFF;
+  margin: 1px;
+  padding: 0;
+  border:1px solid #696969;
+}
+
+/*footerの装飾*/
+footer{
+  display: flex;
+  background: #d9dfe1;
+  margin:0;
+  padding:0;
+  border-top: 1px solid #708090;
+}
+footer > small{
+  flex: 0 0 85%;
+  text-align: center;
+  border-right: 1px solid #708090;
+}
+footer > section{
+  flex: 1 0 auto;
+  text-align: center;
+}

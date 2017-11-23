@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>jscad</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/container.css') }}">
+  <script src="{{ url_for('static', filename='js/svg.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/svg.panzoom.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/svg.select.min.js') }}"></script>
+  <script type="text/javascript">
+    function jscadReadOption(){return JSON.parse({{jscadOption|tojson|safe}})}
+  </script>
+  <script defer src="{{ url_for('static', filename='js/control.panel-0.01.js') }}"></script>
+
+</head>
+<body>
+  <header>
+    <h1>jscad</h1>
+    <nav class="maintab">
+      <ul class="tabmenu">
+        <li>
+          <a>File</a>
+          <ul class="submenu">
+            <li><a>New</a></li>
+            <li><a>Open...</a></li>
+            <li><a>Close</a></li>
+            <li><a>Close All</a></li>
+            <li><a>Save</a></li>
+            <li><a>Save As...</a></li>
+            <li><a>Import</a></li>
+            <li><a>Export</a></li>
+            <li><a>Print</a></li>
+            <li><a>Print Preview</a></li>
+            <li><a>Recent Files</a></li>
+            <li><a>Exit</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Edit</a>
+          <ul class="submenu" >
+            <li><a>Undo</a></li>
+            <li><a>Redo</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>View</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Tool</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Macro</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Widow</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Help</a>
+          <ul class="submenu">
+            <li><a>comming soon</a></li>
+            <li><a>comming soon</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <div class="toolBar">
+      <article>
+        <h2>tool menue</h2>
+        <nav>
+          <ul>
+            <li>new sketch</li>
+            <li>messure</li>
+            <li>fit screen</li>
+            <li>read file</li>
+          </ul>
+        </nav>
+      </article>
+    </div>
+    <div class="contents">
+      <aside class="sidemenu">
+        <article class="drawmenu">
+          <h2>draw menu</h2>
+          <section>
+            <h3>draw</h3>
+            <ul>
+              <li>line</li>
+              <li>polyline</li>
+              <li>circle</li>
+              <li>rectangle</li>
+              <li>point</li>
+            </ul>
+          </section>
+          <section>
+            <h3>edit</h3>
+            <ul>
+              <li>filet</li>
+              <li>chamfer</li>
+              <li>copy</li>
+              <li>move</li>
+              <li>divide</li>
+            </ul>
+          </section>
+          <section>
+            <h3>dimensions</h3>
+            <ul>
+              <li>general</li>
+              <li>vertical</li>
+              <li>horizontal</li>
+              <li>parallel</li>
+              <li>right angle</li>
+              <li>angle</li>
+            </ul>
+          </section>
+          <section>
+            <h3>constrain</h3>
+            <ul>
+              <li >vertical</li>
+              <li>horizontal</li>
+              <li>parallel</li>
+              <li>right angle</li>
+              <li>coincident</li>
+            </ul>
+          </section>
+          <section>
+            <h3>general</h3>
+            <ul>
+              <li>grid</li>
+            </ul>
+          </section>
+        </article>
+        <article class="property">
+          <h2>property</h2>
+          <ul>
+            <li>L1</li>
+            <li>L2</li>
+          </ul>
+        </article>
+      </aside>
+      <div class="maincontents">
+        <article id="drawing"></article>
+        <article class="scripting">script</article>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <small>Copyright July 2017 jscad assosiation</small>
+    <section><small>x: 600, y: 500</small></section>
+  </footer>
+</body>
+</html>
