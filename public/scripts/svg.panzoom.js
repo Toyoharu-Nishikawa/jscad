@@ -18,8 +18,9 @@ SVG.extend(SVG.Doc, SVG.Nested, {
       ev.preventDefault()
 
       if(ev.deltaY == 0) return
-
-      var zoomAmount = this.zoom() - zoomFactor * ev.deltaY/Math.abs(ev.deltaY)
+  
+      // var zoomAmount = this.zoom() - zoomFactor * ev.deltaY/Math.abs(ev.deltaY)
+      var zoomAmount = this.zoom() * Math.pow(zoomFactor,  -ev.deltaY/Math.abs(ev.deltaY))
         , p = this.point(ev.clientX, ev.clientY)
 
       this.zoom(zoomAmount, p)

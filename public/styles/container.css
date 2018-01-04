@@ -2,6 +2,16 @@
   box-sizing: border-box;
 }
 
+circle {
+  vector-effect: non-scaling-stroke;
+}
+path {
+  vector-effect: non-scaling-stroke;
+}
+line {
+  vector-effect: non-scaling-stroke;
+}
+
 /*bodyの装飾*/
 body{
   margin:0;
