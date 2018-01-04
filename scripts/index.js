@@ -1,4 +1,6 @@
 'use strict'
+import dxftosvg from './node_modules/dxftosvg/index.js'
+
 var jscad = {view:null,draw:null,req:null,control:{}};
 //jscad 名前空間開始
 {
@@ -159,9 +161,9 @@ view.initialize();
 /**********************************************/
 /*                 model                      */
 /**********************************************/
-var dafault_width = 600;
-var default_height =400;
-draw = SVG('drawing').panZoom();
+//var dafault_width = 600;
+//var default_height =400;
+draw = SVG('drawing').panZoom({zoomFactor:1.1});
 
 
 draw.width(view.drawing.element.getBoundingClientRect().width);
@@ -171,7 +173,7 @@ draw.style( {
   border: '1px solid #F5F5F5',
   margin:0,
   padding:0,
-  background:'linear-gradient(to bottom, RoyalBlue, white)'
+  background:'linear-gradient(to bottom, white, RoyalBlue )'
 });
 document.addEventListener("svgResize",function(){
   draw.width(view.drawing.element.getBoundingClientRect().width);
@@ -182,14 +184,21 @@ document.addEventListener("svgResize",function(){
 var vb={
   x: 0,
   y: 0,
-  width: dafault_width,
-  height: default_height
+  width: view.drawing.element.getBoundingClientRect().width,
+  height: view.drawing.element.getBoundingClientRect().height
 }
-draw.viewbox(vb.x, vb.y, vb.width, vb.height);
+draw.viewbox(vb.x, vb.y, vb.width, vb.height).flip('y');
+draw.background = draw.group();
+draw.background.line(-1000, 0, 1000, 0).fill("none").stroke({color:"black",opacity: 1.0,width:1})
+  .attr("vector-effect", "non-scaling-stroke")
+  .attr("stroke-dasharray","5 5");
+draw.background.line(0, -1000, 0, 1000).fill("none").stroke({color:"black",opacity: 1.0,width:1})
+  .attr("vector-effect", "non-scaling-stroke")
+  .attr("stroke-dasharray","5 5");
 
 draw.screen=draw.group();
 draw.screen.sheet = [];
-draw.screen.sheet.push(draw.screen.group());
+//draw.screen.sheet.push(draw.screen.group());
 //draw.screen.sheet[0].rect(100,100).move(50,50).fill("none").stroke({color:'black',opacity: 1.0,width:1});
 //draw.screen.sheet[0].line(0,0,100,100).stroke({color:'black',opacity: 1.0,width:1});
 
@@ -247,10 +256,62 @@ control.func = {
   },
   import:{
     execute: function(e){
+      var self = this;
       var elem = document.getElementById("ImportFile");
-      elem.click();
+
+      function removeSvgTag(fileData){
+        return fileData.replace(/<svg.*>|<\/svg>/g,"");
+      }
+
+      function readFile(file){
+        return new Promise((resolve,reject)=>{
+          let filename = file.name;
+          let lastDotPosition = filename.lastIndexOf('.');
+          let bareFilename = filename.substr(0, lastDotPosition);
+          let fileExtension = filename.substr(lastDotPosition+1).toLowerCase();
+            
+          var reader = new FileReader();
+          reader.addEventListener("load",function(e){
+            let fileData = e.target.result;
+            let svgString;
+            switch (fileExtension) {
+              case 'dxf':
+                  svgString = dxftosvg(fileData);
+                  break;
+              case 'svg':
+                  svgString = removeSvgTag(fileData);
+                  break;
+              default:
+                  break;
+            }
+            addSvg(svgString);
+          },false);
+          reader.readAsText(file, 'UTF-8');
+        });//end of Promise
+      }//end of readFile
+      
+      function addSvg(svgString){
+        draw.screen.sheet.push(draw.screen.svg(svgString)
+              .stroke({color:'blue',opacity: 1.0,width:1})
+              .fill('none')
+              .attr("stroke-linecap", "round")
+              .attr("stroke-linejoin", "round"));
+      }
+      function change(e){
+        let filelist = e.target.files;
+        let promise = [];
+        console.log("fire")
+        for(let file of filelist){
+          promise.push(readFile(file))
+        }
+        Promise.all(promise).then(()=>console.log("import all files"));
+        elem.removeEventListener("change",change ,false);
+      }//end of change
+      
+      elem.addEventListener('change', change, false);
+      elem.click(console.log("wait me")); //fire click event
     }
-  }
+  }//end of execute
 }
 
 //各イベントリスナーの登録と削除のメソッドを設定
@@ -274,12 +335,10 @@ for(let any in control.func){
     return this;
   };
   control.func[any].fire = function(){
-    console.log("are you burning?")  
     var myEvent = document.createEvent("HTMLEvents");
     var name = any; 
     myEvent.initEvent(name);
     document.dispatchEvent(myEvent);
-    console.log("i am " + name)  
   }
 }
 
