@@ -1,0 +1,31 @@
+version: '2'
+services:
+  nginx:
+    image: nginx
+    restart: always
+    volumes:
+      - ./public:/usr/share/nginx/html
+      - ./conf.d:/etc/nginx/conf.d
+      - /var/log/jscad:/var/log/nginx
+    networks:
+      - neco_link
+      - default
+  node:
+    image: node
+    restart: always
+    volumes:
+      - ./src:/usr/src
+    working_dir: '/usr/src'
+    command: npm start
+    networks:
+      - default 
+#  mongo:
+#    image: mongo
+#    restart: always
+#    volumes:
+#      - /var/data/jscad_mongo/db:/data/db
+#    networks:
+#      - default 
+networks:
+  neco_link:
+    external: true
