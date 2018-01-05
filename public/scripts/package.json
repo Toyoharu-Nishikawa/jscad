@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dxftosvg": "^1.3.1"
+    "dxftosvg": "^1.3.2"
   }
 }

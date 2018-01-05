@@ -300,16 +300,16 @@ control.func = {
       function change(e){
         let filelist = e.target.files;
         let promise = [];
-        console.log("fire")
         for(let file of filelist){
           promise.push(readFile(file))
         }
-        Promise.all(promise).then(()=>console.log("import all files"));
+        Promise.all(promise).then(()=>{console.log("import all files")});
+        view.allCancel()
         elem.removeEventListener("change",change ,false);
       }//end of change
       
       elem.addEventListener('change', change, false);
-      elem.click(console.log("wait me")); //fire click event
+      elem.click(); //fire click event
     }
   }//end of execute
 }
@@ -337,6 +337,7 @@ for(let any in control.func){
   control.func[any].fire = function(){
     var myEvent = document.createEvent("HTMLEvents");
     var name = any; 
+    console.log("fire "+ name)
     myEvent.initEvent(name);
     document.dispatchEvent(myEvent);
   }
@@ -402,7 +403,10 @@ view.menuBar.eachTag = {
   set: function(){
     for(let any in this.elements){
       console.log("set function of " + any);  
-      this.elements[any].addEventListener('click',control.func[any].fire, false);
+      this.elements[any].addEventListener('click',(e)=>{
+        view.allCancel(); //cancel all select mode
+        control.func[any].fire(e)
+      }, false);
     }
   }
 }
