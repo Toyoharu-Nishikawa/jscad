@@ -303,7 +303,8 @@ control.func = {
         for(let file of filelist){
           promise.push(readFile(file))
         }
-        Promise.all(promise).then(()=>console.log("import all files"));
+        Promise.all(promise).then(()=>{console.log("import all files")});
+        view.allCancel()
         elem.removeEventListener("change",change ,false);
       }//end of change
       
