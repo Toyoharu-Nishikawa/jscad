@@ -311,6 +311,7 @@ control.func = {
       }//end of change
       
       elem.addEventListener('change', change, false);
+      elem.addEventListener('click', (e)=>{e.stopPropagation()}, false);
       elem.click(); //fire click event
     }//end of execute
   },//end of import
@@ -320,7 +321,7 @@ control.func = {
         var blob = new Blob([string], {type: 'text/plain; charset=utf-8'});
         saveAs(blob, filename);
       }
-      var svgString = Gaspath.svg.draw.screen.svg();
+      var svgString = draw.screen.svg();
       saveStringAsFile(svgString, 'SVG.svg');
     },//end of execute
   },//end of export
@@ -435,6 +436,7 @@ view.menuBar.eachTag = {
     for(let any in this.elements){
       console.log("set function of " + any);  
       this.elements[any].addEventListener('click',(e)=>{
+        e.stopPropagation();
         view.allCancel(); //cancel all select mode
         control.func[any].fire(e)
       }, false);
