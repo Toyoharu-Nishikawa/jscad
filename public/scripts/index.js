@@ -1,7 +1,7 @@
 'use strict'
 import dxftosvg from './node_modules/dxftosvg/index.js'
 
-var jscad = {view:null,draw:null,req:null,control:{}};
+var jscad = {view:null,draw:null,req:null,control:{},editor:{}};
 //jscad 名前空間開始
 {
 //view, req, control, drawオブジェクトを作成
@@ -9,6 +9,7 @@ let view = jscad.view;
 let draw = jscad.draw;
 let req = jscad.req;
 let control = jscad.control;
+let editor = jscad.editor;
 
 //オプション読み込み
 //control = {readOption: jscadReadOption()}
@@ -552,6 +553,18 @@ view.keydown = function(){
 //  }
 //};
 
+/********************************************************/
+/*                 editor                               */
+/********************************************************/
+
+editor = ace.edit('editor');
+//editor.setTheme("ace/theme/monokai");
+editor.setKeyboardHandler("ace/keyboard/vim");
+editor.getSession().setMode("ace/mode/javascript");
+/*editor.setOptions({
+  fontFamily: "tahoma",
+  fontSize: "14pt"
+});*/
 /*****************viewの設定を有効にする*****************/
 //menuBarの表示・非表示設定を行う
 view.menuBar.viewset();
