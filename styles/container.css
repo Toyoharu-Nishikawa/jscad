@@ -198,7 +198,7 @@ h1 {
 }
 /*scriptingの装飾*/
 .contents > div.maincontents > article.scripting{
-  background: #FFFFFF;
+/*  background: #FFFFFF;*/
   margin: 1px;
   padding: 0;
   border:1px solid #696969;
