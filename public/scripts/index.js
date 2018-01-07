@@ -1,7 +1,7 @@
 'use strict'
 import dxftosvg from './node_modules/dxftosvg/index.js'
 
-var jscad = {view:null,draw:null,req:null,control:{}};
+var jscad = {view:null,draw:null,req:null,control:{},editor:{}};
 //jscad 名前空間開始
 {
 //view, req, control, drawオブジェクトを作成
@@ -9,6 +9,7 @@ let view = jscad.view;
 let draw = jscad.draw;
 let req = jscad.req;
 let control = jscad.control;
+let editor = jscad.editor;
 
 //オプション読み込み
 //control = {readOption: jscadReadOption()}
@@ -197,8 +198,9 @@ draw.background.line(0, -1000, 0, 1000).fill("none").stroke({color:"black",opaci
   .attr("stroke-dasharray","5 5");
 
 draw.screen=draw.group();
+draw.screen.stroke({color:"blue",opacity: 1.0,width:1});
 draw.screen.sheet = [];
-//draw.screen.sheet.push(draw.screen.group());
+draw.screen.sheet.push(draw.screen.group());
 //draw.screen.sheet[0].rect(100,100).move(50,50).fill("none").stroke({color:'black',opacity: 1.0,width:1});
 //draw.screen.sheet[0].line(0,0,100,100).stroke({color:'black',opacity: 1.0,width:1});
 
@@ -291,7 +293,7 @@ control.func = {
       }//end of readFile
       
       function addSvg(svgString){
-        draw.screen.sheet.push(draw.screen.svg(svgString)
+        draw.screen.sheet.push(draw.screen.group().svg(svgString)
               .stroke({color:'blue',opacity: 1.0,width:1})
               .fill('none')
               .attr("stroke-linecap", "round")
@@ -309,10 +311,38 @@ control.func = {
       }//end of change
       
       elem.addEventListener('change', change, false);
+      elem.addEventListener('click', (e)=>{e.stopPropagation()}, false);
       elem.click(); //fire click event
-    }
-  }//end of execute
-}
+    }//end of execute
+  },//end of import
+  export: {
+    execute: function(){
+      function saveStringAsFile(string,filename){
+        var blob = new Blob([string], {type: 'text/plain; charset=utf-8'});
+        saveAs(blob, filename);
+      }
+      var svgString = draw.screen.svg();
+      saveStringAsFile(svgString, 'SVG.svg');
+    },//end of execute
+  },//end of export
+  run: {
+    execute: function (){
+      var code = editor.getValue();
+      //console.log(code); 
+      //var exec = new Function("elem",code);
+      //exec(draw);
+      eval(code);
+      /*draw.screen.sheet.push(draw.screen.group());
+      draw.screen.sheet.push(draw.screen.group());
+      draw.screen.sheet[0].line(0,0,100,100)
+        .stroke({color:'blue',opacity: 1.0,width:1})
+      draw.screen.sheet[1].line(0,0,-100,-100)
+      draw.screen.sheet[1].move(10,0)
+      console.log(draw.screen.svg())
+      */
+    },//end of execute
+  },//end of run
+};
 
 //各イベントリスナーの登録と削除のメソッドを設定
 for(let any in control.func){
@@ -399,11 +429,14 @@ view.menuBar.click ={
 view.menuBar.eachTag = {
   elements: {
     "import":document.getElementById("Import"),
+    "export":document.getElementById("Export"),
+    "run":document.getElementById("run"),
   },
   set: function(){
     for(let any in this.elements){
       console.log("set function of " + any);  
       this.elements[any].addEventListener('click',(e)=>{
+        e.stopPropagation();
         view.allCancel(); //cancel all select mode
         control.func[any].fire(e)
       }, false);
@@ -496,45 +529,52 @@ view.allCancel = function(){
 view.keydown = function(){
   return function(e){
     switch(e.keyCode){
-      //ESCを押したときの挙動
+      //keydown shift + Enter
+      case 13:
+        if(e.shiftKey){
+          console.log("shift+Enter")
+          control.func.run.fire();
+        }
+        break;
+      //keydown ESC
       case 27:
         console.log("ESC")
         view.allCancel();
         break;
       //Lを押したときの挙動
-      case 76:
-        view.logWidthHeight();
+      //case 76:
+      //  view.logWidthHeight();
       //spacを押したときの挙動
-      case 32:
-        view.setview()
-        console.log("forcibly resized")
-        break;
+      //case 32:
+      //  view.setview()
+      //  console.log("forcibly resized")
+      //  break;
       //ctr+nを押したときの挙動(New)
-      case 78:
-        var New = document.createEvent("HTMLEvents");
-        New.initEvent("new", true, false);
-        document.dispatchEvent(New);
-        break;
+      //case 78:
+      //  var New = document.createEvent("HTMLEvents");
+      //  New.initEvent("new", true, false);
+      //  document.dispatchEvent(New);
+      //  break;
       //ctr+oを押したときの挙動(Open)
-      case 79:
-        var open = document.createEvent("HTMLEvents");
-        open.initEvent("open", true, false);
-        document.dispatchEvent(open);
-        break;
+      //case 79:
+      //  var open = document.createEvent("HTMLEvents");
+      //  open.initEvent("open", true, false);
+      //  document.dispatchEvent(open);
+      //  break;
       //ctr+sを押したときの挙動(Save)
-      case 83:
+      //case 83:
 //        if(e.ctrKey){
-          var save = document.createEvent("HTMLEvents");
-          save.initEvent("save", true, false);
-          document.dispatchEvent(save);
-          return false;
+      //    var save = document.createEvent("HTMLEvents");
+      //    save.initEvent("save", true, false);
+      ///    document.dispatchEvent(save);
+      //    return false;
   //      }
-        break;
+       // break;
       //enterを押したときの挙動
-      case 13:
-        console.log("save has been removed")
-        control.func.save.remove();
-        break;
+      //case 13:
+      //  console.log("save has been removed")
+      //  control.func.save.remove();
+      //  break;
       default:
         break;
     }
@@ -552,6 +592,18 @@ view.keydown = function(){
 //  }
 //};
 
+/********************************************************/
+/*                 editor                               */
+/********************************************************/
+
+editor = ace.edit('editor');
+//editor.setTheme("ace/theme/monokai");
+editor.setKeyboardHandler("ace/keyboard/vim");
+editor.getSession().setMode("ace/mode/javascript");
+/*editor.setOptions({
+  fontFamily: "tahoma",
+  fontSize: "14pt"
+});*/
 /*****************viewの設定を有効にする*****************/
 //menuBarの表示・非表示設定を行う
 view.menuBar.viewset();
