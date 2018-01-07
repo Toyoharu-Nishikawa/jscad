@@ -198,8 +198,9 @@ draw.background.line(0, -1000, 0, 1000).fill("none").stroke({color:"black",opaci
   .attr("stroke-dasharray","5 5");
 
 draw.screen=draw.group();
+draw.screen.stroke({color:"blue",opacity: 1.0,width:1});
 draw.screen.sheet = [];
-//draw.screen.sheet.push(draw.screen.group());
+draw.screen.sheet.push(draw.screen.group());
 //draw.screen.sheet[0].rect(100,100).move(50,50).fill("none").stroke({color:'black',opacity: 1.0,width:1});
 //draw.screen.sheet[0].line(0,0,100,100).stroke({color:'black',opacity: 1.0,width:1});
 
@@ -292,7 +293,7 @@ control.func = {
       }//end of readFile
       
       function addSvg(svgString){
-        draw.screen.sheet.push(draw.screen.svg(svgString)
+        draw.screen.sheet.push(draw.screen.group().svg(svgString)
               .stroke({color:'blue',opacity: 1.0,width:1})
               .fill('none')
               .attr("stroke-linecap", "round")
@@ -311,9 +312,26 @@ control.func = {
       
       elem.addEventListener('change', change, false);
       elem.click(); //fire click event
-    }
-  }//end of execute
-}
+    }//end of execute
+  },//end of import
+  run: {
+    execute: function (){
+      var code = editor.getValue();
+      //console.log(code); 
+      //var exec = new Function("elem",code);
+      //exec(draw);
+      eval(code);
+      /*draw.screen.sheet.push(draw.screen.group());
+      draw.screen.sheet.push(draw.screen.group());
+      draw.screen.sheet[0].line(0,0,100,100)
+        .stroke({color:'blue',opacity: 1.0,width:1})
+      draw.screen.sheet[1].line(0,0,-100,-100)
+      draw.screen.sheet[1].move(10,0)
+      console.log(draw.screen.svg())
+      */
+    },
+  },
+};
 
 //各イベントリスナーの登録と削除のメソッドを設定
 for(let any in control.func){
@@ -400,6 +418,7 @@ view.menuBar.click ={
 view.menuBar.eachTag = {
   elements: {
     "import":document.getElementById("Import"),
+    "run":document.getElementById("run"),
   },
   set: function(){
     for(let any in this.elements){
@@ -497,45 +516,52 @@ view.allCancel = function(){
 view.keydown = function(){
   return function(e){
     switch(e.keyCode){
-      //ESCを押したときの挙動
+      //keydown shift + Enter
+      case 13:
+        if(e.shiftKey){
+          console.log("shift+Enter")
+          control.func.run.fire();
+        }
+        break;
+      //keydown ESC
       case 27:
         console.log("ESC")
         view.allCancel();
         break;
       //Lを押したときの挙動
-      case 76:
-        view.logWidthHeight();
+      //case 76:
+      //  view.logWidthHeight();
       //spacを押したときの挙動
-      case 32:
-        view.setview()
-        console.log("forcibly resized")
-        break;
+      //case 32:
+      //  view.setview()
+      //  console.log("forcibly resized")
+      //  break;
       //ctr+nを押したときの挙動(New)
-      case 78:
-        var New = document.createEvent("HTMLEvents");
-        New.initEvent("new", true, false);
-        document.dispatchEvent(New);
-        break;
+      //case 78:
+      //  var New = document.createEvent("HTMLEvents");
+      //  New.initEvent("new", true, false);
+      //  document.dispatchEvent(New);
+      //  break;
       //ctr+oを押したときの挙動(Open)
-      case 79:
-        var open = document.createEvent("HTMLEvents");
-        open.initEvent("open", true, false);
-        document.dispatchEvent(open);
-        break;
+      //case 79:
+      //  var open = document.createEvent("HTMLEvents");
+      //  open.initEvent("open", true, false);
+      //  document.dispatchEvent(open);
+      //  break;
       //ctr+sを押したときの挙動(Save)
-      case 83:
+      //case 83:
 //        if(e.ctrKey){
-          var save = document.createEvent("HTMLEvents");
-          save.initEvent("save", true, false);
-          document.dispatchEvent(save);
-          return false;
+      //    var save = document.createEvent("HTMLEvents");
+      //    save.initEvent("save", true, false);
+      ///    document.dispatchEvent(save);
+      //    return false;
   //      }
-        break;
+       // break;
       //enterを押したときの挙動
-      case 13:
-        console.log("save has been removed")
-        control.func.save.remove();
-        break;
+      //case 13:
+      //  console.log("save has been removed")
+      //  control.func.save.remove();
+      //  break;
       default:
         break;
     }
