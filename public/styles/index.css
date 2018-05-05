@@ -1,0 +1,254 @@
+* {
+  -webkit-user-select: none;
+}
+
+circle {
+  vector-effect: non-scaling-stroke;
+}
+path {
+  vector-effect: non-scaling-stroke;
+}
+line {
+  vector-effect: non-scaling-stroke;
+}
+
+body{
+  margin:0;
+  border: 2px solid #708090;
+  overflow-x:hidden;
+  overflow-y:hidden;
+  display: grid;
+  height: 100vh;
+  width: 100vw;
+  grid-template-columns: 250px 1fr; 
+  grid-template-rows: 25px 30px 27px 350px 1fr 25px; 
+  grid-template-areas:
+    "header    header   "
+    "mainmenu  mainmenu "
+    "toolbar   toolbar  "
+    "drawmenu  main     "
+    "property  main     "
+    "footer    footer   ";
+}
+
+header {
+  grid-area: header;
+  margin: 0;
+  padding:0;
+  background: #d9dfe1;
+}
+/*h1の装飾*/
+header > h1 {
+  color:#3e5358;
+  padding: 0 8px;
+  margin: 0;
+  font-size: 100%;
+}
+
+nav.mainMenu {
+  grid-area: mainmenu;
+  margin: 0;
+  padding:0;
+}
+
+/*menuの装飾*/
+nav.mainMenu >ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  border-bottom: 5px solid #1495b5;
+  padding: 0;
+  background: #d9dfe1;
+  position:relative;
+}
+nav.mainMenu  > ul> li{
+  margin: 0 8px 0 0;
+  border-radius: 6px 6px 0px 0px;
+  background: #d9dfe1;
+}
+nav.mainMenu  > ul > li > a{
+  display: block;
+  padding: 1px 10px;
+  text-decoration: none;
+  color: #3e5358
+}
+nav.mainMenu  > ul> li:hover{
+  background: #1495b5;
+}
+nav.mainMenu  > ul  > li > a:hover{
+  color: #ffffff;
+}
+nav.mainMenu > ul > li > ul{
+  display:none;
+  position:absolute;
+  top: 25px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #d9dfe1;
+  /*border: 1px solid #d9dfff;*/
+  border: 1px solid #1495b5;
+  border-radius: 0px 0px 5px 5px;
+  z-index: 10;
+}
+nav.mainMenu > ul > li > ul > li{
+  margin: 0;
+  padding: 0;
+}
+nav.mainMenu > ul > li > ul > li > a{
+  display: block;
+  margin:0;
+  padding: 0px 10px;
+  font-size: 90%;
+}
+nav.mainMenu > ul > li > ul > li:hover{
+  background: #1495b5;
+}
+nav.mainMenu > ul > li > ul > li > a:hover{
+  color: #ffffff;
+}
+
+/*ToolBarの装飾*/
+nav.toolBar {
+  grid-area: toolbar;
+}
+nav.toolBar > ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  background: #F5F5F5;
+  border-bottom: 1px solid #696969;
+}
+nav.toolBar > ul > li {
+  flex:0 0 auto;
+  padding: 0px 10px;
+  border: 1px solid #F5F5F5;
+}
+nav.toolBar > ul > li:hover {
+  background: #F0FFF0;
+  border: 1px solid #7FFFD4;
+  border-radius: 6px 6px 6px 6px;
+}
+
+/*drawmenu*/
+aside.drawmenu{
+  grid-area: drawmenu;
+  background: #F5F5F5;
+}
+aside.drawmenu > article{
+  margin:2px;
+  background: #FFFFFF;
+  border:1px solid #696969;
+}
+aside.drawmenu > article > h2{
+  margin:0;
+  padding:0 10px;
+  font-size:100%;
+  background: #d9dfe1;
+  border:1px solid #696969;
+}
+aside.drawmenu > article > section > h3{
+  margin:0;
+  padding: 2px 10px;
+  font-size:90%;
+  display: block;
+  border: 1px solid #696969;
+  background:#FFFFFF;
+}
+aside.drawmenu > article > section > h3:hover {
+  background: #F0FFF0;
+  border: 1px solid #7FFFD4;
+  border-radius: 6px 6px 6px 6px;
+}
+
+aside.drawmenu > article > section > ul{
+  display: none;
+  list-style: none;
+  margin:0;
+  padding:0;
+}
+aside.drawmenu > article > section:nth-child(2) > ul{
+  display:block;
+}
+
+aside.drawmenu  > article> section > ul > li{
+  margin:0;
+  padding: 0 10px;
+  display: block;
+  border: 1px solid #FFFFFF;
+}
+aside.drawmenu  > article> section > ul > li:hover{
+  background: #F0FFF0;
+  border: 1px solid #7FFFD4;
+  border-radius: 6px 6px 6px 6px;
+}
+
+/*propertyの装飾*/
+aside.property {
+  grid-area: property;
+  background: #F5F5F5;
+}
+aside.property > article{
+  margin:2px;
+  padding:0;
+  background: #FFFFFF;
+  border:1px solid #696969;
+}
+aside.property > article > h2{
+  margin:0;
+  padding:0 10px;
+  font-size:100%;
+  background: #d9dfe1;
+  border:1px solid #696969;
+}
+aside.property  > article> ul{
+  margin:0;
+  padding:0 10px;
+  list-style:none;
+}
+
+main {
+  grid-area: main;
+  display:grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 500px 1fr ; 
+  grid-template-areas:
+    "drawing"
+    "editor";
+}
+
+/*drawingの装飾*/
+#drawing{
+  margin:0;
+  padding: 0;
+  grid-area: drawing;
+}
+/*scriptingの装飾*/
+#editor{
+  margin: 1px;
+  padding: 0;
+  border:1px solid #696969;
+  grid-area: editor;
+}
+
+/*footerの装飾*/
+footer{
+  grid-area: footer;
+  display: flex;
+  background: #d9dfe1;
+  margin:0;
+  padding:0;
+  border-top: 1px solid #708090;
+}
+footer > small{
+  flex: 0 0 85%;
+  text-align: center;
+  border-right: 1px solid #708090;
+}
+footer > section{
+  flex: 1 0 auto;
+  text-align: center;
+}
+
+
