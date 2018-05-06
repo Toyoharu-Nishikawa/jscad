@@ -242,13 +242,14 @@ footer{
   border-top: 1px solid #708090;
 }
 footer > small{
-  flex: 0 0 85%;
+  flex: 0 0 80%;
   text-align: center;
   border-right: 1px solid #708090;
 }
 footer > section{
   flex: 1 0 auto;
-  text-align: center;
 }
-
+footer > section > small {
+  padding: 0 0 0 10px;
+}
 

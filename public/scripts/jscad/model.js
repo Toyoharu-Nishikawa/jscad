@@ -14,13 +14,14 @@ export const model = {
   editor:ace.edit('editor'),
   document:{
     click:{
-      execute:function(){
-        model.document.allCancel.execute()
+      execute:function(e){
+        model.document.allCancel.execute(e)
       },
     },
     allCancel:{
-      execute:function(){
-        if(view.tempElement)view.tempElement.notSelected();
+      execute:function(e){
+        if(view.tempElement)view.tempElement.notSelected()
+        if(!e.ctrlKey)model.drawMenuFunc.unselectAll()
         view.tempElement = null;
         model.mainMenu.hover.flag = false;
       },
@@ -107,10 +108,12 @@ export const model = {
   drawMenuFunc: {
     draws:[],
     selected:[],
+    resizeFig:[],
+    resizeFigClone:[],
     temp: null,
     drawMode: null,
     drawModeFlag: false,
-    drawFuncMap: null,
+    resizeMode: false,
     cancelKey: function(e){
       console.log("cancelKey")
       if(e.keyCode ==27)model.drawMenuFunc.cancel()
@@ -135,7 +138,7 @@ export const model = {
       }
       console.log("drawOff")
     },
-    continuous: function(cllbackDraw){
+    continuous: function(callback){
       const fig = model.drawMenuFunc.temp
       fig.on("drawstart",(e)=>{
         console.log("drawstart",fig.type)
@@ -143,9 +146,7 @@ export const model = {
       })
       fig.on("drawstop",(e)=>{
         console.log("drawstop",fig.type)
-        const func = model.drawMenuFunc.drawFuncMap
-          .get(model.drawMenuFunc.drawMode)
-        func && func()
+        callback && callback()
         if(model.drawMenuFunc.drawModeFlag){
           model.drawMenuFunc.draws.push(fig)
           model.drawMenuFunc.addevent(fig)
@@ -158,30 +159,43 @@ export const model = {
       fig.clone()
         .stroke({width:5.0, opacity:0.5,color:"yellow"})
         .click(function(e){
-          if(!e.ctrlKey){
-            model.drawMenuFunc.selected.forEach(selected=>{
-              console.log("not keydown",e.ctrlKey)
-              selected.attr("stroke",null)
-            })
-            model.drawMenuFunc.selected = []
+          e.stopPropagation()
+          if(model.drawMenuFunc.resizeMode){
+            fig.selectize({deepSelect:true})
+              .resize()
+            model.drawMenuFunc.resizeFig.push(fig)
+            model.drawMenuFunc.resizeFigClone.push(this)
           }
-          fig.stroke({color:"red"})
-          model.drawMenuFunc.selected.push(fig,this)
+          else{
+            if(!e.ctrlKey){
+             model.drawMenuFunc.unselectAll(e)
+            }
+            fig.stroke({color:"red"})
+            model.drawMenuFunc.selected.push(fig)
+            model.drawMenuFunc.selectedClone.push(this)
+          }
         })
+    },
+    unselectAll:function(){
+      model.drawMenuFunc.selected.forEach(selected=>{
+        selected.attr("stroke",null)
+      })
+      model.drawMenuFunc.selected = []
+      model.drawMenuFunc.selectedClone = []
     },
     line:{
       execute: function(){
         const fig = model.draw.screen.sheet[0].line().draw()
         model.drawMenuFunc.temp =fig 
         model.drawMenuFunc.drawMode ="line" 
-        model.drawMenuFunc.continuous("line")
+        model.drawMenuFunc.continuous(model.drawMenuFunc.line.execute)
       },
     },
     polyline:{
       execute: function(){
         const fig = model.draw.screen.sheet[0].polyline().draw()
         model.drawMenuFunc.temp =fig 
-        model.drawMenuFunc.continuous("polyline")
+        model.drawMenuFunc.continuous(model.drawMenuFunc.polyline.execute)
       },
     },
     circle: {
@@ -189,7 +203,7 @@ export const model = {
         const fig = model.draw.screen.sheet[0].circle().draw().fill("none")
         model.drawMenuFunc.temp =fig 
         model.drawMenuFunc.drawMode ="circle" 
-        model.drawMenuFunc.continuous("circle")
+        model.drawMenuFunc.continuous(model.drawMenuFunc.circle.execute)
       },
     },
     rectangle: {
@@ -197,19 +211,14 @@ export const model = {
         const fig = model.draw.screen.sheet[0].rect().draw().fill("none")
         model.drawMenuFunc.temp =fig 
         model.drawMenuFunc.drawMode ="rectangle" 
-        model.drawMenuFunc.continuous("rectangle")
+        model.drawMenuFunc.continuous(model.drawMenuFunc.rectangle.execute)
       },
     },
-    setDrawFunc:{
-      execute: function(){
-        model.drawMenuFunc.drawFuncMap = new Map([
-          ["line", model.drawMenuFunc.line.execute],
-          ["polyline", model.drawMenuFunc.polyline.execute],
-          ["circle", model.drawMenuFunc.circle.execute],
-          ["rectangle", model.drawMenuFunc.rectangle.execute],
-        ])
+    resize: {
+      execute:function(){
+        model.drawMenuFunc.resizeMode=true
       },
-    },
+    }
   },
   screenFunc:{
     setScreen: {
@@ -239,9 +248,19 @@ export const model = {
           .attr("vector-effect", "non-scaling-stroke")
           .attr("stroke-dasharray","5 5");
         draw.screen=draw.group();
-        draw.screen.stroke({color:"blue",opacity: 1.0,width:1});
+        draw.screen.stroke({color:"blue",opacity: 1.0,width:1})
         draw.screen.sheet = [];
         draw.screen.sheet.push(draw.screen.group());
+
+        draw.mousemove(function(e){
+          const point = this.point()
+          const coord = {
+            x: point.x+e.clientX/draw.zoom(),
+            y: point.y-e.clientY/draw.zoom()
+          }
+          view.elements.coordinate.textContent=
+           ` x: ${(coord.x*100+0.5|0)/100}, y:${(coord.y*100+0.5|0)/100}`
+        })
       }
     },
     resize: {
@@ -260,6 +279,10 @@ export const model = {
         model.editor.getSession().setMode("ace/mode/javascript");
       },
     },
+    resize: {
+      execute:function(){
+      },
+    },
   },//end of editorFunc
   keyFunc:{
     keyDown:{
@@ -276,12 +299,24 @@ export const model = {
           //keydown ESC
           case 27:{
             console.log("ESC")
-            model.document.allCancel.execute();
+            model.document.allCancel.execute(e);
             if(model.drawMenuFunc.drawModeFlag){
               model.drawMenuFunc.cancel()
             }
             else{
               model.drawMenuFunc.drawOff()
+            }
+            model.drawMenuFunc.unselectAll(e)
+            if(model.drawMenuFunc.resizeMode){
+              model.drawMenuFunc.resizeFig.forEach((resizeFig,i)=>{
+                resizeFig.selectize(false,{deepSelect:true}).resize("stop")
+                model.drawMenuFunc.resizeFigClone[i].attr(
+                  resizeFig.attr() 
+                )
+              })
+              model.drawMenuFunc.resizeFig=[]
+              model.drawMenuFunc.resizeFigClone=[]
+              model.drawMenuFunc.resizeMode=false
             }
             break;
           }
@@ -289,6 +324,9 @@ export const model = {
           case 46:{
             model.drawMenuFunc.selected.forEach(selected=>{
               selected.remove()
+            })
+            model.drawMenuFunc.selectedClone.forEach(selectedClone=>{
+              selectedClone.remove()
             })
           }   
           default:

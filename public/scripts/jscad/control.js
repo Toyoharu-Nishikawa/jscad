@@ -173,14 +173,16 @@ export const control = {
         view.elements.rectangle.onclick = this.execute
       },
     },
-    setDrawFunc:{
+    resize: {
       execute:function(){
-          model.drawMenuFunc.setDrawFunc.execute()
+        model.drawMenuFunc.cancel()
+        model.drawMenuFunc.drawOff()
+        model.drawMenuFunc.resize.execute()
       },
       add:function(){
-        this.execute()
+        view.elements.resize.onclick=this.execute
       }
-    }
+    },
   },//end of drawMenuFunc
   screenFunc:{
     setScreen:{
@@ -207,6 +209,14 @@ export const control = {
       },
       add: function(){
         this.execute()
+      },
+    },
+    resize: {
+      execute:function(){
+        model.editorFunc.resize.execute()
+      },
+      add: function(){
+        window.addEventListener("resize",this.execute,false);
       },
     },
   },
@@ -236,42 +246,3 @@ export const control = {
 }
 
 
-//keyを押したときの挙動を設定
-/*
-//読み込みオプションの挙動を設定
-//control.initRead = function(){
-//  if(control.readOption.inifile){
-//    console.log("inifile is " + control.readOption.inifile)
-//    control.reqJsonObj = JSON.stringify({name:control.readOption.inifile});
-//    var open = document.createEvent("HTMLEvents");
-//    open.initEvent("open", true, false);
-//    document.dispatchEvent(open);
-//  }
-//};
-
-*/
-
-/*****************viewの設定を有効にする*****************/
-//menuBarの表示・非表示設定を行う
-//view.menuBar.viewset();
-//menubarをクリックしたときの挙動をイベントリスナーに登録
-//view.menuBar.click.add();
-//menubarにホバーしたときの挙動をイベントリスナーに登録
-//view.menuBar.hover.add();
-//set each tag function on click
-//view.menuBar.eachTag.set();
-//drawmenurの表示・非表示設定を行う
-//view.drawmenu.viewset();
-//drawmenuをクリックしたときの挙動をイベントリスナーに登録
-//view.drawmenu.click.add();
-//menuBar以外を選択するとmenuBarの選択が解除される。
-//document.addEventListener("click",function(e){view.allCancel()},false);
-
-/************各modeイベントの挙動をイベントリスナーに登録************/
-//for(let any in control.func)if(control.func[any].available)control.func[any].add();
-
-/************keyを押したときの挙動をイベントリスナーに登録***********/
-//document.addEventListener("keydown", view.keydown(), false)
-
-/************読み込みオプションを実行する***************************/
-//control.initRead();
