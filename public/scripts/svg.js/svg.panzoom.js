@@ -99,7 +99,7 @@ SVG.extend(SVG.Doc, SVG.Nested, {
 
     var panStart = function(ev) {
       ev.preventDefault()
-
+      if(ev.buttons==4){
       this.off('mousedown', panStart)
 
       lastTouches = normalizeEvent(ev)
@@ -112,6 +112,7 @@ SVG.extend(SVG.Doc, SVG.Nested, {
 
       SVG.on(document, 'mousemove', panning, this, {passive:false})
       SVG.on(document, 'mouseup', panStop, this, {passive:false})
+      }
     }
 
     var panStop = function(ev) {
