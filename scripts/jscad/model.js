@@ -10,7 +10,18 @@ import dxftosvg from '../dxftosvg/index.js'
 
 
 export const model = {
-  draw: SVG('drawing').panZoom({zoomFactor:1.1}),
+  sketch: {
+    draw: SVG('drawing').panZoom({zoomFactor:1.1}),
+    elements:[],
+    selected:[],
+    selectedClone:[],
+    resizeFig:[],
+    resizeFigClone:[],
+    temp: null,
+    drawMode: null,
+    drawModeFlag: false,
+    resizeMode: false,
+  },
   editor:ace.edit('editor'),
   document:{
     click:{
@@ -50,7 +61,7 @@ export const model = {
     new:{
       execute:function(){
         console.log("new file");
-        model.draw.screen.svg("");
+        model.sketch.draw.screen.svg("");
       },
     },
     import:{
@@ -67,12 +78,12 @@ export const model = {
         return fileData.replace(/<svg.*>|<\/svg>/g,"");
       },//end of removeSvgTag
       addSvg: function (svgString){
-        const svg =  model.draw.screen.group().svg(svgString)
+        const svg =  model.sketch.draw.screen.group().svg(svgString)
           .stroke({color:'blue',opacity: 1.0,width:1})
           .fill('none')
           .attr("stroke-linecap", "round")
           .attr("stroke-linejoin", "round")
-        model.draw.screen.sheet.push(svg)
+        model.sketch.draw.screen.sheet.push(svg)
       },//end of addSvg
       convertToSvg: function(file){
         switch (file.ext) {
@@ -91,6 +102,14 @@ export const model = {
       },//end of convertToSvg
     },//end of import
   },//end of mainMenuFunc
+  toolBarFunc:{
+    run:{
+      execute:function(){
+        const code = model.editor.getValue();
+        new Function(code)()
+      }
+    }
+  },
   drawMenu:{
     click:{
       execute:function(e){
@@ -106,32 +125,24 @@ export const model = {
     },
   },
   drawMenuFunc: {
-    draws:[],
-    selected:[],
-    resizeFig:[],
-    resizeFigClone:[],
-    temp: null,
-    drawMode: null,
-    drawModeFlag: false,
-    resizeMode: false,
     cancelKey: function(e){
       console.log("cancelKey")
       if(e.keyCode ==27)model.drawMenuFunc.cancel()
     },
     cancel: function(){
-      if(model.drawMenuFunc.temp){
-        if(model.drawMenuFunc.drawModeFlag){
-          model.drawMenuFunc.drawModeFlag = false
-          model.drawMenuFunc.temp.draw("cancel")
+      if(model.sketch.temp){
+        if(model.sketch.drawModeFlag){
+          model.sketch.drawModeFlag = false
+          model.sketch.temp.draw("cancel")
         }
       }
     },
     drawOff: function(){
-      const fig = model.drawMenuFunc.temp
-      model.drawMenuFunc.drawMode=null
-      model.drawMenuFunc.temp = null
+      const fig = model.sketch.temp
+      model.sketch.drawMode=null
+      model.sketch.temp = null
       SVG.off(window,"mousemove.draw")
-      model.draw.off("click.draw")
+      model.sketch.draw.off("click.draw")
       if(fig){
         fig.forget("_paintHandler")
         fig.draw = ()=>{}
@@ -139,20 +150,20 @@ export const model = {
       console.log("drawOff")
     },
     continuous: function(callback){
-      const fig = model.drawMenuFunc.temp
+      const fig = model.sketch.temp
       fig.on("drawstart",(e)=>{
         console.log("drawstart",fig.type)
-        model.drawMenuFunc.drawModeFlag = true
+        model.sketch.drawModeFlag = true
       })
       fig.on("drawstop",(e)=>{
         console.log("drawstop",fig.type)
         callback && callback()
-        if(model.drawMenuFunc.drawModeFlag){
-          model.drawMenuFunc.draws.push(fig)
+        if(model.sketch.drawModeFlag){
+          model.sketch.elements.push(fig)
           model.drawMenuFunc.addevent(fig)
         }
-        model.drawMenuFunc.drawModeFlag = false
-        console.log("callback",model.drawMenuFunc.drawMode)
+        model.sketch.drawModeFlag = false
+        console.log("callback",model.sketch.drawMode)
       })
     },
     addevent:function(fig){
@@ -160,63 +171,63 @@ export const model = {
         .stroke({width:5.0, opacity:0.5,color:"yellow"})
         .click(function(e){
           e.stopPropagation()
-          if(model.drawMenuFunc.resizeMode){
+          if(model.sketch.resizeMode){
             fig.selectize({deepSelect:true})
               .resize()
-            model.drawMenuFunc.resizeFig.push(fig)
-            model.drawMenuFunc.resizeFigClone.push(this)
+            model.sketch.resizeFig.push(fig)
+            model.sketch.resizeFigClone.push(this)
           }
           else{
             if(!e.ctrlKey){
              model.drawMenuFunc.unselectAll(e)
             }
             fig.stroke({color:"red"})
-            model.drawMenuFunc.selected.push(fig)
-            model.drawMenuFunc.selectedClone.push(this)
+            model.sketch.selected.push(fig)
+            model.sketch.selectedClone.push(this)
           }
         })
     },
     unselectAll:function(){
-      model.drawMenuFunc.selected.forEach(selected=>{
+      model.sketch.selected.forEach(selected=>{
         selected.attr("stroke",null)
       })
-      model.drawMenuFunc.selected = []
-      model.drawMenuFunc.selectedClone = []
+      model.sketch.selected = []
+      model.sketch.selectedClone = []
     },
     line:{
       execute: function(){
-        const fig = model.draw.screen.sheet[0].line().draw()
-        model.drawMenuFunc.temp =fig 
-        model.drawMenuFunc.drawMode ="line" 
+        const fig = model.sketch.draw.screen.sheet[0].line().draw()
+        model.sketch.temp =fig 
+        model.sketch.drawMode ="line" 
         model.drawMenuFunc.continuous(model.drawMenuFunc.line.execute)
       },
     },
     polyline:{
       execute: function(){
-        const fig = model.draw.screen.sheet[0].polyline().draw()
-        model.drawMenuFunc.temp =fig 
+        const fig = model.sketch.draw.screen.sheet[0].polyline().draw()
+        model.sketch.temp =fig 
         model.drawMenuFunc.continuous(model.drawMenuFunc.polyline.execute)
       },
     },
     circle: {
       execute: function(){
-        const fig = model.draw.screen.sheet[0].circle().draw().fill("none")
-        model.drawMenuFunc.temp =fig 
-        model.drawMenuFunc.drawMode ="circle" 
+        const fig = model.sketch.draw.screen.sheet[0].circle().draw().fill("none")
+        model.sketch.temp =fig 
+        model.sketch.drawMode ="circle" 
         model.drawMenuFunc.continuous(model.drawMenuFunc.circle.execute)
       },
     },
     rectangle: {
       execute: function(){
-        const fig = model.draw.screen.sheet[0].rect().draw().fill("none")
-        model.drawMenuFunc.temp =fig 
-        model.drawMenuFunc.drawMode ="rectangle" 
+        const fig = model.sketch.draw.screen.sheet[0].rect().draw().fill("none")
+        model.sketch.temp =fig 
+        model.sketch.drawMode ="rectangle" 
         model.drawMenuFunc.continuous(model.drawMenuFunc.rectangle.execute)
       },
     },
     resize: {
       execute:function(){
-        model.drawMenuFunc.resizeMode=true
+        model.sketch.resizeMode=true
       },
     }
   },
@@ -225,7 +236,7 @@ export const model = {
       execute:function(){
         const width =view.elements.drawing.getBoundingClientRect().width 
         const height = view.elements.drawing.getBoundingClientRect().height
-        const draw = model.draw
+        const draw = model.sketch.draw
         draw.width(width);
         draw.height(height);
         draw.attr('preserveAspectRatio', 'xMinYMin slice');
@@ -261,22 +272,59 @@ export const model = {
           view.elements.coordinate.textContent=
            ` x: ${(coord.x*100+0.5|0)/100}, y:${(coord.y*100+0.5|0)/100}`
         })
+        draw.click(function(e){
+          const point = this.point(e.screenX, e.screenY)
+          console.log(point,e.screenX, e.screenY)
+        })
       }
     },
     resize: {
       execute: function(){
-        model.draw
-          .width(view.elements.drawing.getBoundingClientRect().width);
-        model.draw
+        const width = view.elements.body.getBoundingClientRect().width
+          - view.elements.aside.getBoundingClientRect().width
+        model.sketch.draw.width(width);
+        model.sketch.draw
           .height(view.elements.drawing.getBoundingClientRect().height);
       },
     }, 
   },//end of screenFunc
+  slidebar:{
+    slide:{
+      originY:null,
+      drawHeight:null,
+      mouseDown: function(e){
+        this.originY =  e.clientY
+        this.drawHeight = view.elements.drawing.clientHeight
+        view.elements.main.onmousemove = this.mouseMove
+      },
+      mouseUp: function(e){
+        this.originY =  null
+        view.elements.main.onmousemove = null 
+      },
+      mouseMove: function(e){
+        const currentY =  e.clientY
+        const originY = model.slidebar.slide.originY
+        const drawHeight = model.slidebar.slide.drawHeight
+        const deltaY = currentY - originY
+        const newHeight =  drawHeight + deltaY
+        const text = `${newHeight}px`
+        view.elements.drawing.style.height = text
+        model.screenFunc.resize.execute()
+        model.editor.resize()
+       // window.dispatchEvent(new Event('resize'))
+      },
+    }
+  },
   editorFunc:{
     setEditor:{
       execute: function(){
         model.editor.setKeyboardHandler("ace/keyboard/vim");
         model.editor.getSession().setMode("ace/mode/javascript");
+        model.editor.on("blur", (e, editor)=> {
+          if(document.activeElement != editor.textInput.getElement()){
+            editor.selection.clearSelection(); 
+          }
+        })
       },
     },
     resize: {
@@ -292,7 +340,7 @@ export const model = {
           case 13:{
             if(e.shiftKey){
               console.log("shift+Enter")
-              control.func.run.fire();
+              model.toolBarFunc.run.execute()
             }
             break;
           }
@@ -300,32 +348,35 @@ export const model = {
           case 27:{
             console.log("ESC")
             model.document.allCancel.execute(e);
-            if(model.drawMenuFunc.drawModeFlag){
+            if(document.activeElement != model.editor.textInput.getElement()){
+              model.editor.selection.clearSelection(); 
+            }
+            if(model.sketch.drawModeFlag){
               model.drawMenuFunc.cancel()
             }
             else{
               model.drawMenuFunc.drawOff()
             }
             model.drawMenuFunc.unselectAll(e)
-            if(model.drawMenuFunc.resizeMode){
-              model.drawMenuFunc.resizeFig.forEach((resizeFig,i)=>{
+            if(model.sketch.resizeMode){
+              model.sketch.resizeFig.forEach((resizeFig,i)=>{
                 resizeFig.selectize(false,{deepSelect:true}).resize("stop")
-                model.drawMenuFunc.resizeFigClone[i].attr(
+                model.sketch.resizeFigClone[i].attr(
                   resizeFig.attr() 
                 )
               })
-              model.drawMenuFunc.resizeFig=[]
-              model.drawMenuFunc.resizeFigClone=[]
-              model.drawMenuFunc.resizeMode=false
+              model.sketch.resizeFig=[]
+              model.sketch.resizeFigClone=[]
+              model.sketch.resizeMode=false
             }
             break;
           }
           //keydown Del
           case 46:{
-            model.drawMenuFunc.selected.forEach(selected=>{
+            model.sketch.selected.forEach(selected=>{
               selected.remove()
             })
-            model.drawMenuFunc.selectedClone.forEach(selectedClone=>{
+            model.sketch.selectedClone.forEach(selectedClone=>{
               selectedClone.remove()
             })
           }   
