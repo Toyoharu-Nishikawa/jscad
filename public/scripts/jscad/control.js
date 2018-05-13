@@ -103,10 +103,11 @@ export const control = {
   toolBarFunc:{
     run: {
       execute: function (){
-        const code = editor.getValue();
-        new Function(code)()
+        model.toolBarFunc.run.execute()
       },//end of execute
-      add: function(){},
+      add: function(){
+        view.elements.run.onclick = this.execute
+      },
     },//end of run
   },
   drawMenu:{
@@ -202,6 +203,20 @@ export const control = {
       },
     },
   },
+  slidebar: {
+    slide:{
+      mouseDown:function(e){
+        model.slidebar.slide.mouseDown(e)
+      },
+      mouseUp:function(e){
+        model.slidebar.slide.mouseUp(e)
+      },
+      add: function(){
+        view.elements.slidebar.onmousedown=this.mouseDown
+        view.elements.slidebar.onmouseup=this.mouseUp
+      },
+    },
+  },
   editorFunc:{
     setEditor:{
       execute: function(){
@@ -235,13 +250,16 @@ export const control = {
     const controls = [
       this.document, this.mainMenu, this.mainMenuFunc,
       this.toolBarFunc, this.drawMenu,this.drawMenuFunc,
-      this.screenFunc, this.editorFunc, this.keyFunc,
+      this.screenFunc, this.slidebar,this.editorFunc, 
+      this.keyFunc,
     ] 
     controls.forEach(control =>{
       for(let any in control){
         control[any].add()
       }
     })
+    //add draw to window property for dyamic scripting
+    window.sketch = model.sketch
   },
 }
 

@@ -210,26 +210,45 @@ aside.property  > article> ul{
 
 main {
   grid-area: main;
+  display:flex;
+  flex-direction:column;
+  /*
   display:grid;
   grid-template-columns: 1fr; 
-  grid-template-rows: 500px 1fr ; 
+  grid-template-rows: 500px 7px 1fr ; 
   grid-template-areas:
     "drawing"
+    "slidebar"
     "editor";
+    */
 }
 
 /*drawingの装飾*/
 #drawing{
   margin:0;
   padding: 0;
-  grid-area: drawing;
+  height:500px;
+/*  grid-area: drawing;*/
 }
+/*slidebar*/
+#slidebar {
+  margin:0;
+  padding:0;
+  background:#F5F5F5;
+  /*grid-area: slidebar;*/
+  height:7px;
+}
+#slidebar:hover {
+  cursor:row-resize;
+}
+
 /*scriptingの装飾*/
 #editor{
   margin: 1px;
   padding: 0;
   border:1px solid #696969;
-  grid-area: editor;
+  flex:1;
+/*  grid-area: editor;:*/
 }
 
 /*footerの装飾*/
