@@ -106,7 +106,7 @@ export const control = {
         model.toolBarFunc.run.execute()
       },//end of execute
       add: function(){
-        view.elements.run.onlick = this.execute
+        view.elements.run.onclick = this.execute
       },
     },//end of run
   },
