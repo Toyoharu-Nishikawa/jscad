@@ -1,4 +1,5 @@
 import {view} from "./view.js"
+import {sketch} from "./sketch.js"
 import {importFiles} from "./FileReader.js"
 import dxftosvg from '../dxftosvg/index.js'
 
@@ -10,18 +11,7 @@ import dxftosvg from '../dxftosvg/index.js'
 
 
 export const model = {
-  sketch: {
-    draw: SVG('drawing').panZoom({zoomFactor:1.1}),
-    elements:[],
-    selected:[],
-    selectedClone:[],
-    resizeFig:[],
-    resizeFigClone:[],
-    temp: null,
-    drawMode: null,
-    drawModeFlag: false,
-    resizeMode: false,
-  },
+  sketch: sketch,
   editor:ace.edit('editor'),
   document:{
     click:{
@@ -32,7 +22,7 @@ export const model = {
     allCancel:{
       execute:function(e){
         if(view.tempElement)view.tempElement.notSelected()
-        if(!e.ctrlKey)model.drawMenuFunc.unselectAll()
+        if(!e.ctrlKey)sketch.unselectAll()
         view.tempElement = null;
         model.mainMenu.hover.flag = false;
       },
@@ -61,7 +51,7 @@ export const model = {
     new:{
       execute:function(){
         console.log("new file");
-        model.sketch.draw.screen.svg("");
+        sketch.draw.screen.svg("");
       },
     },
     import:{
@@ -78,12 +68,12 @@ export const model = {
         return fileData.replace(/<svg.*>|<\/svg>/g,"");
       },//end of removeSvgTag
       addSvg: function (svgString){
-        const svg =  model.sketch.draw.screen.group().svg(svgString)
+        const svg =  sketch.draw.screen.group().svg(svgString)
           .stroke({color:'blue',opacity: 1.0,width:1})
           .fill('none')
           .attr("stroke-linecap", "round")
           .attr("stroke-linejoin", "round")
-        model.sketch.draw.screen.sheet.push(svg)
+        sketch.draw.screen.sheet.push(svg)
       },//end of addSvg
       convertToSvg: function(file){
         switch (file.ext) {
@@ -125,110 +115,49 @@ export const model = {
     },
   },
   drawMenuFunc: {
-    cancelKey: function(e){
-      console.log("cancelKey")
-      if(e.keyCode ==27)model.drawMenuFunc.cancel()
-    },
-    cancel: function(){
-      if(model.sketch.temp){
-        if(model.sketch.drawModeFlag){
-          model.sketch.drawModeFlag = false
-          model.sketch.temp.draw("cancel")
-        }
-      }
-    },
-    drawOff: function(){
-      const fig = model.sketch.temp
-      model.sketch.drawMode=null
-      model.sketch.temp = null
-      SVG.off(window,"mousemove.draw")
-      model.sketch.draw.off("click.draw")
-      if(fig){
-        fig.forget("_paintHandler")
-        fig.draw = ()=>{}
-      }
-      console.log("drawOff")
-    },
-    continuous: function(callback){
-      const fig = model.sketch.temp
-      fig.on("drawstart",(e)=>{
-        console.log("drawstart",fig.type)
-        model.sketch.drawModeFlag = true
-      })
-      fig.on("drawstop",(e)=>{
-        console.log("drawstop",fig.type)
-        callback && callback()
-        if(model.sketch.drawModeFlag){
-          model.sketch.elements.push(fig)
-          model.drawMenuFunc.addevent(fig)
-        }
-        model.sketch.drawModeFlag = false
-        console.log("callback",model.sketch.drawMode)
-      })
-    },
-    addevent:function(fig){
-      fig.clone()
-        .stroke({width:5.0, opacity:0.5,color:"yellow"})
-        .click(function(e){
-          e.stopPropagation()
-          if(model.sketch.resizeMode){
-            fig.selectize({deepSelect:true})
-              .resize()
-            model.sketch.resizeFig.push(fig)
-            model.sketch.resizeFigClone.push(this)
-          }
-          else{
-            if(!e.ctrlKey){
-             model.drawMenuFunc.unselectAll(e)
-            }
-            fig.stroke({color:"red"})
-            model.sketch.selected.push(fig)
-            model.sketch.selectedClone.push(this)
-          }
-        })
-    },
-    unselectAll:function(){
-      model.sketch.selected.forEach(selected=>{
-        selected.attr("stroke",null)
-      })
-      model.sketch.selected = []
-      model.sketch.selectedClone = []
-    },
     line:{
       execute: function(){
-        const fig = model.sketch.draw.screen.sheet[0].line().draw()
-        model.sketch.temp =fig 
-        model.sketch.drawMode ="line" 
-        model.drawMenuFunc.continuous(model.drawMenuFunc.line.execute)
+        const i = sketch.currentSheetNumber
+        const fig = sketch.draw.screen.sheet[i].line().draw()
+        sketch.temp =fig 
+        sketch.drawMode ="line" 
+        sketch.continuous(model.drawMenuFunc.line.execute)
       },
     },
     polyline:{
       execute: function(){
-        const fig = model.sketch.draw.screen.sheet[0].polyline().draw()
-        model.sketch.temp =fig 
-        model.drawMenuFunc.continuous(model.drawMenuFunc.polyline.execute)
+        const fig = sketch.draw.screen.sheet[0].polyline().draw()
+        sketch.temp =fig 
+        sketch.continuous(model.drawMenuFunc.polyline.execute)
       },
     },
     circle: {
       execute: function(){
-        const fig = model.sketch.draw.screen.sheet[0].circle().draw().fill("none")
-        model.sketch.temp =fig 
-        model.sketch.drawMode ="circle" 
-        model.drawMenuFunc.continuous(model.drawMenuFunc.circle.execute)
+        const i = sketch.currentSheetNumber
+        const fig = sketch.draw.screen.sheet[i].circle().draw().fill("none")
+        sketch.temp =fig 
+        sketch.drawMode ="circle" 
+        sketch.continuous(model.drawMenuFunc.circle.execute)
       },
     },
     rectangle: {
       execute: function(){
-        const fig = model.sketch.draw.screen.sheet[0].rect().draw().fill("none")
-        model.sketch.temp =fig 
-        model.sketch.drawMode ="rectangle" 
-        model.drawMenuFunc.continuous(model.drawMenuFunc.rectangle.execute)
+        const fig = sketch.draw.screen.sheet[0].rect().draw().fill("none")
+        sketch.temp =fig 
+        sketch.drawMode ="rectangle" 
+        sketch.continuous(model.drawMenuFunc.rectangle.execute)
       },
     },
     resize: {
       execute:function(){
-        model.sketch.resizeMode=true
+        sketch.drawMode="resize"
       },
+    },
+    coincident: {
+      execute:function(){
+        sketch.drawMode="coincident"
+        console.log("coincident")
+      }
     }
   },
   screenFunc:{
@@ -236,7 +165,7 @@ export const model = {
       execute:function(){
         const width =view.elements.drawing.getBoundingClientRect().width 
         const height = view.elements.drawing.getBoundingClientRect().height
-        const draw = model.sketch.draw
+        const draw = sketch.draw
         draw.width(width);
         draw.height(height);
         draw.attr('preserveAspectRatio', 'xMinYMin slice');
@@ -260,6 +189,7 @@ export const model = {
           .attr("stroke-dasharray","5 5");
         draw.screen=draw.group();
         draw.screen.stroke({color:"blue",opacity: 1.0,width:1})
+          .fill("blue")
         draw.screen.sheet = [];
         draw.screen.sheet.push(draw.screen.group());
 
@@ -282,8 +212,8 @@ export const model = {
       execute: function(){
         const width = view.elements.body.getBoundingClientRect().width
           - view.elements.aside.getBoundingClientRect().width
-        model.sketch.draw.width(width);
-        model.sketch.draw
+        sketch.draw.width(width);
+        sketch.draw
           .height(view.elements.drawing.getBoundingClientRect().height);
       },
     }, 
@@ -351,33 +281,35 @@ export const model = {
             if(document.activeElement != model.editor.textInput.getElement()){
               model.editor.selection.clearSelection(); 
             }
-            if(model.sketch.drawModeFlag){
-              model.drawMenuFunc.cancel()
+            if(sketch.drawModeFlag){
+              sketch.cancel()
             }
             else{
-              model.drawMenuFunc.drawOff()
+              sketch.drawOff()
             }
-            model.drawMenuFunc.unselectAll(e)
-            if(model.sketch.resizeMode){
-              model.sketch.resizeFig.forEach((resizeFig,i)=>{
+            sketch.unselectAll(e)
+            if(sketch.drawMode==="resize"){
+              sketch.resizeFig.forEach((resizeFig)=>{
                 resizeFig.selectize(false,{deepSelect:true}).resize("stop")
-                model.sketch.resizeFigClone[i].attr(
+                sketch.clone.get(resizeFig).attr(
                   resizeFig.attr() 
                 )
               })
-              model.sketch.resizeFig=[]
-              model.sketch.resizeFigClone=[]
-              model.sketch.resizeMode=false
+              sketch.resizeFig=[]
+              sketch.drawMode=null
             }
             break;
           }
           //keydown Del
           case 46:{
-            model.sketch.selected.forEach(selected=>{
-              selected.remove()
-            })
-            model.sketch.selectedClone.forEach(selectedClone=>{
-              selectedClone.remove()
+            sketch.selected.forEach(selected=>{
+              if(selected.data("info").type==="edge"){
+                selected.remove()
+                sketch.clone.get(selected).remove()
+                sketch.nodes.get(selected).forEach(node=>{
+                  node.remove()
+                })
+              }
             })
           }   
           default:
