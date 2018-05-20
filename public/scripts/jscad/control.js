@@ -136,8 +136,8 @@ export const control = {
   drawMenuFunc: {
     line:{
       execute: function(){
-        model.drawMenuFunc.cancel()
-        model.drawMenuFunc.drawOff()
+        model.sketch.cancel()
+        model.sketch.drawOff()
         model.drawMenuFunc.line.execute()
       },
       add: function(){
@@ -146,8 +146,8 @@ export const control = {
     },
     polyline:{
       execute: function(){
-        model.drawMenuFunc.cancel()
-        model.drawMenuFunc.drawOff()
+        model.sketch.cancel()
+        model.sketch.drawOff()
         model.drawMenuFunc.polyline.execute()
       },
       add: function(){
@@ -156,8 +156,8 @@ export const control = {
     },
     circle:{
       execute: function(){
-        model.drawMenuFunc.drawOff()
-        model.drawMenuFunc.cancel()
+        model.sketch.drawOff()
+        model.sketch.cancel()
         model.drawMenuFunc.circle.execute()
       },
       add: function(){
@@ -166,8 +166,8 @@ export const control = {
     },
     rectangle:{
       execute: function(e){
-        model.drawMenuFunc.cancel()
-        model.drawMenuFunc.drawOff()
+        model.sketch.cancel()
+        model.sketch.drawOff()
         model.drawMenuFunc.rectangle.execute(e)
       },
       add: function(){
@@ -176,14 +176,35 @@ export const control = {
     },
     resize: {
       execute:function(){
-        model.drawMenuFunc.cancel()
-        model.drawMenuFunc.drawOff()
+        model.sketch.cancel()
+        model.sketch.drawOff()
         model.drawMenuFunc.resize.execute()
       },
       add:function(){
         view.elements.resize.onclick=this.execute
       }
     },
+    vertical: {
+      execute:function(){
+        model.sketch.cancel()
+        model.sketch.drawOff()
+        model.drawMenuFunc.vertical.execute()
+      },
+      add:function(){
+        view.elements.vertical.onclick=this.execute
+      }
+    },
+    coincident: {
+      execute:function(){
+        model.sketch.cancel()
+        model.sketch.drawOff()
+        model.drawMenuFunc.coincident.execute()
+      },
+      add:function(){
+        view.elements.coincident.onclick=this.execute
+      }
+    },
+
   },//end of drawMenuFunc
   screenFunc:{
     setScreen:{
