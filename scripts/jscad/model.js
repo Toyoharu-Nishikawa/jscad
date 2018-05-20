@@ -153,9 +153,38 @@ export const model = {
         sketch.drawMode="resize"
       },
     },
+    vertical:{
+      execute: function(){
+        sketch.drawMode="vertical"
+        sketch.vertical.execute()
+        console.log("vertical")
+      },
+    },
+    horizontal:{
+      execute: function(){
+        sketch.drawMode="horizontal"
+        sketch.horizontal()
+        console.log("horizontal")
+      },
+    },
+    parallel:{
+      execute: function(){
+        sketch.drawMode="parallel"
+        sketch.parallel()
+        console.log("parallel")
+      },
+    },
+    rightangle:{
+      execute: function(){
+        sketch.drawMode="rightangle"
+        sketch.rightangle()
+        console.log("rightangle")
+      },
+    },
     coincident: {
       execute:function(){
         sketch.drawMode="coincident"
+        sketch.coincident.execute()
         console.log("coincident")
       }
     }
@@ -174,19 +203,51 @@ export const model = {
           margin:0,
           padding:0,
           background:'linear-gradient(to bottom, white, RoyalBlue )'
-        });
-        draw.viewbox(0, 0, width,height).flip('y');
-        draw.background = draw.group();
-        draw.background.line(-1000, 0, 1000, 0)
-          .fill("none")
+        })
+        draw.viewbox(0, 0, width,height).flip('y')
+        draw.background = draw.group()
           .stroke({color:"black",opacity: 1.0,width:1})
+          .fill("black")
           .attr("vector-effect", "non-scaling-stroke")
-          .attr("stroke-dasharray","5 5");
-        draw.background.line(0, -1000, 0, 1000)
-          .fill("none")
-          .stroke({color:"black",opacity: 1.0,width:1})
-          .attr("vector-effect", "non-scaling-stroke")
-          .attr("stroke-dasharray","5 5");
+
+        const horizontal = draw.background.line(-1000, 0, 1000, 0)
+          .attr("stroke-dasharray","5 5")
+          .data("info",{type:"horizontal"})
+        this.setBackLine(horizontal) 
+
+        const vertical = draw.background.line(0, -1000, 0, 1000)
+          .attr("stroke-dasharray","5 5")
+          .data("info",{type:"vertical"})
+        this.setBackLine(vertical) 
+
+        const origin = draw.background.circle(10).center(0,0)
+          .fill("black")
+          .data("info",{type:"origin"})
+          .click(function(e){
+            e.stopPropagation()
+            if(!e.ctrlKey){
+              sketch.unselectAll(e)
+            }
+            this.fill("green").stroke({color:"green"})
+            this.data("isSelected", true, true)
+            sketch.selected.push(this)
+          })
+          .mouseover(function(e){
+            if(!this.data("isSelected")){
+              this.fill("yellow")
+            }
+          })
+          .mouseout(function(e){
+            if(!this.data("isSelected")){
+              this.attr("fill",null)
+                .attr("stroke",null)
+            }
+          })
+
+        sketch.draw.on("zoom",function(e){
+          origin.radius(5.0/sketch.draw.zoom())
+        })
+
         draw.screen=draw.group();
         draw.screen.stroke({color:"blue",opacity: 1.0,width:1})
           .fill("blue")
@@ -206,7 +267,31 @@ export const model = {
           const point = this.point(e.screenX, e.screenY)
           console.log(point,e.screenX, e.screenY)
         })
-      }
+      },
+      setBackLine: function(backLine){
+        backLine.clone()
+          .attr("stroke-dasharray",null)
+          .stroke({width:10.0, opacity:0.0,color:null})
+          .click(function(e){
+            e.stopPropagation()
+            if(!e.ctrlKey){
+              sketch.unselectAll(e)
+            }
+            backLine.stroke({color:"green"})
+            backLine.data("isSelected", true, true)
+            sketch.selected.push(backLine)
+          })
+          .mouseover(function(e){
+            if(!backLine.data("isSelected")){
+              backLine.stroke({color:"yellow"})
+            }
+          })
+          .mouseout(function(e){
+            if(!backLine.data("isSelected")){
+              backLine.attr("stroke",null)
+            }
+          })
+      },
     },
     resize: {
       execute: function(){
@@ -281,7 +366,7 @@ export const model = {
             if(document.activeElement != model.editor.textInput.getElement()){
               model.editor.selection.clearSelection(); 
             }
-            if(sketch.drawModeFlag){
+            if(sketch.drawStartFlag){
               sketch.cancel()
             }
             else{

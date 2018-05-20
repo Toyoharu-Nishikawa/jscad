@@ -184,6 +184,16 @@ export const control = {
         view.elements.resize.onclick=this.execute
       }
     },
+    vertical: {
+      execute:function(){
+        model.sketch.cancel()
+        model.sketch.drawOff()
+        model.drawMenuFunc.vertical.execute()
+      },
+      add:function(){
+        view.elements.vertical.onclick=this.execute
+      }
+    },
     coincident: {
       execute:function(){
         model.sketch.cancel()
