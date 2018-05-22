@@ -1,13 +1,13 @@
 import {jscad} from "./jscad/mini.js"
 
-const draw = jscad.setup("minijscad-test", 500, 300)
+jscad.setup("minijscad-test", 500, 300)
 
-draw.screen.sheet[0].rect(100,100).move(50,50)
+jscad.draw.screen.sheet[0].rect(100,100).move(50,50)
   .fill("none")
   .attr("vector-effect", "non-scaling-stroke")
 
 
-const line1= draw.screen.sheet[0].line(0,0,100,100)
+const line1= jscad.draw.screen.sheet[0].line(0,0,100,100)
   .attr("vector-effect", "non-scaling-stroke")
 
 line1.clone()
@@ -23,4 +23,4 @@ line1.clone()
     this.stroke({color:"red"}) 
   }.bind(line1))
 
-
+jscad.resize(600,400)

@@ -1,12 +1,23 @@
 "use strict"
 
 export const jscad = {
-  setup: function(element, width,height){
+  draw: null,
+  resize: function(width, height){
+    const minijscadFrame = document.getElementById("minijscad-frame")
+    minijscadFrame.style.width = width+"px"
+    minijscadFrame.style.height = height+"px"
+    const elWidth =document.getElementById("minijscad-main").getBoundingClientRect().width || (width -100)
+    const elHeight = document.getElementById("minijscad-main").getBoundingClientRect().height || (height-40)
+    jscad.draw.width(elWidth-2)
+    jscad.draw.height(elHeight-2)
+  },
+  setup: function(element="drawing", width=300, height=300){
     setDOM(element)
     setCSS(width, height)
     const coordinateDOM = document.querySelector("#minijscad-footer > small:nth-child(2)")
-    const elWidth = document.getElementById("minijscad-main").getBoundingClientRect().width
-    const elHeight = document.getElementById("minijscad-main").getBoundingClientRect().height
+    const minijscadFrame = document.getElementById("minijscad-frame")
+    const elWidth =document.getElementById("minijscad-main").getBoundingClientRect().width || (width -100)
+    const elHeight = document.getElementById("minijscad-main").getBoundingClientRect().height || (height-40)
 
     const draw = SVG("minijscad-main").panZoom({zoomFactor:1.1})
     draw.width(elWidth-2)
@@ -46,15 +57,16 @@ export const jscad = {
       coordinateDOM.textContent=` x: ${(coord.x*100+0.5|0)/100}, y:${(coord.y*100+0.5|0)/100}`
     })
 
-    return draw 
+    jscad.draw =draw
+    return draw
   }
-
 }
 
 const setDOM = (element)=>{
  const elementDOM = (element instanceof HTMLElement) ? element: document.getElementById(element) 
  const minijscadFrame = document.createElement("div")
  const minijscadTitle = document.createElement("div")
+ const minijscadMiddle = document.createElement("div")
  const minijscadSidebar = document.createElement("div")
  const ul = document.createElement("ul")
  const liM = document.createElement("li")
@@ -67,6 +79,7 @@ const setDOM = (element)=>{
 
  minijscadFrame.id = "minijscad-frame"
  minijscadTitle.id = "minijscad-title"
+ minijscadMiddle.id = "minijscad-middle"
  minijscadSidebar.id = "minijscad-sidebar"
  minijscadMain.id = "minijscad-main"
  minijscadFooter.id = "minijscad-footer"
@@ -81,12 +94,17 @@ const setDOM = (element)=>{
  ul.appendChild(liM)
  ul.appendChild(liA)
  ul.appendChild(liS)
+
  minijscadSidebar.appendChild(ul)
- minijscadFrame.appendChild(minijscadTitle)
- minijscadFrame.appendChild(minijscadSidebar)
- minijscadFrame.appendChild(minijscadMain)
+
+ minijscadMiddle.appendChild(minijscadSidebar)
+ minijscadMiddle.appendChild(minijscadMain)
+
  minijscadFooter.appendChild(minijscadCopyright)
  minijscadFooter.appendChild(minijscadCoordinate)
+
+ minijscadFrame.appendChild(minijscadTitle)
+ minijscadFrame.appendChild(minijscadMiddle)
  minijscadFrame.appendChild(minijscadFooter)
  elementDOM.appendChild(minijscadFrame)
 
@@ -102,9 +120,8 @@ const setCSS = (width ,height)=>{
     #minijscad-frame {
       width: ${width}px;
       height: ${height}px;
-      display: grid;
-      grid-template-columns: 100px ${width-100}px;
-      grid-template-rows: 20px ${height-40}px 20px;
+      display:flex;
+      flex-direction:column;
       outline: 2px solid #708090;
       padding: 0;
       margin: 0;
@@ -112,8 +129,7 @@ const setCSS = (width ,height)=>{
 
     style.sheet.insertRule(`
     #minijscad-title {
-      grid-row: 1 / 2;
-      grid-column: 1 / 3;
+      height: 20px;
       background: #d9dfe1;
       color:#3e5358;
       padding: 0;
@@ -121,12 +137,19 @@ const setCSS = (width ,height)=>{
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #minijscad-sidebar {
-      grid-row: 2 / 3;
-      grid-column: 1 / 2;
+    #minijscad-middle {
+      display:flex;
+      flex:1;
       padding: 0;
       margin: 0;
 
+    }`,style.sheet.cssRules.length)
+
+    style.sheet.insertRule(`
+    #minijscad-sidebar {
+      width: 100px;
+      padding: 0;
+      margin: 0;
       background: #F8F8F8;
     }`,style.sheet.cssRules.length)
 
@@ -179,16 +202,14 @@ const setCSS = (width ,height)=>{
 
     style.sheet.insertRule(`
     #minijscad-main {
-      grid-row: 2 / 3;
-      grid-column: 2 / 3;
+      flex:1;
       padding: 0;
       margin: 0;
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
     #minijscad-footer {
-      grid-row: 3 / 4;
-      grid-column: 1 / 3;
+      height:20px;
       padding: 0;
       margin: 0;
       border-top: 1px solid #708090;
