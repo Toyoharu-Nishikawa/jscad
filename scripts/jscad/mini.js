@@ -6,8 +6,10 @@ export const jscad = {
     const minijscadFrame = document.getElementById("minijscad-frame")
     minijscadFrame.style.width = width+"px"
     minijscadFrame.style.height = height+"px"
-    const elWidth =document.getElementById("minijscad-main").getBoundingClientRect().width || (width -100)
-    const elHeight = document.getElementById("minijscad-main").getBoundingClientRect().height || (height-40)
+    //const elWidth =document.getElementById("minijscad-main").getBoundingClientRect().width || (width -100)
+    //const elHeight = document.getElementById("minijscad-main").getBoundingClientRect().height || (height-40)
+    const elWidth = width -100
+    const elHeight = height-40
     jscad.draw.width(elWidth-2)
     jscad.draw.height(elHeight-2)
   },
@@ -58,7 +60,7 @@ export const jscad = {
     })
 
     jscad.draw =draw
-    return draw
+    return this 
   }
 }
 
