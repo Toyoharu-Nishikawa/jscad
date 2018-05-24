@@ -1,13 +1,17 @@
 import {jscad} from "./jscad/mini.js"
 
-jscad.setup("minijscad-test", 500, 300)
+const minijscadTest = document.getElementById("frame")
+const width = minijscadTest.getBoundingClientRect().width  
+const height = minijscadTest.getBoundingClientRect().height 
 
-jscad.draw.screen.sheet[0].rect(100,100).move(50,50)
+const sketch = jscad.setup("minijscad-test", width-50, height-50)
+
+sketch.draw.screen.sheet[0].rect(100,100).move(50,50)
   .fill("none")
   .attr("vector-effect", "non-scaling-stroke")
 
 
-const line1= jscad.draw.screen.sheet[0].line(0,0,100,100)
+const line1= sketch.draw.screen.sheet[0].line(0,0,100,100)
   .attr("vector-effect", "non-scaling-stroke")
 
 line1.clone()
@@ -23,4 +27,12 @@ line1.clone()
     this.stroke({color:"red"}) 
   }.bind(line1))
 
-jscad.resize(600,400)
+const resize = ()=> {
+  const minijscadTest = document.getElementById("frame")
+  const width = minijscadTest.getBoundingClientRect().width  
+  const height = minijscadTest.getBoundingClientRect().height 
+  console.log(width, height)
+  sketch.resize(width-50, height-50)
+}
+
+window.onresize = resize
