@@ -5,6 +5,7 @@ export const view ={
     mainMenu: document.querySelectorAll("nav.mainMenu > ul > li"),
       new: document.getElementById("new"),
       open: document.getElementById("open"),
+      openFile: document.getElementById("openFile"),
       close: document.getElementById("close"),
       closeAll: document.getElementById("closeAll"),
       save: document.getElementById("save"),

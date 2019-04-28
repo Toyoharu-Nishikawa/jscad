@@ -4,7 +4,7 @@ import {model} from "../model.js"
 export const  drawMenuFunc = {
   line:{
     execute: function(){
-      model.sketch.cancel()
+      model.sketch.unselectAll()
       model.sketch.drawOff()
       model.drawMenuFunc.line.execute()
     },
@@ -60,6 +60,16 @@ export const  drawMenuFunc = {
     },
     add:function(){
       view.elements.vertical.onclick=this.execute
+    }
+  },
+  horizontal: {
+    execute:function(){
+      model.sketch.cancel()
+      model.sketch.drawOff()
+      model.drawMenuFunc.horizontal.execute()
+    },
+    add:function(){
+      view.elements.horizontal.onclick=this.execute
     }
   },
   coincident: {

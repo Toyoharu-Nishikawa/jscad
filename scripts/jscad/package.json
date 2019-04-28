@@ -16,6 +16,7 @@
     "dxftosvg": "^1.3.2",
     "file-saver": "^2.0.1",
     "filereader": "^1.1.1",
+    "sci": "^4.4.9",
     "svg.js": "^2.7.1"
   }
 }

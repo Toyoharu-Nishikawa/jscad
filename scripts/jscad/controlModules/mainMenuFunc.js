@@ -11,17 +11,18 @@ export const  mainMenuFunc = {
     },
   },
   open: {
-    execute: function(){
+    execute: function(e){
+      model.mainMenuFunc.open.execute(e)
    },
     add:function(){
-      view.elements.open.click= this.execute
+      view.elements.open.onclick= this.execute
     },
   },
   save: {
     execute: function(){
     },
     add:function(){
-      view.elements.save.click= this.execute
+      view.elements.save.onclick= this.execute
     },
   },
   saveas:{
@@ -29,7 +30,7 @@ export const  mainMenuFunc = {
         console.log("Wow!!!!!!!!")
     },
     add: function(e){
-      view.elements.saveAs.click= this.execute
+      view.elements.saveAs.onclick= this.execute
     },
   },
   import:{

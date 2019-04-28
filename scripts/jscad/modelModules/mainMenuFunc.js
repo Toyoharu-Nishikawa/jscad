@@ -7,16 +7,28 @@ export const mainMenuFunc = {
   new:{
     execute:function(){
       console.log("new file");
-      sketch.draw.screen.svg("");
+      mode.sketch.draw.screen.svg("");
     },
   },
+  open:{
+    execute: async function(e){
+      const elem = view.elements.openFile 
+      const fileList = await importFiles(elem)
+      fileList.forEach(v=>{
+        console.log(`read ${v.filename}`)
+        const json = JSON.parse(v.text)
+        model.sketch.import(json)
+      })
+      model.doc.allCancel.execute(e)
+    },//end of execute
+  },
   import:{
-    execute: async function(){
+    execute: async function(e){
       const elem = view.elements.importFile 
       const fileList = await importFiles(elem)
       fileList.map(model.mainMenuFunc.import.convertToSvg)
         .forEach(model.mainMenuFunc.import.addSvg)
-      model.doc.allCancel.execute()
+      model.doc.allCancel.execute(e)
     },//end of execute
     removeSvgTag:function (fileData){
       return fileData.replace(/<svg.*>|<\/svg>/g,"");
