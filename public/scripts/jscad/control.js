@@ -19,6 +19,7 @@ export const control = {
       controlModules.drawMenuFunc,
       controlModules.screenFunc, 
       controlModules.slidebar,
+      controlModules.coordinate,
       controlModules.editorFunc, 
       controlModules.keyFunc,
     ] 
