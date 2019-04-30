@@ -25,6 +25,9 @@ export const Sketch = class extends Constraints {
         this.tmp.draw("cancel")
       }
     }
+    const draw = this.draw
+    draw.off("nodeclick")
+    draw.off("elementclick")
   }
   drawOff(){
     const fig = this.temp
@@ -36,6 +39,9 @@ export const Sketch = class extends Constraints {
       fig.forget("_paintHandler")
       fig.draw = ()=>{}
     }
+    const draw = this.draw
+    draw.off("nodeclick")
+    draw.off("elementclick")
     console.log("drawOff")
   }
 
@@ -55,11 +61,13 @@ export const Sketch = class extends Constraints {
   addFig(type, parameters, idF){
     switch(type){
       case "line":{
-        this.addLine(...parameters, idF)
+        const fig = this.addLine(...parameters, idF)
+        return fig
         break
       }
       case "arc":{
-        this.addArc(...parameters, idF)
+        const fig = this.addArc(...parameters, idF)
+        return fig
         break
       }
       default:{

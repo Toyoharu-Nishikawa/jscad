@@ -30,33 +30,3 @@ export const Svg = class {
   }
 }
 
-
-export const Datamanager = class extends Svg{
-  constructor(elem) {
-    super(elem)
-    this.degreeOfFreedom = 0
-    this.temp =  null
-    this.drawMode = null
-    this.drawStartFlag = false
-  }
-  cancel(){
-    if(this.temp){
-      if(this.drawStartFlag){
-        this.drawStartFlag = false
-        this.temp.draw("cancel")
-      }
-    }
-  }
-  drawOff(){
-    const fig = this.temp
-    this.drawMode=null
-    this.temp = null
-    SVG.off(window,"mousemove.draw")
-    this.draw.off("click.draw")
-    if(fig){
-      fig.forget("_paintHandler")
-      fig.draw = ()=>{}
-    }
-    console.log("drawOff")
-  }
-}

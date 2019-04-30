@@ -4,8 +4,46 @@ let idF = -1
 let idC = -1
 let idD = -1
 
-
 let currentSheetNumber = 0
+
+const dataManager = class {
+  constructor(){
+    this.id = -1   
+    this.MAP = new Map
+  }
+  getId(){
+    this.id ++
+    const id = this.id
+    return id
+  }
+  setObj(id, obj){
+    this.MAP.set(id, obj)
+  }
+  getObj(id, ){
+    return this.MAP.get(id)
+  }
+  hasObj(id, ){
+    return this.MAP.has(id)
+  }
+  getCurrentId(){
+    return this.id 
+  }
+  getMap(){
+    return this.MAP
+  }
+}
+
+const selectedData = class {
+  constructor(){
+    this.SET = new Set()
+  }
+  setData(data){
+    this.SET.add(data) 
+  }
+  getArray(){
+    return [...this.SET.values()]
+  }
+}
 
 export const Basic = class extends Svg {
   constructor(elem){
@@ -15,11 +53,12 @@ export const Basic = class extends Svg {
     this.screen = this._addScreen()
     this.sheets = this._addSheets()
     this.nodeScreen = this._addNodeScreen()
+    this.dimensionScreen = this._addDimensionScreen()
 
     this.selected = [] 
-    this.figs = new Map()
-    this.nodes = new Map()
-    this.clones = new Map()
+    this.figsMap = new Map()
+    this.nodesMap = new Map()
+    this.clonesMap = new Map()
  
   }
   _setBackLine(backLine){
@@ -118,6 +157,14 @@ export const Basic = class extends Svg {
     const nodeScreen=draw.group()
     return nodeScreen
   }
+  _addDimensionScreen(){
+    const draw = this.draw
+    const dimensionScreen=draw.group()
+      .stroke({color:"black",opacity: 1.0,width:1})
+      .fill("black")
+ 
+    return dimensionScreen 
+  }
   _addSheets(){
     const screen = this.screen
     const sheet = screen.group().data("key", {sheetNumber:currentSheetNumber})
@@ -162,6 +209,7 @@ export const Basic = class extends Svg {
     this.selected.push(fig)
   }
   makeClone(fig){
+    const draw = this.draw
     const clone = fig.clone()
       .stroke({width:5.0, opacity:0.0,color:null})
       .click((e)=>{
@@ -172,6 +220,7 @@ export const Basic = class extends Svg {
         fig.stroke({color:"green"})
         fig.data("isSelected", true, true)
         this.addSelected(fig)
+        draw.fire("elementclick")
       })
       .mouseover((e)=>{
         if(!fig.data("isSelected")){
@@ -185,12 +234,13 @@ export const Basic = class extends Svg {
       })
     const IdF = fig.data("idF").idF
     clone.data("idF",{idF: IdF})
-    this.clones.set(IdF, clone)
+    this.clonesMap.set(IdF, clone)
   }
   makeNodes(fig, pointType){
     const nodeScreen = this.nodeScreen 
     const points = fig.data("nodes")
 
+    const draw = this.draw
     const nodes = points.map((point,index)=>{
       const circle = nodeScreen
         .circle(5)
@@ -205,6 +255,7 @@ export const Basic = class extends Svg {
           this.fill("green").stroke({color:"green"})
           this.data("isSelected", true, true)
           sketch.selected.push(this)
+          draw.fire("nodeclick")
         })
         .mouseover(function(e){
           if(!this.data("isSelected")){
@@ -225,26 +276,26 @@ export const Basic = class extends Svg {
    
     const IdF = fig.data("idF").idF
     nodes.forEach(v=>v.data("idF",{idF: IdF}))
-    this.nodes.set(idF, nodes)
+    this.nodesMap.set(idF, nodes)
   }
   addFigMap(IdF, fig){
-    this.figs.set(IdF, fig)
+    this.figsMap.set(IdF, fig)
   }
   getFigFromId(IdF){
-    const fig = this.figs.get(IdF)
+    const fig = this.figsMap.get(IdF)
     return fig
   }
   hasFigFromId(IdF){
-    const flag = this.fig.has(IdF)
+    const flag = this.figsMap.has(IdF)
     return flg 
   }
   getCloneFigFromId(IdF){
-    const cloneFig = this.clones.get(IdF)
+    const cloneFig = this.clonesMap.get(IdF)
     return cloneFig
   }
   getNodesFromId(IdF){
-    const nodes = this.nodes.get(IdF)
-    return nodes 
+    const nodesMap = this.nodesMap.get(IdF)
+    return nodesMap
   }
   addEvent(fig, pointType){
     const IdF = idF
@@ -282,7 +333,7 @@ export const Basic = class extends Svg {
     idD = IdD 
   }
   getFigMap(){
-    return this.figs
+    return this.figsMap
   }
 
 }
