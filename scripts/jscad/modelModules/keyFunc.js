@@ -20,13 +20,14 @@ export const keyFunc = {
           if(document.activeElement != model.editor.textInput.getElement()){
             model.editor.selection.clearSelection(); 
           }
-          if(sketch.drawStartFlag){
-            sketch.cancel()
+          if(sketch.drawObj.getStartFlag()){
+            sketch.drawCancel()
           }
           else{
             sketch.drawOff()
           }
-          sketch.unselectAll(e)
+          sketch.selected.unselectAll()
+          sketch.dimensionSelected.unselectAll()
           if(sketch.drawMode==="resize"){
             sketch.resizeFig.forEach((resizeFig)=>{
               resizeFig.selectize(false,{deepSelect:true}).resize("stop")

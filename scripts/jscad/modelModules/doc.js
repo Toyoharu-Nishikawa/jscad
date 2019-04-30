@@ -13,7 +13,7 @@ export const doc = {
         view.tempElement.notSelected()
       }
       if(!e.ctrlKey){
-        model.sketch.unselectAll()
+        sketch.selected.unselectAll()
       }
       view.tempElement = null
       model.mainMenuView.hover.flag = false
