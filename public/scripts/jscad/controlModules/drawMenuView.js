@@ -4,7 +4,8 @@ import {model} from "../model.js"
 export const drawMenuView = {
   click: {
     execute: function(e){
-      //e.stopPropagation()
+      e.stopPropagation()
+      e.preventDefault()
       model.drawMenuView.click.execute(e)
     },
     add: function(){

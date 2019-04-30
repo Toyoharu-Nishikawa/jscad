@@ -32,14 +32,14 @@ export const  drawMenuFunc = {
       view.elements.circle.onclick = this.execute
     },
   },
-  rectangle:{
-    execute: function(e){
-      model.sketch.cancel()
+  arc:{
+    execute: function(){
       model.sketch.drawOff()
-      model.drawMenuFunc.rectangle.execute(e)
+      model.sketch.cancel()
+      model.drawMenuFunc.circle.execute()
     },
     add: function(){
-      view.elements.rectangle.onclick = this.execute
+      view.elements.arc.onclick = this.execute
     },
   },
   resize: {
@@ -50,6 +50,36 @@ export const  drawMenuFunc = {
     },
     add:function(){
       view.elements.resize.onclick=this.execute
+    }
+  },
+  verticalD: {
+    execute:function(){
+      model.sketch.cancel()
+      model.sketch.drawOff()
+      model.drawMenuFunc.verticalD.execute()
+    },
+    add:function(){
+      view.elements.verticalD.onclick=this.execute
+    }
+  },
+  horizontalD: {
+    execute:function(){
+      model.sketch.cancel()
+      model.sketch.drawOff()
+      model.drawMenuFunc.horizontalD.execute()
+    },
+    add:function(){
+      view.elements.horizontalD.onclick=this.execute
+    }
+  },
+  angleD: {
+    execute:function(){
+      model.sketch.cancel()
+      model.sketch.drawOff()
+      model.drawMenuFunc.angleD.execute()
+    },
+    add:function(){
+      view.elements.angleD.onclick=this.execute
     }
   },
   vertical: {

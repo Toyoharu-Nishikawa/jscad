@@ -18,7 +18,7 @@ export const model = {
     this.editorFunc.setEditor.execute()
     this.mainMenuView.setEvent()
     this.drawMenuView.setEvent()
-    this.test()
+//    this.test()
   },
   doc: modelModules.doc,
   mainMenuView: modelModules.mainMenuView,
