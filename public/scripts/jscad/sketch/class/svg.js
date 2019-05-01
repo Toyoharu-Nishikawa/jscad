@@ -1,3 +1,4 @@
+//import SVG from "../../node_modules/@svgdotjs/svg.js/src/svg.js"
 import {addExtendElements} from "./extra.js"
 
 const blackLine = {color:"black",opacity: 1.0,width:1}
@@ -6,6 +7,7 @@ const blueLine = {color:"blue",opacity: 1.0,width:1}
 export const Svg = class {
   constructor(elem){
     this.draw = SVG(elem).panZoom({zoomFactor:1.1})
+    console.log(this.draw)
     this.currentSheetNumber = 0
 
     this.background = this.makeScreen(blackLine,"black")
