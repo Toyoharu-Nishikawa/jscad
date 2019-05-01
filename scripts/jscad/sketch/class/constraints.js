@@ -74,8 +74,25 @@ export const Constraints = class extends Figs {
       .data("id",{id: id, type:"arrow"})
  
     ds.add(arrow)
-
-    const clone = this.makeDimensionClone(arrow)
+    
+    
+    const clone = this.makeDimensionClone(arrow).draggable()
+    /*
+    clone.on("beforedrag",(e)=>{
+      e.preventDefault()
+    })
+    */
+    clone.on("dragmove",(e)=>{
+      const {handler, p} = e.detail
+      e.preventDefault()
+      console.log(e.detail)
+      const x = p.x - handler.startPoints.point.x 
+      const y = p.y - handler.startPoints.point.y 
+      console.log(x, y)
+ 
+      handler.el.move(x, 0)
+      arrow.move(x, 0)
+    })
 
     console.log(arrow)
   }

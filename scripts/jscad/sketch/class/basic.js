@@ -81,7 +81,7 @@ export const Basic = class extends Svg {
 
   makeDimensionClone(arrow, width=5){
     const clone = arrow.clone()
-      .stroke({width:width, opacity:0.0,color:null})
+      .stroke({width:width, opacity:0.5,color:"red"})
       .attr("stroke-dasharray",null)
 
     this.addDimensionEvent(arrow, clone)
