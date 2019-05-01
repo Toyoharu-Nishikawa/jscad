@@ -5,14 +5,14 @@
   <link rel="stylesheet" type="text/css" href="./styles/index.css">
   <link rel="stylesheet" type="text/css" href="./scripts/svg.js/svg.select.css">
 
-  <script defer src="./scripts/jscad/node_modules/ace-builds/src-min/ace.js"></script>
+  <script  src="./scripts/jscad/node_modules/ace-builds/src-min/ace.js"></script>
   <script defer src="./scripts/jscad/node_modules/file-saver/dist/FileSaver.min.js"></script>
-<!--
-  <script  src="./scripts/jscad/node_modules/@svgdotjs/svg.js/src/svg.js"></script>
-  <script  src="./scripts/jscad/node_modules/@svgdotjs/svg.panzoom.js/dist/svg.panzoom.js"></script>
-  <script  src="./scripts/jscad/node_modules/@svgdotjs/svg.draggable.js/dist/svg.draggable.js"></script>
-  -->
 
+<!--
+  <script defer src="./scripts/jscad/node_modules/@svgdotjs/svg.js/src/svg.js"></script>
+  <script defer src="./scripts/jscad/node_modules/@svgdotjs/svg.panzoom.js/dist/svg.panzoom.js"></script>
+  <script defer src="./scripts/jscad/node_modules/@svgdotjs/svg.draggable.js/dist/svg.draggable.js"></script>
+  -->
   <script defer src="./scripts/jscad/node_modules/svg.js/dist/svg.js"></script>
   <script defer src="./scripts/svg.js/svg.panzoom.js"></script>
   <script defer src="./scripts/svg.js/svg.draw.min.js"></script> 
@@ -157,8 +157,14 @@
   <article>
     <h2>property</h2>
     <ul>
-      <li>L1</li>
-      <li>L2</li>
+      <li>dimension</li>
+      <li><input type="text" id="dimensionInput"></li>
+      <li>
+        <ul class="yesNoSelect">
+          <li id="propertyOK"><p>OK</p></li>
+          <li id="propertyCancel"><p>Cancel</p></li>
+        </ul>
+      </li>
     </ul>
   </article>
 </aside>

@@ -7,7 +7,7 @@ export const Basic = class extends Svg {
     super(elem)
 
     this.selected = new DataClass.SelectedData() 
-    this.dimensionSelected = new DataClass.SelectedData() 
+    this.dimensionsSelected = new DataClass.SelectedData() 
     this.drawObj = new DataClass.ModelObj() 
 
     this.nodesData = new DataClass.countUpDataManager()
@@ -81,7 +81,7 @@ export const Basic = class extends Svg {
 
   makeDimensionClone(arrow, width=5){
     const clone = arrow.clone()
-      .stroke({width:width, opacity:0.5,color:"red"})
+      .stroke({width:width, opacity:0.0,color:null})
       .attr("stroke-dasharray",null)
 
     this.addDimensionEvent(arrow, clone)
@@ -145,13 +145,11 @@ export const Basic = class extends Svg {
     clone 
       .click((e)=>{
         e.stopPropagation()
-        if(!e.ctrlKey){
-          this.dimensionSelected.unselectAll()
-        }
+        this.dimensionsSelected.unselectAll()
         arrow.fill("green").stroke({color:"green"})
         arrow.data("isSelected", true, true)
-        this.dimensionSelected.addData(arrow)
-        this.draw.fire("elementclick")
+        this.dimensionsSelected.addData(arrow)
+        this.draw.fire("dimensionlabelclick")
       })
       .mouseover((e)=>{
         if(!arrow.data("isSelected")){

@@ -14,7 +14,9 @@ export const doc = {
       }
       if(!e.ctrlKey){
         sketch.selected.unselectAll()
+        sketch.dimensionsSelected.unselectAll()
       }
+      model.propertyFunc.cancel.execute()
       view.tempElement = null
       model.mainMenuView.hover.flag = false
     },

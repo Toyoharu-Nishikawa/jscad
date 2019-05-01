@@ -7,14 +7,8 @@ export const Constraints = class extends Figs {
     super(elem)
     this.constraintsData = new DataClass.countUpDataManager()
     this.dimensionsData = new DataClass.countUpDataManager()
+    this.dimensionsLabelData = new DataClass.countUpDataManager()
   }
-
-  setVerticalD(){
-    this.runVerticalD()
-    this.draw.on("nodeclick",this.runVerticalD.bind(this))
-    this.draw.on("elementclick",this.runVerticalD.bind(this))
-  }
-
   makeArrow(x1, y1, x2, y2){
     const arrow = this.draw.group()
     const l = arrow.line(x1, y1, x2, y2)
@@ -26,6 +20,15 @@ export const Constraints = class extends Figs {
     const a4 = arrow.line(0, 0, -5, -5).rotate(thetaDeg).translate(x2, y2)
     return arrow 
   }
+
+//set Dimension
+
+  setVerticalD(){
+    this.runVerticalD()
+    this.draw.on("nodeclick",this.runVerticalD.bind(this))
+    this.draw.on("elementclick",this.runVerticalD.bind(this))
+  }
+
   runVerticalD(){
     if(this.selected.counts() !==1){
       console.log("have to select a element before doing")
@@ -49,7 +52,7 @@ export const Constraints = class extends Figs {
     const y2 = p[1][1]
     const value = y2 - y1 
     const id = this.addDimension("vertical",source, target, value)
-    this.setVerticalLabelD(id, x1, y1, x2, y2, -30)
+    this.setVerticalLabelD(id, x1, y1, x2, y2, 30)
     this.selected.unselectAll()
     this.solve()
     console.log("verticalD")
@@ -68,36 +71,53 @@ export const Constraints = class extends Figs {
 
     const dx1 = tx > x1 ? 15 : -15
     const dx2 = tx > x2 ? 15 : -15
+    const label = ds.group()
+
     const l1 = ds.line(x1, y1, tx+dx1, y1 )
     const l2 = ds.line(x2, y2, tx+dx2, y2 )
     const arrow = this.makeArrow(tx, y1, tx, y2)
       .data("id",{id: id, type:"arrow"})
- 
-    ds.add(arrow)
-    
     
     const clone = this.makeDimensionClone(arrow).draggable()
-    /*
-    clone.on("beforedrag",(e)=>{
-      e.preventDefault()
-    })
-    */
+    arrow.add(text) 
+    label.add(arrow)
+    label.add(l1)
+    label.add(l2)
+    label.data("info", {dX: dX})
+
     clone.on("dragmove",(e)=>{
+      if(!arrow.data("isSelected")){
+        arrow.stroke({color:"yellow"})
+      }
       const {handler, p} = e.detail
       e.preventDefault()
-      console.log(e.detail)
       const x = p.x - handler.startPoints.point.x 
       const y = p.y - handler.startPoints.point.y 
-      console.log(x, y)
+      const gx = p.x + handler.startPoints.transform.x
  
-      handler.el.move(x, 0)
-      arrow.move(x, 0)
+      handler.el.matrix(handler.startPoints.transform).transform({x:x, y: 0}, true)
+      arrow.matrix(handler.startPoints.transform).transform({x:x, y: 0}, true)  
+
+      const dx1 = gx > x1 ? 15 : -15
+      const dx2 = gx > x2 ? 15 : -15
+ 
+      l1.plot(x1, y1, gx+dx1, y1)
+      l2.plot(x2, y2, gx+dx2, y2)
+      label.data("info", {dX: gx-tx+dX})
     })
 
-    console.log(arrow)
+    this.dimensionsLabelData.addData(id, label)
+
+  }
+
+  changeVerticalLabelD(id, x1, y1, x2, y2, dX){
+    const label = this.dimensionsLabelData.getDataFromId(id)
+    label.remove()
+    this.setVerticalLabelD(id, x1, y1, x2, y2, dX)
   }
 
   setHorizontalD(){
+    console.log("OK")
     this.runHorizontalD()
     this.draw.on("nodeclick",this.runHorizontalD.bind(this))
     this.draw.on("elementclick",this.runHorizontalD.bind(this))
@@ -122,32 +142,196 @@ export const Constraints = class extends Figs {
 
     const p = selected[0].array().valueOf()
     console.log(p)
-    const value = p[1][0] - p[0][0]
    
-    const x1 = (p[0][0] + p[1][0])/2
-
+    const x1 = p[0][0] 
+    const y1 = p[0][1] 
     const x2 = p[1][0] 
-    const y1 = Math.min(p[0][1], p[1][1]) - 30
-    const y2 = y1 
-    const minX = Math.min(p[0][0] , p[1][0])
-    const maxX = Math.max(p[0][0] , p[1][0])
-    const ds = this.dimensionScreen
-    const valueText = value.toFixed(2)
-    const text = ds.text(valueText)
-      .flip("y").translate(x1, y1)
-    const l1 = ds.line(p[0][0], p[0][1], p[0][0], y1-15 )
-    const l2 = ds.line(p[1][0], p[1][1], p[1][0], y2 -15 )
-    const l3 = ds.line(p[0][0], y1, p[1][0], y2 )
-    const a1 = ds.line(0, 0, 5, 5).translate(minX, y1)
-    const a2 = ds.line(0, 0, 5, -5).translate(minX, y1)
-    const a3 = ds.line(0, 0, -5, 5).translate(maxX, y2)
-    const a4 = ds.line(0, 0, -5, -5).translate(maxX, y2)
-    this.addDimension("horizontal",source, target, value )
+    const y2 = p[1][1] 
+
+    const value = x2 -x1 
+    const id = this.addDimension("horizontal",source, target, value)
+    this.setHorizontalLabelD(id, x1, y1, x2, y2, -30)
     this.selected.unselectAll()
     this.solve()
+ 
     console.log("horizontalD")
 
   }
+
+  setHorizontalLabelD(id, x1, y1, x2, y2, dY=-30){
+    const ds = this.dimensionScreen
+    const value = x2 - x1 
+    const valueText = value.toFixed(2)
+
+    const tx = (x1 + x2)/2
+    const ty = Math.min(y1, y2) + dY
+
+    const text = ds.text(valueText)
+      .flip("y").translate(tx, ty)
+
+    const dy1 = ty > y1 ? 15 : -15
+    const dy2 = ty > y2 ? 15 : -15
+    const label = ds.group()
+
+    const l1 = ds.line(x1, y1, x1, ty+dy1 )
+    const l2 = ds.line(x2, y2, x2, ty+dy2 )
+    const arrow = this.makeArrow(x1, ty, x2, ty)
+      .data("id",{id: id, type:"arrow"})
+    
+    const clone = this.makeDimensionClone(arrow).draggable()
+    arrow.add(text) 
+    label.add(arrow)
+    label.add(l1)
+    label.add(l2)
+    label.data("info", {dY: dY, type:"horizontal"})
+
+    clone.on("dragmove",(e)=>{
+      if(!arrow.data("isSelected")){
+        arrow.stroke({color:"yellow"})
+      }
+      const {handler, p} = e.detail
+      e.preventDefault()
+      const x = p.x - handler.startPoints.point.x 
+      const y = p.y - handler.startPoints.point.y 
+      const gy = p.y + handler.startPoints.transform.y
+ 
+      handler.el.matrix(handler.startPoints.transform).transform({x:0, y: y}, true)
+      arrow.matrix(handler.startPoints.transform).transform({x:0, y: y}, true)  
+
+      const dy1 = gy > y1 ? 15 : -15
+      const dy2 = gy > y2 ? 15 : -15
+ 
+      l1.plot(x1, y1, x1, gy+dy1)
+      l2.plot(x2, y2, x2, gy+dy2)
+      label.data("info", {dY: gy-ty+dY})
+    })
+
+    this.dimensionsLabelData.addData(id, label)
+
+  }
+
+  changeHorizontalLabelD(id, x1, y1, x2, y2, dY){
+    const label = this.dimensionsLabelData.getDataFromId(id)
+    label.remove()
+    this.setHorizontalLabelD(id, x1, y1, x2, y2, dY)
+  }
+
+
+//dimension
+  addDimension(type, source, target, value, id){
+    switch(type){
+      case "vertical":{
+        const dId = this.addVerticalD(source, target,value, id)
+        return dId
+        break
+      }
+      case "horizontal":{
+        const dId = this.addHorizontalD(source, target,value, id)
+        return dId
+        break
+      }
+
+      default:{
+      }
+    }
+  }
+
+  changeDimension(id, value){
+    const cons = this.dimensionsData.getDataFromId(id)
+    const label = this.dimensionsLabelData.getDataFromId(id)
+    cons[0].value = value
+    console.log(value)
+    sketch.solve()
+    const type = cons[0].type
+    const sourceId = cons[0].sId
+    const fig = this.figsData.getDataFromId(sourceId)
+    const p = fig.array().valueOf()
+    switch(type){
+      case "vertical":{
+        const dX = label.data("info").dX
+        this.changeVerticalLabelD(id, p[0][0], p[0][1], p[1][0], p[1][1], dX)
+        break 
+      }
+      case "horizontal":{
+        const dY = label.data("info").dY
+        this.changeHorizontalLabelD(id, p[0][0], p[0][1], p[1][0], p[1][1], dY)
+        break 
+      }
+    }
+  }
+
+
+  addVerticalD(source, target, value, id){
+    const dId = id ? id : this.dimensionsData.getId()
+    this.dimensionsData.setId(dId)
+    const sourceId = source.id 
+    const sourceElem = source.element
+    const targetId = target.id 
+    const targetElem = target.element
+    const sNum = sourceElem ==="start"? 0 : 2
+    const tNum = targetElem ==="start"? 0 : 2
+
+
+    const cons = [
+      {s: sNum+1,     t: tNum+1,     value: value, sId: sourceId, tId: targetId, type:"vertical"}, // y coincident
+    ]
+
+    const sourceIniParamValid = this.initialParameters
+      .valid.getDataFromId(sourceId)
+
+    const targetIniParamValid = this.initialParameters
+      .valid.getDataFromId(targetId)
+
+     
+    if(targetIniParamValid[tNum+1]){
+      targetIniParamValid[tNum+1] = false //y1 or y2
+    }
+    else{
+      sourceIniParamValid[sNum+1] = false //y1 or y2
+    }   
+ 
+    this.degreesOfFreedom.decrease(1)
+    this.dimensionsData.addData(dId, cons) 
+
+    return dId
+  }
+
+  addHorizontalD(source, target, value, id){
+    const dId = id ? id : this.dimensionsData.getId()
+    this.dimensionsData.setId(dId)
+    const sourceId = source.id 
+    const sourceElem = source.element
+    const targetId = target.id 
+    const targetElem = target.element
+    const sNum = sourceElem ==="start"? 0 : 2
+    const tNum = targetElem ==="start"? 0 : 2
+
+    const cons = [
+      {s: sNum,     t: tNum,     value: value, sId: sourceId, tId: targetId, type:"horizontal"}, // x coincident
+    ]
+
+    const sourceIniParamValid = this.initialParameters
+      .valid.getDataFromId(sourceId)
+
+    const targetIniParamValid = this.initialParameters
+      .valid.getDataFromId(targetId)
+
+    if(targetIniParamValid[tNum]){
+      targetIniParamValid[tNum] = false //x1 or x2
+    }
+    else{
+      sourceIniParamValid[sNum] = false //x1 or x2
+    } 
+
+    this.degreesOfFreedom.decrease(1)
+    this.dimensionsData.addData(dId, cons) 
+    return dId
+  }
+
+
+
+// constraint
+
   setVertical(){
     this.runVertical()
     this.draw.on("nodeclick",this.runVertical.bind(this))
@@ -257,21 +441,69 @@ export const Constraints = class extends Figs {
     }
   }
 
-  addDimension(type, source, target, value, id){
-    switch(type){
-      case "horizontal":{
-        const dId = this.addHorizontalD(source, target,value, id)
-        return dId
-        break
-      }
-      case "vertical":{
-        const dId = this.addVerticalD(source, target,value, id)
-        return dId
-        break
-      }
-      default:{
-      }
+
+  addVertical(source, target, id){
+    const cId = id ? id : this.constraintsData.getId()
+    this.constraintsData.setId(cId)
+    const sourceId = source.id 
+    const sourceElem = source.element
+    const targetId = target.id 
+    const targetElem = target.element
+    const sNum = sourceElem ==="start"? 0 : 2
+    const tNum = targetElem ==="start"? 0 : 2
+
+
+    const cons = [
+      {s: sNum,     t: tNum,     value: 0, sId: sourceId, tId: targetId, type:"vertical"}, // y coincident
+    ]
+
+    const sourceIniParamValid = this.initialParameters
+      .valid.getDataFromId(sourceId)
+
+    const targetIniParamValid = this.initialParameters
+      .valid.getDataFromId(targetId)
+    
+    if(targetIniParamValid[tNum]){
+      targetIniParamValid[tNum] = false //x1 or x2
     }
+    else{
+      sourceIniParamValid[sNum] = false //x1 or x2
+    }   
+ 
+    this.degreesOfFreedom.decrease(1)
+    this.constraintsData.addData(cId, cons) 
+  }
+
+  addHorizontal(source, target, id){
+    const cId = id ? id : this.constraintsData.getId()
+    this.constraintsData.setId(cId)
+    const sourceId = source.id 
+    const sourceElem = source.element
+    const targetId = target.id 
+    const targetElem = target.element
+    const sNum = sourceElem ==="start"? 0 : 2
+    const tNum = targetElem ==="start"? 0 : 2
+
+    const cons = [
+      {s: sNum+1,     t: tNum+1,     value: 0, sId: sourceId, tId: targetId}, // x coincident
+    ]
+
+    const sourceIniParamValid = this.initialParameters
+      .valid.getDataFromId(sourceId)
+
+    const targetIniParamValid = this.initialParameters
+      .valid.getDataFromId(targetId)
+
+
+    if(targetIniParamValid[tNum+1]){
+      targetIniParamValid[tNum+1] = false //y1 or y2
+    }
+    else{
+      sourceIniParamValid[sNum+1] = false //y1 or y2
+    } 
+
+    this.degreesOfFreedom.decrease(1)
+    this.constraintsData.addData(cId, cons) 
   }
 
   addCoincident(source, target, id){
@@ -311,135 +543,7 @@ export const Constraints = class extends Figs {
     this.degreesOfFreedom.decrease(2)
     this.constraintsData.addData(cId, cons) 
   }
-  addHorizontal(source, target, id){
-    const cId = id ? id : this.constraintsData.getId()
-    this.constraintsData.setId(cId)
-    const sourceId = source.id 
-    const sourceElem = source.element
-    const targetId = target.id 
-    const targetElem = target.element
-    const sNum = sourceElem ==="start"? 0 : 2
-    const tNum = targetElem ==="start"? 0 : 2
 
-    const cons = [
-      {s: sNum+1,     t: tNum+1,     value: 0, sId: sourceId, tId: targetId}, // x coincident
-    ]
-
-    const sourceIniParamValid = this.initialParameters
-      .valid.getDataFromId(sourceId)
-
-    const targetIniParamValid = this.initialParameters
-      .valid.getDataFromId(targetId)
-
-
-    if(targetIniParamValid[tNum+1]){
-      targetIniParamValid[tNum+1] = false //y1 or y2
-    }
-    else{
-      sourceIniParamValid[sNum+1] = false //y1 or y2
-    } 
-
-    this.degreesOfFreedom.decrease(1)
-    this.constraintsData.addData(cId, cons) 
-  }
-  addVertical(source, target, id){
-    const cId = id ? id : this.constraintsData.getId()
-    this.constraintsData.setId(cId)
-    const sourceId = source.id 
-    const sourceElem = source.element
-    const targetId = target.id 
-    const targetElem = target.element
-    const sNum = sourceElem ==="start"? 0 : 2
-    const tNum = targetElem ==="start"? 0 : 2
-
-
-    const cons = [
-      {s: sNum,     t: tNum,     value: 0, sId: sourceId, tId: targetId}, // y coincident
-    ]
-
-    const sourceIniParamValid = this.initialParameters
-      .valid.getDataFromId(sourceId)
-
-    const targetIniParamValid = this.initialParameters
-      .valid.getDataFromId(targetId)
-    
-    if(targetIniParamValid[tNum]){
-      targetIniParamValid[tNum] = false //x1 or x2
-    }
-    else{
-      sourceIniParamValid[sNum] = false //x1 or x2
-    }   
- 
-    this.degreesOfFreedom.decrease(1)
-    this.constraintsData.addData(cId, cons) 
-  }
-
-  addVerticalD(source, target, value, id){
-    const dId = id ? id : this.dimensionsData.getId()
-    this.dimensionsData.setId(dId)
-    const sourceId = source.id 
-    const sourceElem = source.element
-    const targetId = target.id 
-    const targetElem = target.element
-    const sNum = sourceElem ==="start"? 0 : 2
-    const tNum = targetElem ==="start"? 0 : 2
-
-
-    const cons = [
-      {s: sNum+1,     t: tNum+1,     value: value, sId: sourceId, tId: targetId}, // y coincident
-    ]
-
-    const sourceIniParamValid = this.initialParameters
-      .valid.getDataFromId(sourceId)
-
-    const targetIniParamValid = this.initialParameters
-      .valid.getDataFromId(targetId)
-
-     
-    if(targetIniParamValid[tNum+1]){
-      targetIniParamValid[tNum+1] = false //y1 or y2
-    }
-    else{
-      sourceIniParamValid[sNum+1] = false //y1 or y2
-    }   
- 
-    this.degreesOfFreedom.decrease(1)
-    this.dimensionsData.addData(dId, cons) 
-
-    return dId
-  }
-
-  addHorizontalD(source, target, value, id){
-    const dId = id ? id : this.dimensionsData.getId()
-    this.dimensionsData.setId(dId)
-    const sourceId = source.id 
-    const sourceElem = source.element
-    const targetId = target.id 
-    const targetElem = target.element
-    const sNum = sourceElem ==="start"? 0 : 2
-    const tNum = targetElem ==="start"? 0 : 2
-
-    const cons = [
-      {s: sNum,     t: tNum,     value: value, sId: sourceId, tId: targetId}, // x coincident
-    ]
-
-    const sourceIniParamValid = this.initialParameters
-      .valid.getDataFromId(sourceId)
-
-    const targetIniParamValid = this.initialParameters
-      .valid.getDataFromId(targetId)
-
-    if(targetIniParamValid[tNum]){
-      targetIniParamValid[tNum] = false //x1 or x2
-    }
-    else{
-      sourceIniParamValid[sNum] = false //x1 or x2
-    } 
-
-    this.degreesOfFreedom.decrease(1)
-    this.dimensionsData.addData(dId, cons) 
-    return dId
-  }
 
   solve(){
     const constraints = [...this.constraintsData.getValues()]

@@ -17,6 +17,7 @@ export const control = {
       controlModules.toolBarFunc, 
       controlModules.drawMenuView,
       controlModules.drawMenuFunc,
+      controlModules.propertyFunc,
       controlModules.screenFunc, 
       controlModules.slidebar,
       controlModules.coordinate,
