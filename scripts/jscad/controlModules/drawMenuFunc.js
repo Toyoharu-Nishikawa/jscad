@@ -5,6 +5,7 @@ export const  drawMenuFunc = {
   line:{
     execute: function(){
       sketch.selected.unselectAll()
+      sketch.dimensionsSelected.unselectAll()
       sketch.drawCancel()
       sketch.drawOff()
       model.drawMenuFunc.line.execute()
@@ -16,6 +17,7 @@ export const  drawMenuFunc = {
   polyline:{
     execute: function(){
       sketch.selected.unselectAll()
+      sketch.dimensionsSelected.unselectAll()
       sketch.drawCancel()
       sketch.drawOff()
       model.drawMenuFunc.polyline.execute()

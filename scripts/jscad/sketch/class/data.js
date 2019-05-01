@@ -70,6 +70,7 @@ export const SelectedData = class {
       .attr("fill",null)
       selected.data("isSelected",null)
     })
+    this.clear()
   }
 }
 

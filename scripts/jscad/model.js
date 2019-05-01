@@ -18,6 +18,7 @@ export const model = {
     this.editorFunc.setEditor.execute()
     this.mainMenuView.setEvent()
     this.drawMenuView.setEvent()
+    this.propertyView.setEvent()
 //    this.test()
   },
   doc: modelModules.doc,
@@ -26,6 +27,8 @@ export const model = {
   toolBarFunc:modelModules.toolBarFunc,
   drawMenuView: modelModules.drawMenuView,
   drawMenuFunc: modelModules.drawMenuFunc,
+  propertyView: modelModules.propertyView,
+  propertyFunc: modelModules.propertyFunc,
   screenFunc: modelModules.screenFunc,
   slidebar: modelModules.slidebar,
   coordinate: modelModules.coordinate,

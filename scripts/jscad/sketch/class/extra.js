@@ -1,4 +1,7 @@
 "use strict"
+//import SVG from '../../../@svgdotjs/svg.js/src/svg.js'
+//console.log(SVG())
+
 export const addExtendElements = ()=>{
   SVG.Arc = SVG.invent({
     create: "path",

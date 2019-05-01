@@ -26,8 +26,9 @@ export const keyFunc = {
           else{
             sketch.drawOff()
           }
+          model.propertyFunc.cancel.execute()
           sketch.selected.unselectAll()
-          sketch.dimensionSelected.unselectAll()
+          sketch.dimensionsSelected.unselectAll()
           if(sketch.drawMode==="resize"){
             sketch.resizeFig.forEach((resizeFig)=>{
               resizeFig.selectize(false,{deepSelect:true}).resize("stop")

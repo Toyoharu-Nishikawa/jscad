@@ -1,4 +1,5 @@
-//import SVG from "../../node_modules/@svgdotjs/svg.js/src/svg.js"
+//import SVG from "../../../@svgdotjs/svg.js/src/svg.js"
+//import * as svgPanzoom from "../../../@svgdotjs/svg.panzoom.js/src/svg.panzoom.js"
 import {addExtendElements} from "./extra.js"
 
 const blackLine = {color:"black",opacity: 1.0,width:1}
@@ -6,7 +7,7 @@ const blueLine = {color:"blue",opacity: 1.0,width:1}
 
 export const Svg = class {
   constructor(elem){
-    this.draw = SVG(elem).panZoom({zoomFactor:1.1})
+    this.draw = SVG(elem).panZoom({zoomMode:"exponential", zoomFactor:1.1})
     console.log(this.draw)
     this.currentSheetNumber = 0
 
@@ -23,12 +24,9 @@ export const Svg = class {
     this.draw.width(width);
     this.draw.height(height);
     this.draw.attr('preserveAspectRatio', 'xMinYMin slice');
-    this.draw.style( {
-      border: '1px solid #F5F5F5',
-      margin:0,
-      padding:0,
-      background:'linear-gradient(to bottom, white, RoyalBlue )'
-    })
+    const style = "margin:0; padding:0; border:1px solid #F5F5F5; background:linear-gradient(to bottom, white, RoyalBlue"
+    this.draw.attr("style" ,style)
+
     this.draw.viewbox(0, 0, width,height).flip('y')
   }
   resize(width, height){
