@@ -60,21 +60,19 @@ export const Basic = class extends Svg {
   makeNodes(fig, pointType){
     const nodeScreen = this.nodeScreen 
     const points = fig.data("nodes")
+    const id = fig.data("id").id
 
- //   const draw = this.draw
     const nodes = points.map((point,index)=>{
       const circle = nodeScreen
         .circle(5)
         .fill("black")
         .center(...point) 
-        .data("info",{type:"node", number:index, pointType:pointType[index]})
+        .data("id",{id:id, type:"node", number:index, pointType:pointType[index]})
 
       this.addNodeEvent(circle,"nodeclick")
       return circle
     })
    
-    const id = fig.data("id").id
-    nodes.forEach(v=>v.data("id",{id: id}))
     this.nodesData.addData(id, nodes)
     return nodes
   }

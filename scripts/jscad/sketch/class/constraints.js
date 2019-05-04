@@ -30,32 +30,89 @@ export const Constraints = class extends Figs {
   }
 
   runVerticalD(){
-    if(this.selected.counts() !==1){
-      console.log("have to select a element before doing")
-      return
-    }
+    const counts = this.selected.counts()
+    switch(counts){
+      case 1 :{
+        const selected = this.selected.getArray()
+        if(selected[0].data("id").type !=="line"){
+          console.log("selected is not a line")
+          return
+        }
+        const source = {
+          id : selected[0].data("id").id ,
+          element: "start" ,
+        }
+  
+        const target = {
+          id : selected[0].data("id").id ,
+          element: "end" ,
+        }
+        const p = selected[0].array().valueOf()
+        const x1 = p[0][0]
+        const y1 = p[0][1]
+        const x2 = p[1][0]
+        const y2 = p[1][1]
+        const value = y2 - y1 
+        const id = this.addDimension("vertical",source, target, value)
+        this.setVerticalLabelD(id, x1, y1, x2, y2, 30)
+        this.selected.unselectAll()
+        this.solve()
+        console.log("verticalD")
+        break
+      }
+      case 2: {
+        const selected = this.selected.getArray()
+        const sourceD = selected[0]
+        const targetD = selected[1]
+        const sId = sourceD.data("id").id
+        const sType = sourceD.data("id").type
+        const sPointType = sourceD.data("id").pointType
+        const sNumber = sourceD.data("id").number
+        const tId = targetD.data("id").id
+        const tType = targetD.data("id").type
+        const tPointType = targetD.data("id").pointType
+        const tNumber = targetD.data("id").number
 
-    const selected = this.selected.getArray()
-    const source = {
-      id : selected[0].data("id").id ,
-      element: "start" ,
-    }
+        const sP = sId ==="ORIGIN" ? [0 ,0 ] :
+          this.figsData.hasData(sId) ? this.figsData.getDataFromId(sId).array().valueOf()[sNumber]:
+          false
 
-    const target = {
-      id : selected[0].data("id").id ,
-      element: "end" ,
+        if(!sP){
+          console.log("selected is not available")
+          return
+        }
+        const tP = tId ==="ORIGIN" ? [0 ,0 ] :
+          this.figsData.hasData(tId) ? this.figsData.getDataFromId(tId).array().valueOf()[tNumber]:
+          false
+
+        if(!tP){
+          console.log("selected is not available")
+          return
+        }
+        const x1 = sP[0]
+        const y1 = sP[1]
+        const x2 = tP[0]
+        const y2 = tP[1]
+        const value = y2 - y1 
+
+        console.log("xy",x1,y1,x2,y2)
+        const source = {
+          id : sId ,
+          element: sPointType ,
+        }
+
+        const target = {
+          id : tId ,
+          element: tPointType ,
+        }
+        const id = this.addDimension("vertical",source, target, value)
+        this.setVerticalLabelD(id, x1, y1, x2, y2, 30)
+        this.selected.unselectAll()
+        this.solve()
+        console.log("verticalD")
+        break
+      }
     }
-    const p = selected[0].array().valueOf()
-    const x1 = p[0][0]
-    const y1 = p[0][1]
-    const x2 = p[1][0]
-    const y2 = p[1][1]
-    const value = y2 - y1 
-    const id = this.addDimension("vertical",source, target, value)
-    this.setVerticalLabelD(id, x1, y1, x2, y2, 30)
-    this.selected.unselectAll()
-    this.solve()
-    console.log("verticalD")
   }
 
   setVerticalLabelD(id, x1, y1, x2, y2, dX=30){
@@ -103,7 +160,8 @@ export const Constraints = class extends Figs {
  
       l1.plot(x1, y1, gx+dx1, y1)
       l2.plot(x2, y2, gx+dx2, y2)
-      label.data("info", {dX: gx-tx+dX})
+      const rX = gx-tx+dX
+      label.data("info", {dX: rX})
     })
 
     this.dimensionsLabelData.addData(id, label)
@@ -124,38 +182,94 @@ export const Constraints = class extends Figs {
   }
 
   runHorizontalD(){
-    if(this.selected.counts() !==1){
-      console.log("have to select a element before doing")
-      return
+    const counts = this.selected.counts()
+    switch(counts){
+      case 1: {
+        const selected = this.selected.getArray()
+        if(selected[0].data("id").type !=="line"){
+          console.log("selected is not a line")
+          return
+        }
+        const source = {
+          id : selected[0].data("id").id ,
+          element: "start" ,
+        }
+    
+        const target = {
+          id : selected[0].data("id").id ,
+          element: "end" ,
+        }
+    
+        const p = selected[0].array().valueOf()
+        console.log(p)
+       
+        const x1 = p[0][0] 
+        const y1 = p[0][1] 
+        const x2 = p[1][0] 
+        const y2 = p[1][1] 
+    
+        const value = x2 -x1 
+        const id = this.addDimension("horizontal",source, target, value)
+        this.setHorizontalLabelD(id, x1, y1, x2, y2, -30)
+        this.selected.unselectAll()
+        this.solve()
+        console.log("horizontalD")
+        break
+      } 
+      case 2: {
+        const selected = this.selected.getArray()
+        const sourceD = selected[0]
+        const targetD = selected[1]
+        const sId = sourceD.data("id").id
+        const sType = sourceD.data("id").type
+        const sPointType = sourceD.data("id").pointType
+        const sNumber = sourceD.data("id").number
+        const tId = targetD.data("id").id
+        const tType = targetD.data("id").type
+        const tPointType = targetD.data("id").pointType
+        const tNumber = targetD.data("id").number
+
+        const sP = sId ==="ORIGIN" ? [0 ,0 ] :
+          this.figsData.hasData(sId) ? this.figsData.getDataFromId(sId).array().valueOf()[sNumber]:
+          false
+
+        if(!sP){
+          console.log("selected is not available")
+          return
+        }
+        const tP = tId ==="ORIGIN" ? [0 ,0 ] :
+          this.figsData.hasData(tId) ? this.figsData.getDataFromId(tId).array().valueOf()[tNumber]:
+          false
+
+        if(!tP){
+          console.log("selected is not available")
+          return
+        }
+        const x1 = sP[0]
+        const y1 = sP[1]
+        const x2 = tP[0]
+        const y2 = tP[1]
+        const value = x2 - x1 
+
+        console.log("xy",x1,y1,x2,y2)
+        const source = {
+          id : sId ,
+          element: sPointType ,
+        }
+
+        const target = {
+          id : tId ,
+          element: tPointType ,
+        }
+        const id = this.addDimension("horizontal",source, target, value)
+        this.setHorizontalLabelD(id, x1, y1, x2, y2, 30)
+        this.selected.unselectAll()
+        this.solve()
+        console.log("horizontalD")
+        break
+
+      }
     }
-
-    const selected = this.selected.getArray()
-    const source = {
-      id : selected[0].data("id").id ,
-      element: "start" ,
-    }
-
-    const target = {
-      id : selected[0].data("id").id ,
-      element: "end" ,
-    }
-
-    const p = selected[0].array().valueOf()
-    console.log(p)
-   
-    const x1 = p[0][0] 
-    const y1 = p[0][1] 
-    const x2 = p[1][0] 
-    const y2 = p[1][1] 
-
-    const value = x2 -x1 
-    const id = this.addDimension("horizontal",source, target, value)
-    this.setHorizontalLabelD(id, x1, y1, x2, y2, -30)
-    this.selected.unselectAll()
-    this.solve()
- 
-    console.log("horizontalD")
-
   }
 
   setHorizontalLabelD(id, x1, y1, x2, y2, dY=-30){
@@ -203,7 +317,8 @@ export const Constraints = class extends Figs {
  
       l1.plot(x1, y1, x1, gy+dy1)
       l2.plot(x2, y2, x2, gy+dy2)
-      label.data("info", {dY: gy-ty+dY})
+      const rY = gy-ty+dY
+      label.data("info", {dY: rY })
     })
 
     this.dimensionsLabelData.addData(id, label)
@@ -242,6 +357,45 @@ export const Constraints = class extends Figs {
     cons[0].value = value
     console.log(value)
     sketch.solve()
+
+    this.dimensionsLabelData.getMap().forEach((label,id)=>{
+      const constraint = this.dimensionsData.getDataFromId(id)
+      const cons = constraint[0] 
+      const sId = cons.sId 
+      const sElem = cons.sElem 
+      const tId = cons.tId 
+      const tElem = cons.tElem 
+      const type = cons.type
+
+      const sFig = this.figsData.getDataFromId(sId)
+      const tFig = this.figsData.getDataFromId(tId)
+
+      const sp = sId === "ORIGIN" ? [0,0] :
+        sElem ==="start" ? sFig.array().valueOf()[0] :
+        sFig.array().valueOf()[1]
+
+      const tp = tId === "ORIGIN" ? [0,0] :
+        tElem ==="start" ? tFig.array().valueOf()[0]:
+        tFig.array().valueOf()[1]
+
+      const [x1, y1] = sp 
+      const [x2, y2] = tp 
+
+      switch(type){
+        case "vertical":{
+          const dX = label.data("info").dX
+          this.changeVerticalLabelD(id, x1, y1, x2, y2, dX)
+          break 
+        }
+        case "horizontal":{
+          const dY = label.data("info").dY
+          this.changeHorizontalLabelD(id, x1, y1, x2, y2, dY)
+          break 
+        }
+      }
+    })
+
+    /*
     const type = cons[0].type
     const sourceId = cons[0].sId
     const fig = this.figsData.getDataFromId(sourceId)
@@ -258,6 +412,7 @@ export const Constraints = class extends Figs {
         break 
       }
     }
+    */
   }
 
 
@@ -273,7 +428,8 @@ export const Constraints = class extends Figs {
 
 
     const cons = [
-      {s: sNum+1,     t: tNum+1,     value: value, sId: sourceId, tId: targetId, type:"vertical"}, // y coincident
+      {s: sNum+1,     t: tNum+1,     value: value, sId: sourceId, sElem: sourceElem, 
+         tId: targetId, tElem: targetElem, type:"vertical"}, // y coincident
     ]
 
     const sourceIniParamValid = this.initialParameters
@@ -307,7 +463,8 @@ export const Constraints = class extends Figs {
     const tNum = targetElem ==="start"? 0 : 2
 
     const cons = [
-      {s: sNum,     t: tNum,     value: value, sId: sourceId, tId: targetId, type:"horizontal"}, // x coincident
+      {s: sNum,     t: tNum,     value: value, sId: sourceId, sElem: sourceElem, 
+        tId: targetId, tElem: targetElem, type:"horizontal"}, // x coincident
     ]
 
     const sourceIniParamValid = this.initialParameters

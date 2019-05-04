@@ -43,14 +43,13 @@ export const keyFunc = {
         }
         //keydown Del
         case 46:{
-          sketch.selected.forEach(selected=>{
-            if(selected.data("info").type==="edge"){
-              selected.remove()
-              sketch.clone.get(selected).remove()
-              sketch.nodes.get(selected).forEach(node=>{
-                node.remove()
-              })
-            }
+          sketch.selected.getArray().forEach(selected=>{
+            const id = selected.data("id").id
+            selected.remove()
+            sketch.clonesData.getDataFromId(id).remove()
+            sketch.nodesData.getDataFromId(id).forEach(node=>{
+              node.remove()
+            })
           })
         }   
         default:
