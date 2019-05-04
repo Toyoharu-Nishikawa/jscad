@@ -8,7 +8,6 @@ const blueLine = {color:"blue",opacity: 1.0,width:1}
 export const Svg = class {
   constructor(elem){
     this.draw = SVG(elem).panZoom({zoomMode:"exponential", zoomFactor:1.1})
-    console.log(this.draw)
     this.currentSheetNumber = 0
 
     this.background = this.makeScreen(blackLine,"black")

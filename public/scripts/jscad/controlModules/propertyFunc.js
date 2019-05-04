@@ -2,6 +2,24 @@ import {view} from "../view.js"
 import {model} from "../model.js"
 
 export const  propertyFunc = {
+  aside: {
+     execute: function(e){
+      e.stopPropagation()
+      e.preventDefault
+    },
+    add: function(){
+      view.elements.aside.onclick = this.execute
+    },
+  },
+  property: {
+     execute: function(e){
+      e.stopPropagation()
+      e.preventDefault
+    },
+    add: function(){
+      view.elements.property.onclick = this.execute
+    },
+  },
   input: {
     execute: function(e){
       e.stopPropagation()
