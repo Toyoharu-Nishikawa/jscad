@@ -45,11 +45,7 @@ export const keyFunc = {
         case 46:{
           sketch.selected.getArray().forEach(selected=>{
             const id = selected.data("id").id
-            selected.remove()
-            sketch.clonesData.getDataFromId(id).remove()
-            sketch.nodesData.getDataFromId(id).forEach(node=>{
-              node.remove()
-            })
+            sketch.remove(id)
           })
         }   
         default:

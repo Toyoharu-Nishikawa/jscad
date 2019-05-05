@@ -11,6 +11,7 @@ export const Figs = class extends Basic {
       valid: new DataClass.DataManager(),
     }
     this.degreesOfFreedom = new DataClass.Degrees()
+    this.figsAttrData = new DataClass.DataManager()
 
     this.initializeBackground()
   }
@@ -151,6 +152,11 @@ export const Figs = class extends Basic {
     this.initialParameters.param.addData(fId, [x1, y1, x2, y2])
     this.initialParameters.valid.addData(fId, [true, true, true, true])
     this.degreesOfFreedom.increase(4)
+    const attr = {
+      degreesOfFreedom: new DataClass.Degrees("line"),
+      constraint: new Map(),
+    }
+    this.figsAttrData.addData(fId, attr)
     return line
   }
   changeLine(id, x1,y1,x2,y2){

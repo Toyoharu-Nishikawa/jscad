@@ -39,5 +39,37 @@ export const Sketch = class extends Constraints {
       console.log(point, e.screenX, e.screenY)
     })
   }
+  remove(id){
+    const selected = this.figsData.getDataFromId(id)
+    const clone = this.clonesData.getDataFromId(id)
+    const nodes = this.nodesData.getDataFromId(id)
+    const figsAttr = this.figsAttrData.getDataFromId(id)
+    const constraint = figsAttr.constraint
+    selected.remove()
+    clone.remove()
+    nodes.forEach(node=>node.remove())
 
+    constraint.forEach((id, key)=>{
+      switch(key){
+        case "verticalD" :
+        case "horizontalD": {
+          const label = this.dimensionsLabelData.getDataFromId(id)
+          label.remove()
+          this.dimensionsLabelData.removeData(id)
+          this.dimensionsData.removeData(id)
+          break
+        }
+        case "vertical" :
+        case "horizontal": 
+        case "coincident": { 
+          this.constrainsData.removeData(id)
+          break
+        }
+      }  
+    })
+    this.figsData.removeData(id)
+    this.clonesData.removeData(id)
+    this.nodesData.removeData(id)
+ 
+  }
 } 

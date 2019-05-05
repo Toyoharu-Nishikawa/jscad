@@ -38,15 +38,27 @@ export const Constraints = class extends Figs {
           console.log("selected is not a line")
           return
         }
+        const sourceId =selected[0].data("id").id
+        const sourceElem = "start"
         const source = {
-          id : selected[0].data("id").id ,
-          element: "start" ,
+          id : sourceId ,
+          element: sourceElem ,
         }
   
+        const targetId =selected[0].data("id").id
+        const targetElem = "end"
         const target = {
-          id : selected[0].data("id").id ,
-          element: "end" ,
+          id : targetId ,
+          element: targetElem ,
         }
+        const key = `verticalD.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+        if(this.figsAttrData.getDataFromId(sourceId).constraint.has(key)){
+          return
+        }
+        if(this.figsAttrData.getDataFromId(targetId).constraint.has(key)){
+          return
+        }
+
         const p = selected[0].array().valueOf()
         const x1 = p[0][0]
         const y1 = p[0][1]
@@ -190,16 +202,26 @@ export const Constraints = class extends Figs {
           console.log("selected is not a line")
           return
         }
+        const sourceId = selected[0].data("id").id
+        const sourceElem = "start"
         const source = {
-          id : selected[0].data("id").id ,
-          element: "start" ,
+          id : sourceId ,
+          element: sourceElem ,
         }
-    
+        const targetId = selected[0].data("id").id 
+        const targetElem = "end"
         const target = {
-          id : selected[0].data("id").id ,
-          element: "end" ,
+          id : targetId,
+          element: targetElem ,
         }
     
+        const key = `horizontalD.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+        if(this.figsAttrData.getDataFromId(sourceId).constraint.has(key)){
+          return
+        }
+        if(this.figsAttrData.getDataFromId(targetId).constraint.has(key)){
+          return
+        }
         const p = selected[0].array().valueOf()
         console.log(p)
        
@@ -394,25 +416,6 @@ export const Constraints = class extends Figs {
         }
       }
     })
-
-    /*
-    const type = cons[0].type
-    const sourceId = cons[0].sId
-    const fig = this.figsData.getDataFromId(sourceId)
-    const p = fig.array().valueOf()
-    switch(type){
-      case "vertical":{
-        const dX = label.data("info").dX
-        this.changeVerticalLabelD(id, p[0][0], p[0][1], p[1][0], p[1][1], dX)
-        break 
-      }
-      case "horizontal":{
-        const dY = label.data("info").dY
-        this.changeHorizontalLabelD(id, p[0][0], p[0][1], p[1][0], p[1][1], dY)
-        break 
-      }
-    }
-    */
   }
 
 
@@ -449,6 +452,14 @@ export const Constraints = class extends Figs {
     this.degreesOfFreedom.decrease(1)
     this.dimensionsData.addData(dId, cons) 
 
+    const sAttr = this.figsAttrData.getDataFromId(sourceId)
+    const tAttr = this.figsAttrData.getDataFromId(targetId)
+    sAttr.degreesOfFreedom.decrease(1)
+    tAttr.degreesOfFreedom.decrease(1)
+
+    const key = `verticalD.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    sAttr.constraint.set(key, dId)
+    tAttr.constraint.set(key, dId)
     return dId
   }
 
@@ -482,6 +493,15 @@ export const Constraints = class extends Figs {
 
     this.degreesOfFreedom.decrease(1)
     this.dimensionsData.addData(dId, cons) 
+
+    const sAttr = this.figsAttrData.getDataFromId(sourceId)
+    const tAttr = this.figsAttrData.getDataFromId(targetId)
+    sAttr.degreesOfFreedom.decrease(1)
+    tAttr.degreesOfFreedom.decrease(1)
+    const key = `horizontalD.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    sAttr.constraint.set(key, dId)
+    tAttr.constraint.set(key, dId)
+ 
     return dId
   }
 
@@ -629,6 +649,17 @@ export const Constraints = class extends Figs {
  
     this.degreesOfFreedom.decrease(1)
     this.constraintsData.addData(cId, cons) 
+
+    const sAttr = this.figsAttrData.getDataFromId(sourceId)
+    const tAttr = this.figsAttrData.getDataFromId(targetId)
+    sAttr.degreesOfFreedom.decrease(1)
+    tAttr.degreesOfFreedom.decrease(1)
+
+    const key = `vertical.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    sAttr.constraint.set(key, cId)
+    tAttr.constraint.set(key, cId)
+
+    return cId
   }
 
   addHorizontal(source, target, id){
@@ -661,6 +692,17 @@ export const Constraints = class extends Figs {
 
     this.degreesOfFreedom.decrease(1)
     this.constraintsData.addData(cId, cons) 
+
+    const sAttr = this.figsAttrData.getDataFromId(sourceId)
+    const tAttr = this.figsAttrData.getDataFromId(targetId)
+    sAttr.degreesOfFreedom.decrease(1)
+    tAttr.degreesOfFreedom.decrease(1)
+ 
+    const key = `horizontal.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    sAttr.constraint.set(key, cId)
+    tAttr.constraint.set(key, cId)
+
+    return cId
   }
 
   addCoincident(source, target, id){
@@ -699,6 +741,16 @@ export const Constraints = class extends Figs {
 
     this.degreesOfFreedom.decrease(2)
     this.constraintsData.addData(cId, cons) 
+
+    const sAttr = this.figsAttrData.getDataFromId(sourceId)
+    const tAttr = this.figsAttrData.getDataFromId(targetId)
+    sAttr.degreesOfFreedom.decrease(2)
+    tAttr.degreesOfFreedom.decrease(2)
+    const key = `coincident.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    sAttr.constraint.set(key, cId)
+    tAttr.constraint.set(key, cId)
+
+    return cId
   }
 
 
