@@ -109,8 +109,11 @@ export const  freedomMap = new Map([
 ])
 
 export const Degrees = class{
-  constructor(){
-    this.degree = 0 
+  constructor(ini){
+    this.degree = ini ==undefined ? 0 :
+       freedomMap.has(ini) ? freedomMap.get(ini):
+       typeof ini === "number"  ? ini :
+       0 
   }
   increase(num){
     this.degree += num   
