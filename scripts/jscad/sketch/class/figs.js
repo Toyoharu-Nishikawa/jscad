@@ -66,47 +66,6 @@ export const Figs = class extends Basic {
       this.drawObj.setMode("line")
   }
 
-  drawPolyline(){
-      const sheet = this.getCurrentSheet()
-      const draw = this.draw
-      const fig = sheet.polyline().draw()
-      const keyDown = (e)=>{
-        if(e.keyCode===13){
-          fig.draw("done")
-          fig.off("drawstart")
-        } 
-      }
-      fig.on("drawstart",(e)=>{
-        this.drawObj.setStartFlag(true)
-        console.log("dragstart", "line")
-        document.addEventListener("keydown",keyDown,{once:true})
-      })
-      fig.on("drawstop",(e)=>{
-        console.log("dragstop", "line")
-        if(this.drawObj.getStartFlag()){
-          const points = fig.array().valueOf()
-          console.log(points)
-          fig.remove()
-          document.removeEventListener("keydown",keyDown)
-          const lines = points.map((v,i,arr)=>i>0?[arr[i-1],v]:0).slice(1)
-          const lineFigs =lines.map(v=>this.addFig("line", [].concat(...v)))
-          lineFigs.forEach((v,i,arr)=>{
-            if(i>0){
-              const sourceId = arr[i-1].data("id").id
-              const targetId = v.data("id").id
-              const source = {id:sourceId ,element:"end"}
-              const target = {id:targetId ,element:"start"}
-              this.addConstraint("coincindent", source, target)
-            }
-          }) 
-          this.drawPolyline()
-        }
-        this.drawObj.setStartFlag(false)
-      })
-      this.drawObj.setTemp(fig)
-      this.drawObj.setMode("line")
-  }
-
   addFig(type, parameters, idF){
     switch(type){
       case "line":{
@@ -144,10 +103,11 @@ export const Figs = class extends Basic {
       {x1:null, y1:null, x2:null, y2:null, angle:null, length:null})
     const p1 = [x1, y1]
     const p2 = [x2, y2]
-    line.data("nodes",[p1, p2])
+    const nodes = [p1, p2]
+    line.data("nodes",nodes)
     const pointType =  ["start", "end"]
     this.makeClone(line, 5)
-    this.makeNodes(line, pointType)
+    this.makeNodes(nodes, pointType, fId)
     this.figsData.addData(fId, line)
     this.initialParameters.param.addData(fId, [x1, y1, x2, y2])
     this.initialParameters.valid.addData(fId, [true, true, true, true])
@@ -157,7 +117,7 @@ export const Figs = class extends Basic {
       constraint: new Map(),
     }
     this.figsAttrData.addData(fId, attr)
-    return line
+    return fId 
   }
   changeLine(id, x1,y1,x2,y2){
     const line = this.figsData.getDataFromId(id)
@@ -167,20 +127,33 @@ export const Figs = class extends Basic {
     cloneLine.plot(x1, y1, x2, y2)
     nodes[0].center(x1, y1)
     nodes[1].center(x2, y2)
+    return id
   }
   addArc(cx, cy, r, theta1, theta2, id){
     const sheet = this.getCurrentSheet()
-    const figId = id ? id : this.getFigId()
-    this.setFigId(figId)
+    const fId = id ? id : this.figsData.getId()
+    this.figsData.setId(fId)
     const arc = sheet.arc(cx, cy, r, theta1, theta2)
-    arc.data("id",{id:figId, type:"arc"})
+    arc.data("id",{id:fId, type:"arc"})
     arc.data("parameters",{cx:cx, cy:cy, r:r, theta1:theta1, theta2: theta2})
     const c = [cx, cy]
-    const p1 = [cx+r*Math.cos(theta1), cy+r*Math.sin(theta1)]
-    const p2 = [cx+r*Math.cos(theta2), cy+r*Math.sin(theta2)]
-    arc.data("nodes",[ c, p1, p2 ])
+    const p1 = [cx+r*Math.cos(theta1*Math.PI/180), cy+r*Math.sin(theta1*Math.PI/180)]
+    const p2 = [cx+r*Math.cos(theta2*Math.PI/180), cy+r*Math.sin(theta2*Math.PI/180)]
+    const nodes = [ c, p1, p2 ]
+    arc.data("nodes",nodes)
     const pointType =  ["center", "start", "end"]
-    this.addEvent(arc, pointType)
-    return arc 
+    this.makeClone(arc, 5)
+    this.makeNodes(nodes, pointType, fId)
+    this.figsData.addData(fId, arc)
+    this.initialParameters.param.addData(fId, [cx, cy, r, theta1, theta2])
+    this.initialParameters.valid.addData(fId, [true, true, true, true, true])
+    this.degreesOfFreedom.increase(5)
+    const attr = {
+      degreesOfFreedom: new DataClass.Degrees("arc"),
+      constraint: new Map(),
+    }
+    this.figsAttrData.addData(fId, attr)
+
+    return fId 
   }
 }

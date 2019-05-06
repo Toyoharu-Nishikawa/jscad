@@ -4,14 +4,17 @@ import {addExtendElements} from "./extra.js"
 
 const blackLine = {color:"black",opacity: 1.0,width:1}
 const blueLine = {color:"blue",opacity: 1.0,width:1}
+const nonLine = {color:null,opacity: 0.0,width:1}
 
 export const Svg = class {
   constructor(elem){
+    this.element = elem
     this.draw = SVG(elem).panZoom({zoomMode:"exponential", zoomFactor:1.1})
     this.currentSheetNumber = 0
 
     this.background = this.makeScreen(blackLine,"black")
     this.screen = this.makeScreen(blueLine,"none")
+    this.cloneScreen = this.makeScreen(nonLine,"none")
     this.nodeScreen = this.makeScreen(blackLine,"black")
     this.dimensionScreen = this.makeScreen(blackLine,"black")
 

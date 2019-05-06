@@ -1,4 +1,5 @@
 import {model} from "../model.js"
+import {view} from "../view.js"
 
 export const coordinate = {
   display:{
@@ -6,7 +7,8 @@ export const coordinate = {
       model.coordinate.display.execute(e)
     },
     add:function(){
-      document.addEventListener("sketch.mouse.move", this.execute)
+      const dom = view.elements.drawing 
+      dom.addEventListener("sketch.mouse.move", this.execute)
     }
   }
 }
