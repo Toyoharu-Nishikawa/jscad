@@ -452,14 +452,17 @@ export const Constraints = class extends Figs {
     this.degreesOfFreedom.decrease(1)
     this.dimensionsData.addData(dId, cons) 
 
-    const sAttr = this.figsAttrData.getDataFromId(sourceId)
-    const tAttr = this.figsAttrData.getDataFromId(targetId)
-    sAttr.degreesOfFreedom.decrease(1)
-    tAttr.degreesOfFreedom.decrease(1)
-
     const key = `verticalD.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
-    sAttr.constraint.set(key, dId)
-    tAttr.constraint.set(key, dId)
+    if(!["ORIGIN","XAXIS", "YAXIS"].includes(sourceId)){
+      const sAttr = this.figsAttrData.getDataFromId(sourceId)
+      sAttr.degreesOfFreedom.decrease(1)
+      sAttr.constraint.set(key, dId)
+    }
+    if(!["ORIGIN","XAXIS", "YAXIS"].includes(targetId)){
+      const tAttr = this.figsAttrData.getDataFromId(targetId)
+      tAttr.degreesOfFreedom.decrease(1)
+      tAttr.constraint.set(key, dId)
+    }
     return dId
   }
 
@@ -494,18 +497,20 @@ export const Constraints = class extends Figs {
     this.degreesOfFreedom.decrease(1)
     this.dimensionsData.addData(dId, cons) 
 
-    const sAttr = this.figsAttrData.getDataFromId(sourceId)
-    const tAttr = this.figsAttrData.getDataFromId(targetId)
-    sAttr.degreesOfFreedom.decrease(1)
-    tAttr.degreesOfFreedom.decrease(1)
-    const key = `horizontalD.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
-    sAttr.constraint.set(key, dId)
-    tAttr.constraint.set(key, dId)
- 
+    const key = `verticalD.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    if(!["ORIGIN","XAXIS", "YAXIS"].includes(sourceId)){
+      const sAttr = this.figsAttrData.getDataFromId(sourceId)
+      sAttr.degreesOfFreedom.decrease(1)
+      sAttr.constraint.set(key, dId)
+    }
+    if(!["ORIGIN","XAXIS", "YAXIS"].includes(targetId)){
+      const tAttr = this.figsAttrData.getDataFromId(targetId)
+      tAttr.degreesOfFreedom.decrease(1)
+      tAttr.constraint.set(key, dId)
+    }
+
     return dId
   }
-
-
 
 // constraint
 
@@ -522,22 +527,33 @@ export const Constraints = class extends Figs {
     }
 
     const selected = this.selected.getArray()
+
+    const sourceId = selected[0].data("id").id 
+    const sourceElem = "start" 
     const source = {
-      id : selected[0].data("id").id ,
-      element: "start" ,
+      id : sourceId,
+      element: sourceElem ,
     }
 
+    const targetId = selected[0].data("id").id 
+    const targetElem = "end" 
     const target = {
-      id : selected[0].data("id").id ,
-      element: "end" ,
+      id : targetId ,
+      element: targetElem ,
+    }
+
+    const key = `vertical.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    if(this.figsAttrData.getDataFromId(sourceId).constraint.has(key)){
+      return
+    }
+    if(this.figsAttrData.getDataFromId(targetId).constraint.has(key)){
+      return
     }
 
     this.addConstraint("vertical",source, target )
     this.selected.unselectAll()
     this.solve()
-    console.log("horizontal")
-
-
+    console.log("vertical")
   }
 
   setHorizontal(){
@@ -553,15 +569,29 @@ export const Constraints = class extends Figs {
     }
 
     const selected = this.selected.getArray()
+
+    const sourceId = selected[0].data("id").id 
+    const sourceElem = "start" 
     const source = {
-      id : selected[0].data("id").id ,
-      element: "start" ,
+      id : sourceId,
+      element: sourceElem ,
     }
 
+    const targetId = selected[0].data("id").id 
+    const targetElem = "end" 
     const target = {
-      id : selected[0].data("id").id ,
-      element: "end" ,
+      id : targetId ,
+      element: targetElem ,
     }
+
+    const key = `horizontal.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    if(this.figsAttrData.getDataFromId(sourceId).constraint.has(key)){
+      return
+    }
+    if(this.figsAttrData.getDataFromId(targetId).constraint.has(key)){
+      return
+    }
+
 
     this.addConstraint("horizontal",source, target )
     this.selected.unselectAll()
@@ -583,14 +613,27 @@ export const Constraints = class extends Figs {
     }
     const selected = this.selected.getArray()
     console.log(selected)
+
+    const sourceId = selected[0].data("id").id 
+    const sourceElem = selected[0].data("id").pointType
     const source = {
-      id : selected[0].data("id").id ,
-      element: selected[0].data("info").pointType ,
+      id : sourceId,
+      element: sourceElem ,
     }
 
+    const targetId = selected[1].data("id").id 
+    const targetElem = selected[1].data("id").pointType
     const target = {
-      id : selected[1].data("id").id ,
-      element: selected[1].data("info").pointType ,
+      id : targetId ,
+      element: targetElem ,
+    }
+
+    const key = `coincident.${sourceId}.${sourceElem}.${targetId}.${targetElem}` 
+    if(this.figsAttrData.getDataFromId(sourceId).constraint.has(key)){
+      return
+    }
+    if(this.figsAttrData.getDataFromId(targetId).constraint.has(key)){
+      return
     }
 
     this.addConstraint("coincident",source, target )

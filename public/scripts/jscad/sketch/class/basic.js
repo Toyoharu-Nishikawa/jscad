@@ -45,10 +45,11 @@ export const Basic = class extends Svg {
 
   makeClone(fig, width=5){
 //    const draw = this.draw
+    const cloneScreen = this.cloneScreen
     const clone = fig.clone()
       .stroke({width:width, opacity:0.0,color:null})
       .attr("stroke-dasharray",null)
-
+    cloneScreen.add(clone) 
     this.addElementEvent(fig, clone)
 
     const id = fig.data("id").id
@@ -57,11 +58,8 @@ export const Basic = class extends Svg {
     return clone
   }
 
-  makeNodes(fig, pointType){
-    const nodeScreen = this.nodeScreen 
-    const points = fig.data("nodes")
-    const id = fig.data("id").id
-
+  makeNodes(points, pointType, id){
+    const nodeScreen = this.nodeScreen
     const nodes = points.map((point,index)=>{
       const circle = nodeScreen
         .circle(5)
