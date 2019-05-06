@@ -13,8 +13,10 @@ export const doc = {
         view.tempElement.notSelected()
       }
       if(!e.ctrlKey){
-        model.sketch.unselectAll()
+        sketch.selected.unselectAll()
+        sketch.dimensionsSelected.unselectAll()
       }
+      model.propertyFunc.cancel.execute()
       view.tempElement = null
       model.mainMenuView.hover.flag = false
     },

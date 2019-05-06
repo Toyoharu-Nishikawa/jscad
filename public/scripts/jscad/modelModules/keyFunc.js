@@ -20,13 +20,15 @@ export const keyFunc = {
           if(document.activeElement != model.editor.textInput.getElement()){
             model.editor.selection.clearSelection(); 
           }
-          if(sketch.drawStartFlag){
-            sketch.cancel()
+          if(sketch.drawObj.getStartFlag()){
+            sketch.drawCancel()
           }
           else{
             sketch.drawOff()
           }
-          sketch.unselectAll(e)
+          model.propertyFunc.cancel.execute()
+          sketch.selected.unselectAll()
+          sketch.dimensionsSelected.unselectAll()
           if(sketch.drawMode==="resize"){
             sketch.resizeFig.forEach((resizeFig)=>{
               resizeFig.selectize(false,{deepSelect:true}).resize("stop")
@@ -41,14 +43,9 @@ export const keyFunc = {
         }
         //keydown Del
         case 46:{
-          sketch.selected.forEach(selected=>{
-            if(selected.data("info").type==="edge"){
-              selected.remove()
-              sketch.clone.get(selected).remove()
-              sketch.nodes.get(selected).forEach(node=>{
-                node.remove()
-              })
-            }
+          sketch.selected.getArray().forEach(selected=>{
+            const id = selected.data("id").id
+            sketch.remove(id)
           })
         }   
         default:

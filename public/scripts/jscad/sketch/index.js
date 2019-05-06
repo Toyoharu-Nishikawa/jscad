@@ -1,13 +1,10 @@
 import {Constraints} from "./class/constraints.js"
-import * as solve from "../../sci/solve/index.mjs"
 
 
 export const Sketch = class extends Constraints {
   constructor(elem){
     super(elem)
-    this.tmp = null
-    this.drawMode = null
-    this.drawStartFlag = null
+    this.initializeZoomEvent()
   }
   import(json){
     const figs = json.figs 
@@ -18,163 +15,103 @@ export const Sketch = class extends Constraints {
   export(){
   }
 
-  cancel(){
-    if(this.tmp){
-      if(this.drawStartFlag){
-        this.setDrawStartFlag(false)
-        this.tmp.draw("cancel")
-      }
-    }
+  initializeZoomEvent(){
     const draw = this.draw
-    draw.off("nodeclick")
-    draw.off("elementclick")
-  }
-  drawOff(){
-    const fig = this.temp
-    sketch.drawMode=null
-    this.temp = null
-    SVG.off(window,"mousemove.draw")
-    this.draw.off("click.draw")
-    if(fig){
-      fig.forget("_paintHandler")
-      fig.draw = ()=>{}
-    }
-    const draw = this.draw
-    draw.off("nodeclick")
-    draw.off("elementclick")
-    console.log("drawOff")
-  }
-
-  setDrawStartFlag(flag){
-    this.drawStartFlag = flag
-  }
-  getDrawStartFlag(flag){
-    return this.drawStartFlag 
-  }
-  setTmp(fig){
-    this.tmp = fig  
-  }
-  setDrawMode(mode){
-    this.drawMode = mode  
-  }
-
-  addFig(type, parameters, idF){
-    switch(type){
-      case "line":{
-        const fig = this.addLine(...parameters, idF)
-        return fig
-        break
-      }
-      case "arc":{
-        const fig = this.addArc(...parameters, idF)
-        return fig
-        break
-      }
-      default:{
-      }
-    }
-  }
-  changeFig(idF, params){
-    const fig = this.getFigFromId(idF) 
-    const type = fig.data("idF").type
-    switch(type){
-      case "line":{
-        this.changeLine(idF, ...params)
-        break
-      }
-    }
-  }
-  addConstraint(type, source, target, idC){
-    switch(type){
-      case "coincident":{
-        this.addCoincident(source, target, idC)
-        break
-      }
-      case "horizontal":{
-        this.addHorizontal(source, target, idC)
-        break
-      }
-      case "vertical":{
-        this.addVertical(source, target, idC)
-        break
-      }
-      default:{
-      }
-    }
-  }
-  addDimension(type, source, target, value, idD){
-    switch(type){
-      case "horizontal":{
-        this.addHorizontalD(source, target,value, idD)
-        break
-      }
-      case "vertical":{
-        this.addVerticalD(source, target,value, idD)
-        break
-      }
-      default:{
-      }
-    }
-  }
-  solve(){
-    const constraints = [...this.getConstraintMap().values()]
-    const dimensions = [...this.getDimensionMap().values()]
-    const figs = this.getFigMap()
-    const figKeys = [...figs.keys()]
-    const N = figKeys.length*4
-    const constraintsMatrix = constraints.flatMap(v=>v.map(u=>this._makeMatrixColumn(u, N,figKeys)))
-    const constraintsVector = constraints.flatMap(v=>v.map(u=>u.value))
-
-    const dimensionsMatrix = dimensions.flatMap(v=>v.map(u=>this._makeMatrixColumn(u, N, figKeys)))
-    const dimensionsVector = dimensions.flatMap(v=>v.map(u=>u.value))
-
-
-    const initialParameters = [].concat(...this.getInitialParametersMap().values())
-    const initialParametersValid = [].concat(...this.getInitialParametersValidMap().values())
-    const initialParametersMatrix = initialParametersValid.map((v,i)=>!v?null:[...Array(N)].map((u,j)=>j==i?1:0)).filter(v=>v!==null)
-    const initialParametersVector = initialParametersValid.map((v,i)=>!v?null:initialParameters[i]).filter(v=>v!==null)
-
-    const geometryMatrix = [].concat(constraintsMatrix, dimensionsMatrix, initialParametersMatrix)
-    const valueVector = [].concat(constraintsVector, dimensionsVector, initialParametersVector)
-
-    console.log("M",geometryMatrix)
-    console.log("V",valueVector)
-
-    const sol = solve.linEqGauss(geometryMatrix, valueVector)
-
-    figKeys.forEach((v,i)=>{
-      const parameters = sol.slice(i*4, i*4+4)    
-      this.changeFig(v, parameters)
+    const element = this.element
+    const dom = document.getElementById(element)
+    draw.on("zoom",(e)=>{
+      const origin = this.backgroundData.getDataFromId("ORIGIN")
+      const circles = this.nodesData.getValues()
+      origin.radius(5.0/draw.zoom())
+      circles.forEach(v=>v.forEach(u=>u.radius(2.5/draw.zoom())))
     })
 
-    const freedomDegree = this.getFreedomDegree()
-    console.log("degree of feedom", freedomDegree)
+    draw.mousemove(function(e){
+      const point = this.point()
+      const coord = {
+        x: point.x+e.clientX/draw.zoom(),
+        y: point.y-e.clientY/draw.zoom()
+      }
+      const ev = new CustomEvent("sketch.mouse.move", {detail:coord})
+      dom.dispatchEvent(ev)
+    })
+    draw.click(function(e){
+      const point = this.point(e.screenX, e.screenY)
+      console.log(point, e.screenX, e.screenY)
+    })
   }
-  _makeMatrixColumn(u, N, figKeys){ 
-    const s = u.s
-    const t = u.t
-    const sId = u.sId
-    const tId = u.tId
+  remove(id){
+    const selected = this.figsData.getDataFromId(id)
+    const clone = this.clonesData.getDataFromId(id)
+    const nodes = this.nodesData.getDataFromId(id)
+    const figsAttr = this.figsAttrData.getDataFromId(id)
+    const constraint = figsAttr.constraint
+    selected.remove()
+    clone.remove()
+    nodes.forEach(node=>node.remove())
 
-    const ss = sId === "YAXIS" ? -1 :
-               sId === "XAXIS" ? -1 :
-               sId === "ORIGIN"? -1 :
-               figKeys.indexOf(sId)
-
-    const tt = tId === "YAXIS" ? -1 :
-               tId === "XAXIS" ? -1 :
-               tId === "ORIGIN"? -1 :
-               figKeys.indexOf(tId)
-
-    const list = [...Array(N)].fill(0)
-    if(ss>-1){
-      const sn = ss*4 + s
-      list[sn] = -1
-    }
-   if(tt>-1){
-      const tn = tt*4 + t 
-      list[tn] = 1
-    }
-    return list
+    constraint.forEach((id, key)=>{
+      switch(key){
+        case "verticalD" :
+        case "horizontalD": {
+          const label = this.dimensionsLabelData.getDataFromId(id)
+          label.remove()
+          this.dimensionsLabelData.removeData(id)
+          this.dimensionsData.removeData(id)
+          break
+        }
+        case "vertical" :
+        case "horizontal": 
+        case "coincident": { 
+          this.constrainsData.removeData(id)
+          break
+        }
+      }  
+    })
+    this.figsData.removeData(id)
+    this.clonesData.removeData(id)
+    this.nodesData.removeData(id)
   }
+
+  drawPolyline(){
+      const sheet = this.getCurrentSheet()
+      const draw = this.draw
+      const fig = sheet.polyline().draw()
+      const keyDown = (e)=>{
+        if(e.keyCode===13){
+          fig.draw("done")
+          fig.off("drawstart")
+        } 
+      }
+      fig.on("drawstart",(e)=>{
+        this.drawObj.setStartFlag(true)
+        console.log("dragstart", "line")
+        document.addEventListener("keydown",keyDown,{once:true})
+      })
+      fig.on("drawstop",(e)=>{
+        console.log("dragstop", "line")
+        if(this.drawObj.getStartFlag()){
+          const points = fig.array().valueOf()
+          console.log(points)
+          fig.remove()
+          document.removeEventListener("keydown",keyDown)
+          const lines = points.map((v,i,arr)=>i>0?[arr[i-1],v]:0).slice(1)
+          const lineFigsId =lines.map(v=>this.addFig("line", [].concat(...v)))
+          lineFigsId.forEach((v,i,arr)=>{
+            if(i>0){
+              const sourceId = arr[i-1]
+              const targetId = v
+              const source = {id:sourceId ,element:"end"}
+              const target = {id:targetId ,element:"start"}
+              this.addConstraint("coincident", source, target)
+            }
+          }) 
+          this.drawPolyline()
+        }
+        this.drawObj.setStartFlag(false)
+      })
+      this.drawObj.setTemp(fig)
+      this.drawObj.setMode("line")
+  }
+
 } 

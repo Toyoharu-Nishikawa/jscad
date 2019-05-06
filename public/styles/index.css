@@ -208,6 +208,35 @@ aside.property  > article> ul{
   list-style:none;
 }
 
+ul.yesNoSelect{
+  list-style: none;
+  display: flex;
+  list-style: none;
+  margin:0;
+  padding:0;
+}
+
+ul.yesNoSelect > li{
+  margin: 5px 10px;
+  padding:2px 7px;
+  width: 50px;
+  border: 1px solid #5F5F5F;
+  border-radius: 5px;
+  background: #EEEEEE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ul.yesNoSelect > li:hover{
+  background: #CCCCCC;
+  cursor: pointer;
+}
+
+ul.yesNoSelect > li >p{
+  margin:0;
+  padding:0;
+}
 main {
   grid-area: main;
   display:flex;

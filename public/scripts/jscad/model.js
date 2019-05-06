@@ -18,6 +18,7 @@ export const model = {
     this.editorFunc.setEditor.execute()
     this.mainMenuView.setEvent()
     this.drawMenuView.setEvent()
+    this.propertyView.setEvent()
 //    this.test()
   },
   doc: modelModules.doc,
@@ -26,6 +27,8 @@ export const model = {
   toolBarFunc:modelModules.toolBarFunc,
   drawMenuView: modelModules.drawMenuView,
   drawMenuFunc: modelModules.drawMenuFunc,
+  propertyView: modelModules.propertyView,
+  propertyFunc: modelModules.propertyFunc,
   screenFunc: modelModules.screenFunc,
   slidebar: modelModules.slidebar,
   coordinate: modelModules.coordinate,
@@ -34,17 +37,20 @@ export const model = {
   test:function(){
     sketch.addFig("line",[0,10,100,120], 0)
     sketch.addFig("line",[110,100,240,220], 1)
+    sketch.addFig("arc",[100,100,50,0, 140], 2)
     sketch.changeFig(0,[110,300,240,320])
 
-    sketch.addConstraint("coincident", {idF:0, element:"end"}, {idF:1, element:"start"}, 0)
-    sketch.addConstraint("horizontal", {idF:1, element:"start"}, {idF:1, element:"end"}, 1)
+    sketch.addConstraint("coincident", {id:0, element:"end"}, {id:1, element:"start"}, 0)
+    sketch.addConstraint("horizontal", {id:1, element:"start"}, {id:1, element:"end"}, 1)
 
+    sketch.nodeScreen.hide()
+    sketch.clonesData.getValues().forEach(v=>v.hide())
 //    sketch.addDimension("horizontal", {idF:"YAXIS", element:"edge"}, {idF:0, element:"start"},50, 0)
 //    sketch.addDimension("vertical", {idF:"XAXIS", element:"edge"}, {idF:0, element:"start"},200, 1)
 //    sketch.addDimension("horizontal", {idF:0, element:"start"}, {idF:0, element:"end"}, 100, 2)
 //    sketch.addDimension("vertical", {idF:0, element:"start"}, {idF:0, element:"end"}, 50, 3)
 //    sketch.addDimension("horizontal", {idF:1, element:"start"}, {idF:1, element:"end"}, 100, 4)
-    sketch.solve()
+   // sketch.solve()
     console.log("sketch", sketch)
 
   }

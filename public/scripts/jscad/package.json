@@ -17,6 +17,7 @@
     "file-saver": "^2.0.1",
     "filereader": "^1.1.1",
     "sci": "^4.4.9",
+    "svg.draw.js": "^2.0.3",
     "svg.js": "^2.7.1"
   }
 }
