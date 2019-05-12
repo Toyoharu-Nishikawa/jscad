@@ -4,11 +4,7 @@ import {model} from "../model.js"
 export const  drawMenuFunc = {
   line:{
     execute: function(){
-      sketch.selected.unselectAll()
-      sketch.dimensionsSelected.unselectAll()
-      sketch.drawCancel()
-      sketch.drawOff()
-      model.drawMenuFunc.line.execute()
+     model.drawMenuFunc.line.execute()
     },
     add: function(){
       view.elements.line.onclick = this.execute
@@ -16,11 +12,7 @@ export const  drawMenuFunc = {
   },
   polyline:{
     execute: function(){
-      sketch.selected.unselectAll()
-      sketch.dimensionsSelected.unselectAll()
-      sketch.drawCancel()
-      sketch.drawOff()
-      model.drawMenuFunc.polyline.execute()
+     model.drawMenuFunc.polyline.execute()
     },
     add: function(){
       view.elements.polyline.onclick = this.execute
@@ -28,9 +20,6 @@ export const  drawMenuFunc = {
   },
   circle:{
     execute: function(){
-      sketch.selected.unselectAll()
-      sketch.drawOff()
-      sketch.drawCancel()
       model.drawMenuFunc.circle.execute()
     },
     add: function(){
@@ -39,10 +28,7 @@ export const  drawMenuFunc = {
   },
   arc:{
     execute: function(){
-      sketch.selected.unselectAll()
-      sketch.drawOff()
-      sketch.drawCancel()
-      model.drawMenuFunc.circle.execute()
+     model.drawMenuFunc.circle.execute()
     },
     add: function(){
       view.elements.arc.onclick = this.execute
@@ -50,9 +36,7 @@ export const  drawMenuFunc = {
   },
   resize: {
     execute:function(){
-      sketch.drawCancel()
-      sketch.drawOff()
-      model.drawMenuFunc.resize.execute()
+     model.drawMenuFunc.resize.execute()
     },
     add:function(){
       view.elements.resize.onclick=this.execute
@@ -60,8 +44,6 @@ export const  drawMenuFunc = {
   },
   verticalD: {
     execute:function(){
-      sketch.drawCancel()
-      sketch.drawOff()
       model.drawMenuFunc.verticalD.execute()
     },
     add:function(){
@@ -70,9 +52,7 @@ export const  drawMenuFunc = {
   },
   horizontalD: {
     execute:function(){
-      sketch.drawCancel()
-      sketch.drawOff()
-      model.drawMenuFunc.horizontalD.execute()
+     model.drawMenuFunc.horizontalD.execute()
     },
     add:function(){
       view.elements.horizontalD.onclick=this.execute
@@ -80,9 +60,7 @@ export const  drawMenuFunc = {
   },
   angleD: {
     execute:function(){
-      sketch.drawCancel()
-      sketch.drawOff()
-      model.drawMenuFunc.angleD.execute()
+     model.drawMenuFunc.angleD.execute()
     },
     add:function(){
       view.elements.angleD.onclick=this.execute
@@ -90,9 +68,7 @@ export const  drawMenuFunc = {
   },
   vertical: {
     execute:function(){
-      sketch.drawCancel()
-      sketch.drawOff()
-      model.drawMenuFunc.vertical.execute()
+     model.drawMenuFunc.vertical.execute()
     },
     add:function(){
       view.elements.vertical.onclick=this.execute
@@ -100,9 +76,7 @@ export const  drawMenuFunc = {
   },
   horizontal: {
     execute:function(){
-      sketch.drawCancel()
-      sketch.drawOff()
-      model.drawMenuFunc.horizontal.execute()
+     model.drawMenuFunc.horizontal.execute()
     },
     add:function(){
       view.elements.horizontal.onclick=this.execute
@@ -110,9 +84,7 @@ export const  drawMenuFunc = {
   },
   coincident: {
     execute:function(){
-      sketch.drawCancel()
-      sketch.drawOff()
-      model.drawMenuFunc.coincident.execute()
+     model.drawMenuFunc.coincident.execute()
     },
     add:function(){
       view.elements.coincident.onclick=this.execute
