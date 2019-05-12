@@ -12,11 +12,11 @@ export const Svg = class {
     this.draw = SVG(elem).panZoom({zoomMode:"exponential", zoomFactor:1.1})
     this.currentSheetNumber = 0
 
-    this.background = this.makeScreen(blackLine,"black")
-    this.screen = this.makeScreen(blueLine,"none")
     this.cloneScreen = this.makeScreen(nonLine,"none")
-    this.nodeScreen = this.makeScreen(blackLine,"black")
     this.dimensionScreen = this.makeScreen(blackLine,"black")
+    this.screen = this.makeScreen(blueLine,"none")
+    this.background = this.makeScreen(blackLine,"black")
+    this.nodeScreen = this.makeScreen(blackLine,"black")
 
     this.sheets = this.makeSheets()
 

@@ -29,7 +29,7 @@ export const propertyFunc = {
     execute: function(){
       const inputElem = view.elements.dimensionInput
       inputElem.value = ""
-      sketch.dimensionsSelected.unselectAll()
+      sketch.unselectAll()
       console.log("cancel")
     },
   }
