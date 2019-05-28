@@ -25,8 +25,7 @@ export const MiniJscad = class{
     return this
   }
   hideEventObject(){
-    this.sketch.nodeScreen.hide()
-    this.sketch.cloneScreen.hide()
+    this.sketch.hideEventObject()
     return this
   }
   setup(element="drawing", width=300, height=300){

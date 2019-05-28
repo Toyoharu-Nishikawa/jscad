@@ -1,6 +1,6 @@
 import {view} from "./view.js"
 import * as modelModules from "./modelModules/index.js"
-import {Sketch} from "./sketch/index.js"
+import {Sketch} from "../minijscad/sketch/index.js"
 
 "use strict"
 

@@ -26,11 +26,18 @@ export const Sketch = class  {
   resize(width, height){
     this.view.svg.resize(width, height)
   }
+
+  hideEventObject(){
+    this.view.svg.nodeScreen.hide()
+    this.view.svg.cloneScreen.hide()
+    this.view.svg.backgroundNode.hide()
+  }
   get draw(){
     return this.view.svg.draw
   }
   addFig(type, parameters, idF){
-    this.viewModel.figs.addFig(type, parameters, idF)
+    const id = this.viewModel.figs.addFig(type, parameters, idF)
+    return id
   } 
   changeFig(idF, parameters){
     this.viewModel.figs.changeFig(idF, parameters)
