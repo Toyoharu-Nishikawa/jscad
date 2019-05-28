@@ -1,7 +1,7 @@
 version: '2'
 services:
   nginx:
-    image: nginx
+    image: nginx:alpine
     restart: always
     volumes:
       - ./public:/usr/share/nginx/html
@@ -9,7 +9,6 @@ services:
       - /var/log/jscad:/var/log/nginx
     networks:
       - neco_link
-      - default
 #  node:
 #    image: node
 #    restart: always

@@ -4,16 +4,29 @@ import {model} from "../model.js"
 export const drawMenuFunc = {
   line:{
     execute: function(){
+      sketch.unselectAll()
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       sketch.drawLine()
     },
   },
   polyline:{
     execute: function(){
+      sketch.selected.unselectAll()
+      sketch.dimensionsSelected.unselectAll()
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       sketch.drawPolyline()
     },
   },
   circle: {
     execute: function(){
+      sketch.selected.unselectAll()
+      sketch.drawOff()
+      sketch.drawCancel()
+ 
       const i = sketch.currentSheetNumber
       const fig = sketch.draw.screen.sheet[i].circle().draw().fill("none")
       sketch.temp =fig 
@@ -23,6 +36,10 @@ export const drawMenuFunc = {
   },
   arc: {
     execute: function(){
+      sketch.selected.unselectAll()
+      sketch.drawOff()
+      sketch.drawCancel()
+ 
       const i = sketch.currentSheetNumber
       const fig = sketch.draw.screen.sheet[i].circle().draw().fill("none")
       sketch.temp =fig 
@@ -32,31 +49,49 @@ export const drawMenuFunc = {
   },
   resize: {
     execute:function(){
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       sketch.drawMode="resize"
     },
   },
   verticalD: {
     execute: function(){
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       sketch.setVerticalD()
     },
   },
   horizontalD: {
     execute: function(){
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       sketch.setHorizontalD()
     },
   },
   angleD: {
     execute: function(){
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       console.log("angleD")
     }
   },
   vertical:{
     execute: function(){
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       sketch.setVertical()
     },
   },
   horizontal:{
     execute: function(){
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       sketch.setHorizontal()
     },
   },
@@ -76,6 +111,9 @@ export const drawMenuFunc = {
   },
   coincident: {
     execute:function(){
+      sketch.drawCancel()
+      sketch.drawOff()
+ 
       sketch.setCoincident()
     },
   }

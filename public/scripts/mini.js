@@ -1,4 +1,4 @@
-import {MiniJscad} from "./jscad/mini.js"
+import {MiniJscad} from "./minijscad/index.js"
 
 const minijscadTest = document.getElementById("frame")
 const width = minijscadTest.getBoundingClientRect().width  
