@@ -13,8 +13,7 @@ export const doc = {
         view.tempElement.notSelected()
       }
       if(!e.ctrlKey){
-        sketch.selected.unselectAll()
-        sketch.dimensionsSelected.unselectAll()
+        sketch.unselectAll()
       }
       model.propertyFunc.cancel.execute()
       view.tempElement = null
