@@ -69,7 +69,7 @@ export const Figs = class{
 
   addArc(cx, cy, r, theta1, theta2, id){
     const sheet = this.view.svg.getCurrentSheet()
-    const fId = id ? id : this.data.getId()
+    const fId = id ? id : this.view.figs.data.getId()
  
     this.view.figs.addArc(sheet, cx, cy, r, theta1, theta2, fId)
 

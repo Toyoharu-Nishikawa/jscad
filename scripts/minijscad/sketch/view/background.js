@@ -4,12 +4,14 @@ import {EventHandler} from "./eventHandler.js"
 export const Background = class {
   constructor(svg){
     this.background = svg.background
+    this.backgroundNode = svg.backgroundNode
     this.eH = new EventHandler(svg.draw, svg.cloneScreen, svg.nodeScreen) 
     this.backgroundData = new DataClass.DataManager()
     this.initializeBackground()
   }
   initializeBackground(){
     const background = this.background
+    const backgroundNode = this.backgroundNode
     const eH = this.eH
  
     const XAXIS = background.line(-1000, 0, 1000, 0)
@@ -22,7 +24,7 @@ export const Background = class {
       .data("id",{id: "YAXIS", type:"line"})
     eH.makeClone(YAXIS, 10,"YAXIS", "elementclick") 
   
-    const ORIGIN = background.circle(10).center(0,0)
+    const ORIGIN = backgroundNode.circle(10).center(0,0)
       .data("id",{id: "ORIGIN", type:"circle"})
 
     eH.addNodeEvent(ORIGIN, "nodeclick", "ORIGIN")  
