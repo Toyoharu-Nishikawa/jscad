@@ -1,6 +1,6 @@
 version: '2'
 services:
-  nginx:
+  web:
     image: nginx:alpine
     restart: always
     volumes:
