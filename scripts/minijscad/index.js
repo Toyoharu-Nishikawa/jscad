@@ -5,7 +5,6 @@ import {Sketch} from "./sketch/index.js"
 export const MiniJscad = class{
   constructor(element, width=300, height=300){
     this.sketch = null
-    this.draw = null 
     this.element = element
     this.setup(element, width, height)
     return this
@@ -48,7 +47,6 @@ export const MiniJscad = class{
     })
 
     this.sketch = sketch
-    this.draw = sketch.draw
     return this
   }
 }

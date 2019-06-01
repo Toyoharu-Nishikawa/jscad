@@ -26,7 +26,30 @@ export const Sketch = class  {
   resize(width, height){
     this.view.svg.resize(width, height)
   }
-
+  addSheet(id){
+    this.view.svg.addSheet(id)
+  }
+  getSheet(id){
+    return this.view.svg.getSheet(id)
+  }
+  getCurrentSheet(){
+    return this.view.svg.getCurrentSheet()
+  }
+  getCurrentSheetId(){
+    return this.view.svg.getCurrentSheetId()
+  }
+  getAllSheetIds(){
+    return this.view.svg.getAllSheetIds()
+  }
+  getAllSheets(){
+    return this.view.svg.getAllSheets()
+  }
+  removeSheet(id){
+    this.view.svg.removeSheet(id)
+  }
+  removeAllSheets(){
+    this.view.svg.removeAllSheets()
+  }
   hideEventObject(){
     this.view.svg.nodeScreen.hide()
     this.view.svg.cloneScreen.hide()
@@ -42,5 +65,5 @@ export const Sketch = class  {
   changeFig(idF, parameters){
     this.viewModel.figs.changeFig(idF, parameters)
   } 
-
+  
 } 
