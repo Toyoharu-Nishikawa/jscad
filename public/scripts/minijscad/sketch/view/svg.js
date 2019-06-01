@@ -8,9 +8,9 @@ const nonLine = {color:null,opacity: 0.0,width:1}
 
 export const Svg = class {
   constructor(elem){
+    this.currentSheetId = null
     this.element = elem
     this.draw = SVG(elem).panZoom({zoomMode:"exponential", zoomFactor:1.1})
-    this.currentSheetNumber = 0
 
     this.cloneScreen = this.makeScreen(nonLine,"none")
     this.dimensionScreen = this.makeScreen(blackLine,"black")
@@ -42,46 +42,58 @@ export const Svg = class {
       .stroke(strokeObj)
       .fill(fillObj)
       .attr("vector-effect", "non-scaling-stroke")
-    this.draw.screen = screen
     return screen
   }
   makeSheets(){
     const screen = this.screen
-    const currentSheetNumber = this.currentSheetNumber
-    screen.sheet = []
-    const sheet = screen.group().data("key", {sheetNumber:currentSheetNumber})
-    screen.sheet.push(sheet)
-
-    const sheets = new Map([[currentSheetNumber, sheet]])
+    const id = "sheet0"
+    const sheet = screen.group().data("key", {sheetId:id})
+    this.currentSheetId = id
+    const sheets = new Map([[id, sheet]])
     return sheets 
   }
-  addSheet(){
-    this.currentSheetNumber++
-    const cSN = this.currentSheetNumber
+  addSheet(id){
     const sheets = this.sheets
-    const screen = this.screen
-    const newSheet = screen.group().data("key", {sheetNumber:cSN})
-    screen.sheet.push(newSheet)
-    sheets.set(cSN, newSheet)
+    const newSheet = screen.group().data("key", {sheetId:id})
+    sheets.set(id, newSheet)
+    this.currentSheetId = id
     return newSheet 
   }
   getCurrentSheet(){
+    const id = this.currentSheetId 
     const sheets = this.sheets
-    const sheet = sheets.get(this.currentSheetNumber)
+    const sheet = sheets.get(id)
     return sheet
   }
-  getCurrentSheetNumber(){
-    return this.currentSheetNumber
+  getCurrentSheetId(){
+    return this.currentSheetId
   }
   getSheet(id){
     const sheets = this.sheets
     const sheet = sheets.get(id)
     return sheet
   }
+  getAllSheetIds(){
+    const sheets = this.sheets
+    const ids = [...sheets.keys()]
+    return ids
+  }
+  getAllSheets(){
+    const sheets = this.sheets
+    const sh = [...sheets.values()]
+    return sh 
+  }
+
   removeSheet(id){
     const sheets = this.sheets
     sheets.delete(id)
     return this
   }
+  removeAllSheets(){
+    const sheets = this.sheets
+    sheets.clear()
+    return this
+  }
+
 }
 
