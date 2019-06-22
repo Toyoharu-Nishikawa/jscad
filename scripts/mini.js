@@ -12,6 +12,7 @@ console.log(miniJscad)
 
 console.log(miniJscad.sketch.getAllSheetIds())
 console.log(miniJscad.sketch.getCurrentSheetId())
+const sheet1 = miniJscad.sketch.addSheet("sheet1")
 const id1 = miniJscad.sketch.addFig("line", [100,0,100,100])
 const id2 =miniJscad.sketch.addFig("arc", [150,100,50,180, 90])
 const id3 =  miniJscad.sketch.addFig("line", [150,150,200,150])
