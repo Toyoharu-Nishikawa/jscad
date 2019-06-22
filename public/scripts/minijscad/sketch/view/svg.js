@@ -53,6 +53,7 @@ export const Svg = class {
     return sheets 
   }
   addSheet(id){
+    const screen = this.screen
     const sheets = this.sheets
     const newSheet = screen.group().data("key", {sheetId:id})
     sheets.set(id, newSheet)
@@ -73,6 +74,10 @@ export const Svg = class {
     const sheet = sheets.get(id)
     return sheet
   }
+  changeCurrentSheet(id){
+    this.currentSheetId = id
+    return this
+  }
   getAllSheetIds(){
     const sheets = this.sheets
     const ids = [...sheets.keys()]
@@ -85,7 +90,9 @@ export const Svg = class {
   }
 
   removeSheet(id){
+    const sheet = this.getSheet(id) 
     const sheets = this.sheets
+    sheet.clear()
     sheets.delete(id)
     return this
   }
