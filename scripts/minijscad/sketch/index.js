@@ -65,5 +65,8 @@ export const Sketch = class  {
   changeFig(idF, parameters){
     this.viewModel.figs.changeFig(idF, parameters)
   } 
-  
+  addDimension(type, ...parameters){
+    const id = this.viewModel.dimensions.addDimension(type, ...parameters)
+    return id
+  }  
 } 
