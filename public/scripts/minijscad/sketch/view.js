@@ -1,6 +1,7 @@
 import {Svg} from "./view/svg.js"
 import {Background} from "./view/background.js"
 import {Figs} from "./view/figs.js"
+import {DimensionsLabel} from "./view/dimensionsLabel.js"
 
 
 export const View = class  {
@@ -8,6 +9,7 @@ export const View = class  {
     this.svg = new Svg(elem) 
     this.background = new Background(this.svg) 
     this.figs = new Figs(this.svg) 
+    this.dimensionsLabel = new DimensionsLabel(this.svg) 
     this.initializeZoomEvent()
   }
   initializeZoomEvent(){
