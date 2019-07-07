@@ -1,6 +1,7 @@
 import {Sketch} from "./sketch/index.js"
 
 "use strict"
+export {Drawing} from "./dxf-writer/Drawing.js"
 
 export const MiniJscad = class{
   constructor(element, width=300, height=300){
@@ -151,6 +152,7 @@ const setCSS = (element, width ,height)=>{
 
     style.sheet.insertRule(`
     #${element}-minijscad-sidebar {
+      display: none;
       width: 100px;
       padding: 0;
       margin: 0;

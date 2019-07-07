@@ -1,12 +1,13 @@
 import * as DataClass from "../data.js"
 import {EventHandler} from "./eventHandler.js"
 import {arcPath} from "./arcPath.js"
-
+import {Drawing} from "../../dxf-writer/Drawing.js"
 export const Figs = class {
   constructor(svg){
     this.svg = svg
     this.eH = new EventHandler(svg.draw, svg.cloneScreen, svg.nodeScreen) 
     this.data = new DataClass.countUpDataManager()
+    this.parameters = new DataClass.DataManager()
   }
 
   remove(id){
@@ -24,8 +25,9 @@ export const Figs = class {
   }
 
 
-  addLine(sheet, x1, y1, x2, y2, id){
+  addLine(sheet, parameters, id){
     this.data.setId(id)
+    const [x1, y1, x2, y2] = [].concat(...parameters.points)
     const line = sheet.line(x1, y1, x2, y2)
     line.data("id",{id:id, type:"line"})
     const p1 = [x1, y1]
@@ -37,7 +39,45 @@ export const Figs = class {
     this.eH.makeNodes(nodes, pointType, id, "nodeclick")
 
     this.data.addData(id, line)
+    this.parameters.addData(id, {parameters:parameters, type:"line"})
+    return line 
   }
+
+  addLines(sheet, parameters, id){
+    this.data.setId(id)
+    const points = parameters.points
+    const lines = sheet.group()
+    points.forEach((v,i,arr)=>{
+      if(i>0){
+        lines.line(arr[i-1][0], arr[i-1][1], v[0], v[1])
+      }
+    })
+    lines.data("id",{id:id, type:"lines"})
+    lines.data("nodes",points)
+    const pointType =  ["start", "end"]
+    this.eH.makeClone(lines, 5, id, "elementclick")
+    this.eH.makeNodes(points, pointType, id, "nodeclick")
+
+    this.data.addData(id, lines)
+    this.parameters.addData(id, {parameters:parameters, type:"lines"})
+    return lines 
+  }
+
+  addPolyline(sheet, parameters, id){
+    this.data.setId(id)
+    const points = parameters.points
+    const polyline = sheet.polyline(points)
+    polyline.data("id",{id:id, type:"polyline"})
+    polyline.data("nodes",points)
+    const pointType =  ["start", "end"]
+    this.eH.makeClone(polyline, 5, id, "elementclick")
+    this.eH.makeNodes(nodes, pointType, id, "nodeclick")
+
+    this.data.addData(id, polyline)
+    this.parameters.addData(id, {parameters:parameters, type:"polyline"})
+    return lines 
+  }
+
 
   changeLine(id, x1,y1,x2,y2){
     const line = this.data.getDataFromId(id)
@@ -50,8 +90,13 @@ export const Figs = class {
     return id
   }
 
-  addArc(sheet, cx, cy, r, theta1, theta2, id){
+  addArc(sheet, parameters, id){
     this.data.setId(id)
+    console.log("parameters",parameters)
+    const [cx, cy] = parameters.center 
+    const r = parameters.radius
+    const theta1 = parameters.start
+    const theta2 = parameters.end
     const arc = sheet.arc(cx, cy, r, theta1, theta2)
     arc.data("id",{id:id, type:"arc"})
     arc.data("parameters",{cx:cx, cy:cy, r:r, theta1:theta1, theta2: theta2})
@@ -64,6 +109,8 @@ export const Figs = class {
     this.eH.makeClone(arc, 5, id, "elementclick")
     this.eH.makeNodes(nodes, pointType, id, "nodeclick")
     this.data.addData(id, arc)
+    this.parameters.addData(id, {parameters:parameters, type:"arc"})
+    return arc 
   }
 
   changeArc(id, cx, cy, r, theta1, theta2){
@@ -83,5 +130,41 @@ export const Figs = class {
     nodes[2].center(p2[0], p2[1])
     return id
   }
- 
+
+  getDxf(){
+    const d = new Drawing()
+    const params = this.parameters.getValues()
+    d.addLayer('l_green', Drawing.ACI.GREEN, 'CONTINUOUS');
+    d.setActiveLayer('l_green');
+    params.forEach(v=>{
+      const type = v.type
+      switch(type){
+        case "line":{
+          const points = [].concat(...v.parameters.points)
+          d.drawLine(...points)
+          break
+        }
+        case "polyline":
+        case "lines":{
+          const points = v.parameters.points
+          points.forEach((v,i,arr)=>{
+            if(i>0){
+              d.drawLine(arr[i-1][0], arr[i-1][1],v[0],v[1])
+            }
+          })
+          break
+        }
+        case "arc":{
+          const center = v.parameters.center
+          const radius = v.parameters.radius
+          const start = v.parameters.start
+          const end = v.parameters.end
+          d.drawArc(center[0], center[1], radius, start, end)
+          break
+        }
+      }
+    })
+    const string = d.toDxfString()
+    return string
+  } 
 }

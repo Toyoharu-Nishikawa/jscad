@@ -35,7 +35,13 @@ export const DimensionsLabel = class {
     return text
   }
 
-  setLengthLabelD(x1, y1, x2, y2, distance=5, size=20, digit=2, auxiliaryFlag=true){
+  setLengthLabelD(parameters){
+    const [x1, y1, x2, y2] = [].concat(...parameters.points)
+    const distance = parameters.distance || 5
+    const size = parameters.size || 20
+    const digit = parameters.digit || 2
+    const auxiliaryFlag = parameters.auxiliary || true
+
     const ds = this.dimensionScreen 
     const id = this.labelData.getId()
     const label = ds.group()
@@ -61,7 +67,14 @@ export const DimensionsLabel = class {
     return id
   }
 
-  setVerticalLabelD(x1, y1, x2, y2, distance=5, size=20, digit=2, auxiliaryFlag=true){
+  setVerticalLabelD(parameters){
+
+    const [x1, y1, x2, y2] = [].concat(...parameters.points)
+    const distance = parameters.distance || 5
+    const size = parameters.size || 20
+    const digit = parameters.digit || 2
+    const auxiliaryFlag = parameters.auxiliary || true
+
     const ds = this.dimensionScreen 
     const id = this.labelData.getId()
     const label = ds.group()
@@ -86,7 +99,14 @@ export const DimensionsLabel = class {
     return id
   }
 
-  setHorizontalLabelD(x1, y1, x2, y2, distance=5, size=20, digit=2, auxiliaryFlag=true){
+  setHorizontalLabelD(parameters){
+
+    const [x1, y1, x2, y2] = [].concat(...parameters.points)
+    const distance = parameters.distance || 5
+    const size = parameters.fontSize || 20
+    const digit = parameters.digit || 2
+    const auxiliaryFlag = parameters.auxiliary || true
+
     const ds = this.dimensionScreen 
     const id = this.labelData.getId()
     const label = ds.group()

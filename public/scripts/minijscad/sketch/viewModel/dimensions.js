@@ -3,18 +3,18 @@ export const Dimensions = class{
     this.view = view
     this.model = model 
   }
-  addDimension(type, ...parameters){
+  addDimension(type, parameters){
     switch(type){
       case "length" :{
-        const id = this.view.dimensionsLabel.setLengthLabelD(...parameters)        
+        const id = this.view.dimensionsLabel.setLengthLabelD(parameters)        
         return id
       }
       case "vertical" :{
-        const id = this.view.dimensionsLabel.setVerticalLabelD(...parameters)        
+        const id = this.view.dimensionsLabel.setVerticalLabelD(parameters)        
         return id
       }
       case "horizontal" :{
-        const id = this.view.dimensionsLabel.setHorizontalLabelD(...parameters)        
+        const id = this.view.dimensionsLabel.setHorizontalLabelD(parameters)        
         return id
       }
     }

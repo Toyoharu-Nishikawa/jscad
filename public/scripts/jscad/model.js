@@ -35,11 +35,11 @@ export const model = {
   editorFunc: modelModules.editorFunc,
   keyFunc: modelModules.keyFunc,
   test:function(){
-    sketch.addFig("line",[0,10,100,120], 0)
+    sketch.addFig("line",{points:[[0,10],[100,120]]}, 0)
 //    sketch.addFig("line",[110,100,240,220], 1)
-    sketch.addFig("arc",[100,100,50,0, 180], 1)
-    sketch.changeFig(0,[110,300,240,320])
-    sketch.changeFig(1, [300,200,100,0, 180])
+    sketch.addFig("arc",{center:[100,100],radius:50, start:0, end:180}, 1)
+    //sketch.changeFig(0,[110,300,240,320])
+    //sketch.changeFig(1, [300,200,100,0, 180])
 //    sketch.addFig("arc",[100,100,50,0, 180], 2)
 //    sketch.addFig("arc",[200,100,150,0, 180], 3)
 

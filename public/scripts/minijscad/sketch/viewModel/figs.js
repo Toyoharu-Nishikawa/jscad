@@ -15,14 +15,21 @@ export const Figs = class{
   addFig(type, parameters, idF){
     switch(type){
       case "line":{
-        const fig = this.addLine(...parameters, idF)
-        return fig
-        break
+        const id= this.addLine(parameters, idF)
+        return id 
       }
+      case "lines":{
+        const id = this.addLines(parameters, idF)
+        return id 
+      }
+      case "polyline":{
+        const id = this.addPolyline(parameters, idF)
+        return id 
+      }
+
       case "arc":{
-        const fig = this.addArc(...parameters, idF)
-        return fig
-        break
+        const id = this.addArc(parameters, idF)
+        return id 
       }
       default:{
       }
@@ -45,20 +52,20 @@ export const Figs = class{
     }
   }
 
-  addLine(x1, y1, x2, y2, id){
+  addLine(parameters, id){
     const sheet = this.view.svg.getCurrentSheet()
     const fId = id ? id : this.view.figs.data.getId()
 
-    this.view.figs.addLine(sheet, x1, y1, x2, y2, fId)
+    const line = this.view.figs.addLine(sheet, parameters, fId)
 
     this.degreesOfFreedom.increase(4)
     const attr = {
       degreesOfFreedom: new DataClass.Degrees("line"),
       constraint: new Map(),
     }
-    this.initialParameters.param.addData(fId, [x1, y1, x2, y2])
-    this.initialParameters.valid.addData(fId, [true, true, true, true])
-    this.attrData.addData(fId, attr)
+    //this.initialParameters.param.addData(fId, [x1, y1, x2, y2])
+    //this.initialParameters.valid.addData(fId, [true, true, true, true])
+    //this.attrData.addData(fId, attr)
 
     return fId
   }
@@ -67,15 +74,51 @@ export const Figs = class{
     this.view.figs.changeline(id, x1, y1, x2, y2)
   }
 
-  addArc(cx, cy, r, theta1, theta2, id){
+  addLines(parameters, id){
+    const sheet = this.view.svg.getCurrentSheet()
+    const fId = id ? id : this.view.figs.data.getId()
+
+    const lines = this.view.figs.addLines(sheet, parameters, fId)
+
+    this.degreesOfFreedom.increase(4)
+    const attr = {
+      degreesOfFreedom: new DataClass.Degrees("line"),
+      constraint: new Map(),
+    }
+    //this.initialParameters.param.addData(fId, points)
+    //this.initialParameters.valid.addData(fId, [true, true, true, true])
+    //this.attrData.addData(fId, attr)
+
+    return fId
+  }
+
+  addPolylines(parameters, id){
+    const sheet = this.view.svg.getCurrentSheet()
+    const fId = id ? id : this.view.figs.data.getId()
+
+    const polyline = this.view.figs.addPolylines(sheet, parameters, fId)
+
+    this.degreesOfFreedom.increase(4)
+    const attr = {
+      degreesOfFreedom: new DataClass.Degrees("line"),
+      constraint: new Map(),
+    }
+    //this.initialParameters.param.addData(fId, points)
+    //this.initialParameters.valid.addData(fId, [true, true, true, true])
+    //this.attrData.addData(fId, attr)
+
+    return fId
+  }
+
+  addArc(parameters, id){
     const sheet = this.view.svg.getCurrentSheet()
     const fId = id ? id : this.view.figs.data.getId()
  
-    this.view.figs.addArc(sheet, cx, cy, r, theta1, theta2, fId)
+    this.view.figs.addArc(sheet, parameters, fId)
 
-    this.initialParameters.param.addData(fId, [cx, cy, r, theta1, theta2])
-    this.initialParameters.valid.addData(fId, [true, true, true, true, true])
-    this.degreesOfFreedom.increase(5)
+    //this.initialParameters.param.addData(fId, [cx, cy, r, theta1, theta2])
+    //this.initialParameters.valid.addData(fId, [true, true, true, true, true])
+    //this.degreesOfFreedom.increase(5)
     const attr = {
       degreesOfFreedom: new DataClass.Degrees("arc"),
       constraint: new Map(),
