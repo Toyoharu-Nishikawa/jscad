@@ -69,4 +69,8 @@ export const Sketch = class  {
     const id = this.viewModel.dimensions.addDimension(type, ...parameters)
     return id
   }  
+  getDxf(){
+    const dxf = this.view.figs.getDxf()
+    return dxf
+  }
 } 
