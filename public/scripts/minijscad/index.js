@@ -14,9 +14,10 @@ export const MiniJscad = class{
     const element = this.element
     const sketch = this.sketch
     const minijscadFrame = document.getElementById(element+"-minijscad-frame")
-    minijscadFrame.style.width = width+"px"
-    minijscadFrame.style.height = height+"px"
-    const elWidth = width -100
+    minijscadFrame.style.width = String(width)+"px"
+    minijscadFrame.style.height = String(height)+"px"
+    //console.log(minijscadFrame.style)
+    const elWidth = width //-100
     const elHeight = height-40
     const sketchWidth = elWidth-2
     const sketchHeight = elHeight-6
