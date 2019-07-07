@@ -22,6 +22,17 @@ main {
 aside {
   width: 150px;
   background: blue;
+  padding:0;
+}
+aside > ul {
+  display: flex;
+  flex-flow: column;
+  margin: 0;
+  padding:0;
+}
+aside > ul > input {
+  margin: 10px;
+  width: 120px;
 }
 article {
   flex: 1;

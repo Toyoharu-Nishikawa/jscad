@@ -8,6 +8,7 @@ export const Figs = class {
     this.eH = new EventHandler(svg.draw, svg.cloneScreen, svg.nodeScreen) 
     this.data = new DataClass.countUpDataManager()
     this.parameters = new DataClass.DataManager()
+    this.figsInSheet = new DataClass.DataManager()
   }
 
   remove(id){
@@ -22,10 +23,36 @@ export const Figs = class {
     this.data.removeData(id)
     this.eH.clonesData.removeData(id)
     this.eH.nodesData.removeData(id)
+    this.parameters.removeData(id)
+  }
+  record(sheetId, fid){
+    const figsInSheet = this.figsInSheet
+    const flag = figsInSheet.hasData(sheetId)
+    if(!flag){
+      figsInSheet.addData(sheetId, new Set())
+    }
+    const sheetSet = figsInSheet.getDataFromId(sheetId)
+    console.log(sheetId)
+    sheetSet.add(fid)
+  }
+  clearSheet(id){
+    const sheetId = id ? id : this.svg.getCurrentSheetId() 
+    console.log(sheetId)
+    const includedIds = this.figsInSheet.getDataFromId(sheetId)   
+    console.log("includedIds",includedIds)
+    if(includedIds && includedIds.size){
+      includedIds.forEach(v=>{
+          this.remove(v)
+      })
+      includedIds.clear()
+    }
   }
 
-
-  addLine(sheet, parameters, id){
+  addLine(parameters, fid){
+    const sheetId =  this.svg.getCurrentSheetId()
+    const sheet = this.svg.getCurrentSheet()
+    const id = fid ? fid : this.data.getId()
+ 
     this.data.setId(id)
     const [x1, y1, x2, y2] = [].concat(...parameters.points)
     const line = sheet.line(x1, y1, x2, y2)
@@ -40,10 +67,15 @@ export const Figs = class {
 
     this.data.addData(id, line)
     this.parameters.addData(id, {parameters:parameters, type:"line"})
-    return line 
+    this.record(sheetId, id)
+    return id 
   }
 
-  addLines(sheet, parameters, id){
+  addLines(parameters, fid){
+    const sheetId =  this.svg.getCurrentSheetId()
+    const sheet = this.svg.getCurrentSheet()
+    const id = fid ? fid : this.data.getId()
+
     this.data.setId(id)
     const points = parameters.points
     const lines = sheet.group()
@@ -60,10 +92,16 @@ export const Figs = class {
 
     this.data.addData(id, lines)
     this.parameters.addData(id, {parameters:parameters, type:"lines"})
-    return lines 
+    this.record(sheetId, id)
+    return id 
   }
 
-  addPolyline(sheet, parameters, id){
+  addPolyline(parameters, fid){
+    const sheetId =  this.svg.getCurrentSheetId()
+    const sheet = this.svg.getCurrentSheet()
+    const id = fid ? fid : this.data.getId()
+
+
     this.data.setId(id)
     const points = parameters.points
     const polyline = sheet.polyline(points)
@@ -75,7 +113,8 @@ export const Figs = class {
 
     this.data.addData(id, polyline)
     this.parameters.addData(id, {parameters:parameters, type:"polyline"})
-    return lines 
+    this.record(sheetId, id)
+    return id 
   }
 
 
@@ -90,7 +129,11 @@ export const Figs = class {
     return id
   }
 
-  addArc(sheet, parameters, id){
+  addArc( parameters, fid){
+    const sheetId =  this.svg.getCurrentSheetId()
+    const sheet = this.svg.getCurrentSheet()
+    const id = fid ? fid : this.data.getId()
+
     this.data.setId(id)
     console.log("parameters",parameters)
     const [cx, cy] = parameters.center 
@@ -110,7 +153,8 @@ export const Figs = class {
     this.eH.makeNodes(nodes, pointType, id, "nodeclick")
     this.data.addData(id, arc)
     this.parameters.addData(id, {parameters:parameters, type:"arc"})
-    return arc 
+    this.record(sheetId, id)
+    return id 
   }
 
   changeArc(id, cx, cy, r, theta1, theta2){

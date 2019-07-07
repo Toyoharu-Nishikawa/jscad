@@ -3,10 +3,35 @@ import * as DataClass from "../data.js"
 
 export const DimensionsLabel = class {
   constructor(svg){
+    this.svg = svg
     this.labelData = new DataClass.countUpDataManager()
-    this.dimensionScreen = svg.dimensionScreen
+    this.dimensionsInSheet = new DataClass.DataManager()
+    //this.dimensionScreen = svg.dimensionScreen
   }
-
+  remove(id){
+    const label = this.labelData.getDataFromId(id)
+    label.remove(id)
+  }
+  record(sheetId, id){
+    const dimensionsInSheet = this.dimensionsInSheet
+    const flag = dimensionsInSheet.hasData(sheetId)
+    if(!flag){
+      dimensionsInSheet.addData(sheetId, new Set)
+    }
+    const sheetSet = dimensionsInSheet.getDataFromId(sheetId)
+    sheetSet.add(id)
+  }
+  clearSheet(id){
+    const sheetId = id ? id : this.svg.getCurrentSheetId() 
+    const includedIds = this.dimensionsInSheet.getDataFromId(sheetId)   
+    if(includedIds && includedIds.size){
+      includedIds.forEach(v=>{
+        this.remove(v)
+      })
+      includedIds.clear()
+    }
+  }
+ 
   makeArrow(arrow, x1, y1, x2, y2, size){
     arrow.line(x1, y1, x2, y2)
     const theta = Math.atan2(y2-y1, x2-x1)
@@ -20,7 +45,6 @@ export const DimensionsLabel = class {
   }
 
   makeValueText(obj, length, Dx1, Dy1, Dx2, Dy2, size, digit){
-      console.log( Dx1, Dy1, Dx2, Dy2)
     const valueText = length.toFixed(digit)
 
     const tx = (Dx1 + Dx2)/2
@@ -42,7 +66,8 @@ export const DimensionsLabel = class {
     const digit = parameters.digit || 2
     const auxiliaryFlag = parameters.auxiliary || true
 
-    const ds = this.dimensionScreen 
+    const sheetId = this.svg.getCurrentSheetId()
+    const ds = this.svg.getCurrentDheet()
     const id = this.labelData.getId()
     const label = ds.group()
 
@@ -64,6 +89,7 @@ export const DimensionsLabel = class {
     }
  
     this.labelData.addData(id, label)
+    this.record(sheetId, id)
     return id
   }
 
@@ -75,7 +101,8 @@ export const DimensionsLabel = class {
     const digit = parameters.digit || 2
     const auxiliaryFlag = parameters.auxiliary || true
 
-    const ds = this.dimensionScreen 
+    const sheetId = this.svg.getCurrentSheetId()
+    const ds = this.svg.getCurrentDheet()
     const id = this.labelData.getId()
     const label = ds.group()
 
@@ -96,6 +123,7 @@ export const DimensionsLabel = class {
     }
  
     this.labelData.addData(id, label)
+    this.record(sheetId, id)
     return id
   }
 
@@ -107,7 +135,8 @@ export const DimensionsLabel = class {
     const digit = parameters.digit || 2
     const auxiliaryFlag = parameters.auxiliary || true
 
-    const ds = this.dimensionScreen 
+    const sheetId = this.svg.getCurrentSheetId()
+    const ds = this.svg.getCurrentDheet()
     const id = this.labelData.getId()
     const label = ds.group()
 
@@ -128,6 +157,7 @@ export const DimensionsLabel = class {
     }
  
     this.labelData.addData(id, label)
+    this.record(sheetId, id)
     return id
   }
 

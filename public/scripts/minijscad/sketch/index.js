@@ -38,6 +38,9 @@ export const Sketch = class  {
   getCurrentSheetId(){
     return this.view.svg.getCurrentSheetId()
   }
+  changeCurrentSheet(id){
+    return this.view.svg.changeCurrentSheet(id)
+  }
   getAllSheetIds(){
     return this.view.svg.getAllSheetIds()
   }
@@ -50,10 +53,20 @@ export const Sketch = class  {
   removeAllSheets(){
     this.view.svg.removeAllSheets()
   }
+  clearSheet(id){
+    this.view.figs.clearSheet(id)
+    this.view.dimensionsLabel.clearSheet(id)
+  }
   hideEventObject(){
     this.view.svg.nodeScreen.hide()
     this.view.svg.cloneScreen.hide()
     this.view.svg.backgroundNode.hide()
+  }
+  hideDimensions(){
+    this.view.svg.dimensionScreen.hide()
+  }
+  showDimensions(){
+    this.view.svg.dimensionScreen.show()
   }
   get draw(){
     return this.view.svg.draw
