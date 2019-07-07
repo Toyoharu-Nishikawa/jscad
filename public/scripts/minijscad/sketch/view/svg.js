@@ -19,7 +19,8 @@ export const Svg = class {
     this.backgroundNode = this.makeScreen(blackLine,"black")
     this.nodeScreen = this.makeScreen(blackLine,"black")
 
-    this.sheets = this.makeSheets()
+    this.sheets = this.makeSheets(this.screen)
+    this.dheets = this.makeSheets(this.dimensionScreen)
 
     addExtendElements()
   }
@@ -44,8 +45,7 @@ export const Svg = class {
       .attr("vector-effect", "non-scaling-stroke")
     return screen
   }
-  makeSheets(){
-    const screen = this.screen
+  makeSheets(screen){
     const id = "sheet0"
     const sheet = screen.group().data("key", {sheetId:id})
     this.currentSheetId = id
@@ -54,17 +54,34 @@ export const Svg = class {
   }
   addSheet(id){
     const screen = this.screen
+    const dimensionScreen = this.dimensionScreen
     const sheets = this.sheets
-    const newSheet = screen.group().data("key", {sheetId:id})
-    sheets.set(id, newSheet)
-    this.currentSheetId = id
-    return newSheet 
+    const dheets = this.dheets
+    if(!sheets.has(id)){
+      const newSheet = screen.group().data("key", {sheetId:id})
+      const newDheet = dimensionScreen.group().data("key", {sheetId:id})
+      sheets.set(id, newSheet)
+      dheets.set(id, newDheet)
+      this.currentSheetId = id
+      return newSheet 
+    }
+    else{
+      const sheet = sheets.get(id)
+      this.currentSheetId = id
+      return sheet
+    }
   }
   getCurrentSheet(){
     const id = this.currentSheetId 
     const sheets = this.sheets
     const sheet = sheets.get(id)
     return sheet
+  }
+  getCurrentDheet(){
+    const id = this.currentSheetId 
+    const dheets = this.dheets
+    const dheet = dheets.get(id)
+    return dheet
   }
   getCurrentSheetId(){
     return this.currentSheetId
@@ -74,9 +91,16 @@ export const Svg = class {
     const sheet = sheets.get(id)
     return sheet
   }
+  getDheet(id){
+    const dheets = this.dheets
+    const dheet = dheets.get(id)
+    return dheet
+  }
   changeCurrentSheet(id){
     this.currentSheetId = id
-    return this
+    const sheets = this.sheets
+    const sheet = sheets.get(id)
+    return sheet 
   }
   getAllSheetIds(){
     const sheets = this.sheets
@@ -91,9 +115,13 @@ export const Svg = class {
 
   removeSheet(id){
     const sheet = this.getSheet(id) 
+    const dheet = this.getDheet(id) 
     const sheets = this.sheets
+    const dheets = this.dheets
     sheet.clear()
+    dheet.clear()
     sheets.delete(id)
+    dheets.delete(id)
     return this
   }
   removeAllSheets(){
@@ -101,6 +129,5 @@ export const Svg = class {
     sheets.clear()
     return this
   }
-
 }
 
