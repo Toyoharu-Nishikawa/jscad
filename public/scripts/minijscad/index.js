@@ -4,10 +4,10 @@ import {Sketch} from "./sketch/index.js"
 export {Drawing} from "./dxf-writer/Drawing.js"
 
 export const MiniJscad = class{
-  constructor(element, width=300, height=300){
+  constructor(element, width=300, height=300, eventFlag=false){
     this.sketch = null
     this.element = element
-    this.setup(element, width, height)
+    this.setup(element, width, height, eventFlag)
     return this
   }
   resize(width, height){
@@ -16,7 +16,7 @@ export const MiniJscad = class{
     const minijscadFrame = document.getElementById(element+"-minijscad-frame")
     minijscadFrame.style.width = String(width)+"px"
     minijscadFrame.style.height = String(height)+"px"
-    //console.log(minijscadFrame.style)
+
     const elWidth = width //-100
     const elHeight = height-40
     const sketchWidth = elWidth-2
@@ -29,7 +29,7 @@ export const MiniJscad = class{
     this.sketch.hideEventObject()
     return this
   }
-  setup(element="drawing", width=300, height=300){
+  setup(element="drawing", width=300, height=300, eventFlag=false){
     setDOM(element)
     setCSS(element,width, height)
     const coordinateDOM = document.querySelector("#"+element +"-minijscad-footer > small:nth-child(2)")
@@ -42,6 +42,9 @@ export const MiniJscad = class{
     const sketchWidth = elWidth-2
     const sketchHeight = elHeight-6
     sketch.setScreenSize(sketchWidth, sketchHeight)
+    if(!eventFlag){
+      sketch.invalidEvent()
+    }
 
     main.addEventListener("sketch.mouse.move",(e)=>{
       const coord = e.detail
@@ -121,6 +124,12 @@ const setCSS = (element, width ,height)=>{
     #${element}-minijscad-main  path {
       vector-effect: non-scaling-stroke; 
     }`,0) 
+
+    style.sheet.insertRule(`
+    #${element}-minijscad-main  polyline {
+      vector-effect: non-scaling-stroke; 
+    }`,0) 
+
 
     style.sheet.insertRule(`
     #${element}-minijscad-frame {

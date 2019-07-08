@@ -4,11 +4,15 @@ import {arcPath} from "./arcPath.js"
 import {Drawing} from "../../dxf-writer/Drawing.js"
 export const Figs = class {
   constructor(svg){
+    this.flag = true 
     this.svg = svg
     this.eH = new EventHandler(svg.draw, svg.cloneScreen, svg.nodeScreen) 
     this.data = new DataClass.countUpDataManager()
     this.parameters = new DataClass.DataManager()
     this.figsInSheet = new DataClass.DataManager()
+  }
+  invalidEvent(){
+    this.flag = false
   }
 
   remove(id){
@@ -17,13 +21,16 @@ export const Figs = class {
     const nodes = this.eH.nodesData.getDataFromId(id)
 
     selected.remove()
-    clone.remove()
-    nodes.forEach(node=>node.remove())
-
     this.data.removeData(id)
-    this.eH.clonesData.removeData(id)
-    this.eH.nodesData.removeData(id)
     this.parameters.removeData(id)
+
+    if(this.flag){
+      clone.remove()
+      nodes.forEach(node=>node.remove())
+
+      this.eH.clonesData.removeData(id)
+      this.eH.nodesData.removeData(id)
+    }
   }
   record(sheetId, fid){
     const figsInSheet = this.figsInSheet
@@ -57,17 +64,20 @@ export const Figs = class {
     const [x1, y1, x2, y2] = [].concat(...parameters.points)
     const line = sheet.line(x1, y1, x2, y2)
     line.data("id",{id:id, type:"line"})
-    const p1 = [x1, y1]
-    const p2 = [x2, y2]
-    const nodes = [p1, p2]
-    line.data("nodes",nodes)
-    const pointType =  ["start", "end"]
-    this.eH.makeClone(line, 5, id, "elementclick")
-    this.eH.makeNodes(nodes, pointType, id, "nodeclick")
-
     this.data.addData(id, line)
     this.parameters.addData(id, {parameters:parameters, type:"line"})
     this.record(sheetId, id)
+
+    if(this.flag){
+      const p1 = [x1, y1]
+      const p2 = [x2, y2]
+      const nodes = [p1, p2]
+      line.data("nodes",nodes)
+      const pointType =  ["start", "end"]
+      this.eH.makeClone(line, 5, id, "elementclick")
+      this.eH.makeNodes(nodes, pointType, id, "nodeclick")
+    }
+
     return id 
   }
 
@@ -85,14 +95,18 @@ export const Figs = class {
       }
     })
     lines.data("id",{id:id, type:"lines"})
-    lines.data("nodes",points)
-    const pointType =  ["start", "end"]
-    this.eH.makeClone(lines, 5, id, "elementclick")
-    this.eH.makeNodes(points, pointType, id, "nodeclick")
 
     this.data.addData(id, lines)
     this.parameters.addData(id, {parameters:parameters, type:"lines"})
     this.record(sheetId, id)
+
+    if(this.flag){
+      lines.data("nodes",points)
+      const pointType =  ["start", "end"]
+      this.eH.makeClone(lines, 5, id, "elementclick")
+      this.eH.makeNodes(points, pointType, id, "nodeclick")
+    }
+
     return id 
   }
 
@@ -106,14 +120,18 @@ export const Figs = class {
     const points = parameters.points
     const polyline = sheet.polyline(points)
     polyline.data("id",{id:id, type:"polyline"})
-    polyline.data("nodes",points)
-    const pointType =  ["start", "end"]
-    this.eH.makeClone(polyline, 5, id, "elementclick")
-    this.eH.makeNodes(nodes, pointType, id, "nodeclick")
 
     this.data.addData(id, polyline)
     this.parameters.addData(id, {parameters:parameters, type:"polyline"})
     this.record(sheetId, id)
+
+    if(this.flag){
+      polyline.data("nodes",points)
+      const pointType =  ["start", "end"]
+      this.eH.makeClone(polyline, 5, id, "elementclick")
+      this.eH.makeNodes(points, pointType, id, "nodeclick")
+    }
+
     return id 
   }
 
@@ -143,17 +161,22 @@ export const Figs = class {
     const arc = sheet.arc(cx, cy, r, theta1, theta2)
     arc.data("id",{id:id, type:"arc"})
     arc.data("parameters",{cx:cx, cy:cy, r:r, theta1:theta1, theta2: theta2})
-    const c = [cx, cy]
-    const p1 = [cx+r*Math.cos(theta1*Math.PI/180), cy+r*Math.sin(theta1*Math.PI/180)]
-    const p2 = [cx+r*Math.cos(theta2*Math.PI/180), cy+r*Math.sin(theta2*Math.PI/180)]
-    const nodes = [ c, p1, p2 ]
-    arc.data("nodes",nodes)
-    const pointType =  ["center", "start", "end"]
-    this.eH.makeClone(arc, 5, id, "elementclick")
-    this.eH.makeNodes(nodes, pointType, id, "nodeclick")
+
     this.data.addData(id, arc)
     this.parameters.addData(id, {parameters:parameters, type:"arc"})
     this.record(sheetId, id)
+
+    if(this.flag){
+      const c = [cx, cy]
+      const p1 = [cx+r*Math.cos(theta1*Math.PI/180), cy+r*Math.sin(theta1*Math.PI/180)]
+      const p2 = [cx+r*Math.cos(theta2*Math.PI/180), cy+r*Math.sin(theta2*Math.PI/180)]
+      const nodes = [ c, p1, p2 ]
+      arc.data("nodes",nodes)
+      const pointType =  ["center", "start", "end"]
+      this.eH.makeClone(arc, 5, id, "elementclick")
+      this.eH.makeNodes(nodes, pointType, id, "nodeclick")
+    }
+
     return id 
   }
 

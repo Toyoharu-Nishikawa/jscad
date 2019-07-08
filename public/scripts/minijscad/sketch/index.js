@@ -62,6 +62,9 @@ export const Sketch = class  {
     this.view.svg.cloneScreen.hide()
     this.view.svg.backgroundNode.hide()
   }
+  invalidEvent(){
+    this.view.figs.invalidEvent()
+  }
   hideDimensions(){
     this.view.svg.dimensionScreen.hide()
   }
