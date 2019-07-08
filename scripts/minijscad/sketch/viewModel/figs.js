@@ -86,8 +86,8 @@ export const Figs = class{
     return fid
   }
 
-  addPolylines(parameters, id){
-    const fid = this.view.figs.addPolylines(parameters, id)
+  addPolyline(parameters, id){
+    const fid = this.view.figs.addPolyline(parameters, id)
 
     this.degreesOfFreedom.increase(4)
     const attr = {
