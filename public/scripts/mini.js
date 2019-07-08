@@ -4,7 +4,7 @@ const minijscadTest = document.getElementById("frame")
 const width = minijscadTest.getBoundingClientRect().width  
 const height = minijscadTest.getBoundingClientRect().height 
 console.log(width, height)
-const miniJscad = new MiniJscad("minijscad-test", width-50, height-50)
+const miniJscad = new MiniJscad("minijscad-test", width-50, height-50, false)
   .hideEventObject()
 
 const draw = () =>{
@@ -33,6 +33,7 @@ const main = () => {
   
   const sheet0 = miniJscad.sketch.changeCurrentSheet("sheet0")
   const id9 =miniJscad.sketch.addFig("lines", {points:[[2000,500],[2000,600],[1500,600],[1500,500] ]})
+  const id10 =miniJscad.sketch.addFig("polyline", {points:[[1500,500],[1000,500],[1000,600],[500,500] ]})
   
   const idD2 =  miniJscad.sketch.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, auxiliary:true})
   const idD3 =  miniJscad.sketch.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:30, digit:2, auxiliary:false})
