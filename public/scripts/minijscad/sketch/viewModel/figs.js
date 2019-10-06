@@ -26,7 +26,10 @@ export const Figs = class{
         const id = this.addPolyline(parameters, idF)
         return id 
       }
-
+      case "circle":{
+        const id = this.addCircle(parameters, idF)
+        return id 
+      }
       case "arc":{
         const id = this.addArc(parameters, idF)
         return id 
@@ -92,6 +95,21 @@ export const Figs = class{
     this.degreesOfFreedom.increase(4)
     const attr = {
       degreesOfFreedom: new DataClass.Degrees("line"),
+      constraint: new Map(),
+    }
+    //this.initialParameters.param.addData(fId, points)
+    //this.initialParameters.valid.addData(fId, [true, true, true, true])
+    //this.attrData.addData(fId, attr)
+
+    return fid
+  }
+
+  addCircle(parameters, id){
+    const fid = this.view.figs.addCircle(parameters, id)
+
+    this.degreesOfFreedom.increase(3)
+    const attr = {
+      degreesOfFreedom: new DataClass.Degrees("circle"),
       constraint: new Map(),
     }
     //this.initialParameters.param.addData(fId, points)

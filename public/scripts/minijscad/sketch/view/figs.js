@@ -135,6 +135,33 @@ export const Figs = class {
     return id 
   }
 
+  addCircle(parameters, fid){
+    const sheetId =  this.svg.getCurrentSheetId()
+    const sheet = this.svg.getCurrentSheet()
+    const id = fid ? fid : this.data.getId()
+
+
+    this.data.setId(id)
+    const [cx, cy] = parameters.center 
+    const r = parameters.radius
+    const circle = sheet.circle(2*r).center(cx, cy)
+  
+    circle.data("id",{id:id, type:"circle"})
+
+    this.data.addData(id, circle)
+    this.parameters.addData(id, {parameters:parameters, type:"circle"})
+    this.record(sheetId, id)
+
+    if(this.flag){
+      const nodes = [[cx, cy]]
+      circle.data("nodes",nodes)
+      const pointType =  ["center"]
+      this.eH.makeClone(circle, 5, id, "elementclick")
+      this.eH.makeNodes(nodes, pointType, id, "nodeclick")
+    }
+
+    return id 
+  }
 
   changeLine(id, x1,y1,x2,y2){
     const line = this.data.getDataFromId(id)
