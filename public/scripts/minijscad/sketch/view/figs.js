@@ -39,14 +39,14 @@ export const Figs = class {
       figsInSheet.addData(sheetId, new Set())
     }
     const sheetSet = figsInSheet.getDataFromId(sheetId)
-    console.log(sheetId)
+    //console.log(sheetId)
     sheetSet.add(fid)
   }
   clearSheet(id){
     const sheetId = id ? id : this.svg.getCurrentSheetId() 
-    console.log(sheetId)
+//    console.log(sheetId)
     const includedIds = this.figsInSheet.getDataFromId(sheetId)   
-    console.log("includedIds",includedIds)
+//    console.log("includedIds",includedIds)
     if(includedIds && includedIds.size){
       includedIds.forEach(v=>{
           this.remove(v)
@@ -180,7 +180,7 @@ export const Figs = class {
     const id = fid ? fid : this.data.getId()
 
     this.data.setId(id)
-    console.log("parameters",parameters)
+    //console.log("parameters",parameters)
     const [cx, cy] = parameters.center 
     const r = parameters.radius
     const theta1 = parameters.start
@@ -211,8 +211,8 @@ export const Figs = class {
     const arc = this.data.getDataFromId(id)
     const cloneArc = this.eH.clonesData.getDataFromId(id)
     const nodes = this.eH.nodesData.getDataFromId(id)
-    console.log(arc)
-    console.log(cloneArc)
+    //console.log(arc)
+    //console.log(cloneArc)
     const pathText = arcPath(cx, cy, r, theta1, theta2)
     arc.attr({d:pathText})
     cloneArc.attr({d:pathText})
