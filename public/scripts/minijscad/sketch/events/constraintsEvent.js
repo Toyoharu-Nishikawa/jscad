@@ -8,7 +8,7 @@ import * as solve from "../../../sci/solve/index.mjs"
 
   runVertical(){
     if(this.selected.counts() !==1){
-      console.log("have to select a element before doing")
+      //console.log("have to select a element before doing")
       return
     }
 
@@ -39,7 +39,7 @@ import * as solve from "../../../sci/solve/index.mjs"
     this.addConstraint("vertical",source, target )
     this.selected.unselectAll()
     this.solve()
-    console.log("vertical")
+    //console.log("vertical")
   }
 
   setHorizontal(){
@@ -50,7 +50,7 @@ import * as solve from "../../../sci/solve/index.mjs"
 
   runHorizontal(){
     if(this.selected.counts() !==1){
-      console.log("have to select a element before doing")
+      //console.log("have to select a element before doing")
       return
     }
 
@@ -82,7 +82,7 @@ import * as solve from "../../../sci/solve/index.mjs"
     this.addConstraint("horizontal",source, target )
     this.selected.unselectAll()
     this.solve()
-    console.log("horizontal")
+    //console.log("horizontal")
 
   }
   setCoincident(){
@@ -93,12 +93,12 @@ import * as solve from "../../../sci/solve/index.mjs"
 
   runCoincident(){
     if(this.selected.counts() !==2){
-      console.log("have to select 2 elements before doing")
-      console.log(this.selected.counts())
+      //console.log("have to select 2 elements before doing")
+      //console.log(this.selected.counts())
       return
     }
     const selected = this.selected.getArray()
-    console.log(selected)
+    //console.log(selected)
 
     const sourceId = selected[0].data("id").id 
     const sourceElem = selected[0].data("id").pointType
@@ -123,7 +123,7 @@ import * as solve from "../../../sci/solve/index.mjs"
     }
 
     this.addConstraint("coincident",source, target )
-    console.log("coincident")
+    //console.log("coincident")
     this.selected.unselectAll()
     this.solve()
   }

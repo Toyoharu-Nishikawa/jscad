@@ -52,7 +52,7 @@ export const DimensionsLabel = class {
       
     const theta = Math.atan2(Dy2-Dy1, Dx2-Dx1)
     const thetaDeg = theta*180/Math.PI
-    console.log(thetaDeg)
+    //console.log(thetaDeg)
     const text = obj.text(valueText).font({size:size})
       .flip("y",0).rotate(-thetaDeg+180,0,0).translate(tx, ty)
     
