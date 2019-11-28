@@ -1,7 +1,7 @@
 import {view} from "../view.js"
 import {model} from "../model.js"
 import {importFiles} from "../../filereader/index.js"
-import dxftosvg from '../../dxftosvg/index.js'
+import {dxftosvg} from '../../dxftosvg/index.js'
 
 export const mainMenuFunc = {
   new:{
@@ -34,12 +34,12 @@ export const mainMenuFunc = {
       return fileData.replace(/<svg.*>|<\/svg>/g,"");
     },//end of removeSvgTag
     addSvg: function (svgString){
-      const svg =  sketch.draw.screen.group().svg(svgString)
+      const svg =  model.sketch.draw.svg(svgString)
         .stroke({color:'blue',opacity: 1.0,width:1})
         .fill('none')
         .attr("stroke-linecap", "round")
         .attr("stroke-linejoin", "round")
-      sketch.draw.screen.sheet.push(svg)
+      sketch.draw.screen.sheets.push(svg)
     },//end of addSvg
     convertToSvg: function(file){
       switch (file.ext) {
