@@ -1,4 +1,5 @@
 import {MiniJscad} from "./minijscad/index.js"
+import {dxftosvg, getParamFromDxf} from "./dxftosvg/index.js"
 
 const minijscadTest = document.getElementById("frame")
 const width = minijscadTest.getBoundingClientRect().width  
@@ -51,6 +52,22 @@ const resize = ()=> {
 }
 
 window.onresize = resize
+
+document.getElementById("read-dxf").onchange = (e) =>{
+  const file = e.target.files[0]
+  const reader = new FileReader()
+  reader.onload = (eve) => {
+    const text = eve.target.result  
+    const param = getParamFromDxf(text)
+    console.log("param", param)
+    const svg = dxftosvg(text)
+    console.log("svg", svg)
+    const sheet = miniJscad.sketch.getCurrentSheet()
+    sheet.svg(svg)
+    
+  }
+  reader.readAsText(file, "UTF-8")    
+}
 
 document.getElementById("download-dxf").onclick = () =>{
   const exportText = miniJscad.sketch.getDxf()
