@@ -12,26 +12,26 @@ export const Figs = class{
     this.attrData = new DataClass.DataManager()
   }
 
-  addFig(type, parameters, idF){
+  addFig(type, parameters, attr, idF){
     switch(type){
       case "line":{
-        const id= this.addLine(parameters, idF)
+        const id= this.addLine(parameters, attr, idF)
         return id 
       }
       case "lines":{
-        const id = this.addLines(parameters, idF)
+        const id = this.addLines(parameters, attr, idF)
         return id 
       }
       case "polyline":{
-        const id = this.addPolyline(parameters, idF)
+        const id = this.addPolyline(parameters, attr, idF)
         return id 
       }
       case "circle":{
-        const id = this.addCircle(parameters, idF)
+        const id = this.addCircle(parameters, attr, idF)
         return id 
       }
       case "arc":{
-        const id = this.addArc(parameters, idF)
+        const id = this.addArc(parameters, attr, idF)
         return id 
       }
       default:{
@@ -56,7 +56,7 @@ export const Figs = class{
   }
 
   addLine(parameters, id){
-   const fid = this.view.figs.addLine(parameters, id)
+    const fid = this.view.figs.addLine(parameters, id)
 
     this.degreesOfFreedom.increase(4)
     const attr = {

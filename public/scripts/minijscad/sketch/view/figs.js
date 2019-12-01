@@ -1,7 +1,10 @@
+import {dataMap as dashMap} from "./dash.js"
 import * as DataClass from "../data.js"
 import {EventHandler} from "./eventHandler.js"
 import {arcPath} from "./arcPath.js"
 import {Drawing} from "../../dxf-writer/Drawing.js"
+
+
 export const Figs = class {
   constructor(svg){
     this.flag = true 
@@ -55,7 +58,7 @@ export const Figs = class {
     }
   }
 
-  addLine(parameters, fid){
+  addLine(parameters, attr, fid){
     const sheetId =  this.svg.getCurrentSheetId()
     const sheet = this.svg.getCurrentSheet()
     const id = fid ? fid : this.data.getId()
@@ -63,6 +66,17 @@ export const Figs = class {
     this.data.setId(id)
     const [x1, y1, x2, y2] = [].concat(...parameters.points)
     const line = sheet.line(x1, y1, x2, y2)
+
+    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
+    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
+    if(color){
+      line.stroke({color: color})
+    }
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      line.attr("stroke-dasharray", dashCode)
+    }
+
     line.data("id",{id:id, type:"line"})
     this.data.addData(id, line)
     this.parameters.addData(id, {parameters:parameters, type:"line"})
@@ -81,7 +95,7 @@ export const Figs = class {
     return id 
   }
 
-  addLines(parameters, fid){
+  addLines(parameters, attr, fid){
     const sheetId =  this.svg.getCurrentSheetId()
     const sheet = this.svg.getCurrentSheet()
     const id = fid ? fid : this.data.getId()
@@ -89,11 +103,23 @@ export const Figs = class {
     this.data.setId(id)
     const points = parameters.points
     const lines = sheet.group()
+
     points.forEach((v,i,arr)=>{
       if(i>0){
         lines.line(arr[i-1][0], arr[i-1][1], v[0], v[1])
       }
     })
+    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
+    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
+ 
+    if(color){
+      lines.stroke({color: color})
+    }
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      lines.attr("stroke-dasharray", dashCode)
+    }
+
     lines.data("id",{id:id, type:"lines"})
 
     this.data.addData(id, lines)
@@ -110,7 +136,7 @@ export const Figs = class {
     return id 
   }
 
-  addPolyline(parameters, fid){
+  addPolyline(parameters, attr, fid){
     const sheetId =  this.svg.getCurrentSheetId()
     const sheet = this.svg.getCurrentSheet()
     const id = fid ? fid : this.data.getId()
@@ -119,6 +145,19 @@ export const Figs = class {
     this.data.setId(id)
     const points = parameters.points
     const polyline = sheet.polyline(points)
+
+    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
+    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
+ 
+    if(color){
+      polyline.stroke({color: color})
+      
+    }
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      polyline.attr("stroke-dasharray", dashCode)
+    }
+
     polyline.data("id",{id:id, type:"polyline"})
 
     this.data.addData(id, polyline)
@@ -135,7 +174,7 @@ export const Figs = class {
     return id 
   }
 
-  addCircle(parameters, fid){
+  addCircle(parameters, attr, fid){
     const sheetId =  this.svg.getCurrentSheetId()
     const sheet = this.svg.getCurrentSheet()
     const id = fid ? fid : this.data.getId()
@@ -145,6 +184,19 @@ export const Figs = class {
     const [cx, cy] = parameters.center 
     const r = parameters.radius
     const circle = sheet.circle(2*r).center(cx, cy)
+
+    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
+    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
+ 
+    if(color){
+      circle.stroke({color: color})
+      
+    }
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      circle.attr("stroke-dasharray", dashCode)
+    }
+
   
     circle.data("id",{id:id, type:"circle"})
 
@@ -174,7 +226,7 @@ export const Figs = class {
     return id
   }
 
-  addArc( parameters, fid){
+  addArc( parameters, attr, fid){
     const sheetId =  this.svg.getCurrentSheetId()
     const sheet = this.svg.getCurrentSheet()
     const id = fid ? fid : this.data.getId()
@@ -186,6 +238,20 @@ export const Figs = class {
     const theta1 = parameters.start
     const theta2 = parameters.end
     const arc = sheet.arc(cx, cy, r, theta1, theta2)
+
+    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
+    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
+ 
+    if(color){
+      arc.stroke({color: color})
+      
+    }
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      arc.attr("stroke-dasharray", dashCode)
+    }
+
+
     arc.data("id",{id:id, type:"arc"})
     arc.data("parameters",{cx:cx, cy:cy, r:r, theta1:theta1, theta2: theta2})
 
