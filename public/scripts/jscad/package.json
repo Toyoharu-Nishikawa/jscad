@@ -13,7 +13,7 @@
     "@svgdotjs/svg.js": "^3.0.12",
     "@svgdotjs/svg.panzoom.js": "^2.0.2",
     "ace-builds": "^1.4.3",
-    "dxftosvg": "^2.1.0",
+    "dxftosvg": "^2.2.0",
     "file-saver": "^2.0.1",
     "filereader": "^1.1.1",
     "necoengine": "^3.0.0",

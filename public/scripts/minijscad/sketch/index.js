@@ -74,8 +74,8 @@ export const Sketch = class  {
   get draw(){
     return this.view.svg.draw
   }
-  addFig(type, parameters, idF){
-    const id = this.viewModel.figs.addFig(type, parameters, idF)
+  addFig(type, parameters, attr, idF){
+    const id = this.viewModel.figs.addFig(type, parameters, attr, idF)
     return id
   } 
   changeFig(idF, parameters){
