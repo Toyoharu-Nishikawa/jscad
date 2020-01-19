@@ -1,12 +1,17 @@
 import {MiniJscad} from "./minijscad/index.js"
 import {dxftosvg, getParamFromDxf} from "./dxftosvg/index.js"
 
-const minijscadTest = document.getElementById("frame")
-const width = minijscadTest.getBoundingClientRect().width  
-const height = minijscadTest.getBoundingClientRect().height 
+const frame = document.getElementById("frame")
+const minijscadTest= document.getElementById("minijscad-test")
+const width = frame.getBoundingClientRect().width  
+const height = frame.getBoundingClientRect().height 
+minijscadTest.style.width = (width-50) + "px"
+minijscadTest.style.height = (height-50) + "px"
 console.log(width, height)
 const miniJscad = new MiniJscad("minijscad-test", width-50, height-50, false)
   .hideEventObject()
+
+//miniJscad.sketch.setBackgroundColor("black")
 
 const draw = () =>{
   const sheet1 = miniJscad.sketch.addSheet("sheet1")
@@ -38,8 +43,8 @@ const main = () => {
   const id11 =miniJscad.sketch.addFig("circle", {center:[1500,500], radius: 200}, {color:"#10AA05", lineTypeName:"DIVIDE"})
   
   const idD2 =  miniJscad.sketch.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, auxiliary:true})
-  const idD3 =  miniJscad.sketch.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:30, digit:2, auxiliary:false})
-  //miniJscad.sketch.remove(id1)
+  const idD3 =  miniJscad.sketch.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:30, digit:3, auxiliary:false})
+  //miniJscad.sketch.removeFig(id1)
   console.log(id1, id2, id3)
   console.log(miniJscad.sketch.getAllSheets())
 }

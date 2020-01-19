@@ -17,7 +17,7 @@ export const MiniJscad = class{
     minijscadFrame.style.width = String(width)+"px"
     minijscadFrame.style.height = String(height)+"px"
 
-    const elWidth = width //-100
+    const elWidth = width -100
     const elHeight = height-40
     const sketchWidth = elWidth-2
     const sketchHeight = elHeight-6
@@ -30,17 +30,20 @@ export const MiniJscad = class{
     return this
   }
   setup(element="drawing", width=300, height=300, eventFlag=false){
+ 
     setDOM(element)
     setCSS(element,width, height)
     const coordinateDOM = document.querySelector("#"+element +"-minijscad-footer > small:nth-child(2)")
     const minijscadFrame = document.getElementById(element+"-minijscad-frame")
     const main = document.getElementById(element+"-minijscad-main")
     const elWidth = main.getBoundingClientRect().width || (width -100)
-    const elHeight = main.getBoundingClientRect().height || (height-40)
+    //const elHeight = main.getBoundingClientRect().height || (height-40)
+    const elHeight = height-40
 
     const sketch = new Sketch(element+"-minijscad-main")
-    const sketchWidth = elWidth-2
-    const sketchHeight = elHeight-6
+    const sketchWidth = elWidth//-2
+    const sketchHeight = elHeight//-6
+    console.log("height",height, "elHeight", elHeight,"sketchHeight", sketchHeight)
     sketch.setScreenSize(sketchWidth, sketchHeight)
     if(!eventFlag){
       sketch.invalidEvent()
@@ -218,7 +221,9 @@ const setCSS = (element, width ,height)=>{
 
     style.sheet.insertRule(`
     #${element}-minijscad-main {
-      flex:1;
+      width: ${width}px;
+      height: ${height-40}px;
+      
       padding: 0;
       margin: 0;
     }`,style.sheet.cssRules.length)
@@ -244,5 +249,6 @@ const setCSS = (element, width ,height)=>{
     #${element}-minijscad-footer > small:nth-child(2) {
       flex: 1 0 auto; 
       padding: 0 0 0 10px;
+      margin: 0;
     }`,style.sheet.cssRules.length)
 }
