@@ -18,14 +18,17 @@ export const Figs = class {
     this.flag = false
   }
 
-  remove(id){
+  removeFig(id){
     const selected = this.data.getDataFromId(id)
     const clone = this.eH.clonesData.getDataFromId(id)
     const nodes = this.eH.nodesData.getDataFromId(id)
+    const sheetId =  this.svg.getCurrentSheetId()
 
     selected.remove()
     this.data.removeData(id)
     this.parameters.removeData(id)
+    const includedIds = this.figsInSheet.getDataFromId(sheetId)
+    includedIds.delete(id)
 
     if(this.flag){
       clone.remove()
@@ -35,6 +38,7 @@ export const Figs = class {
       this.eH.nodesData.removeData(id)
     }
   }
+
   record(sheetId, fid){
     const figsInSheet = this.figsInSheet
     const flag = figsInSheet.hasData(sheetId)
@@ -45,14 +49,16 @@ export const Figs = class {
     //console.log(sheetId)
     sheetSet.add(fid)
   }
-  clearSheet(id){
+
+  removeFigsInSheet(id){
     const sheetId = id ? id : this.svg.getCurrentSheetId() 
 //    console.log(sheetId)
     const includedIds = this.figsInSheet.getDataFromId(sheetId)   
+    console.log("includedIds", includedIds)
 //    console.log("includedIds",includedIds)
     if(includedIds && includedIds.size){
       includedIds.forEach(v=>{
-          this.remove(v)
+          this.removeFig(v)
       })
       includedIds.clear()
     }

@@ -10,6 +10,8 @@ minijscadTest.style.height = (height-50) + "px"
 console.log(width, height)
 const miniJscad = new MiniJscad("minijscad-test", width-50, height-50, false)
   .hideEventObject()
+const version = miniJscad.version
+console.log("version", version)
 
 //miniJscad.sketch.setBackgroundColor("black")
 
@@ -20,10 +22,9 @@ const draw = () =>{
   const id6 =miniJscad.sketch.addFig("arc", {center:[450,100], radius:50, start:180, end:0})
   const id7 =miniJscad.sketch.addFig("arc", {center:[550,100], radius:50, start:0, end:270})
   const id8 =miniJscad.sketch.addFig("arc", {center:[650,100], radius:50, start:270, end:0})
-  const idD1 =  miniJscad.sketch.addDimension("horizontal", {points:[[150, 150], [2000, 500]], distance:300, fontSize:100, digit:2, auxiliary:true})
 }
-console.log(miniJscad)
 
+console.log(miniJscad)
 console.log(miniJscad.sketch.getAllSheetIds())
 console.log(miniJscad.sketch.getCurrentSheetId())
 
@@ -34,6 +35,8 @@ const main = () => {
   const id2 =miniJscad.sketch.addFig("arc", {center:[150,100], radius:50, start:90, end:180})
   const id3 = miniJscad.sketch.addFig("line", {points:[[150,150],[2000,500]]})
   
+  console.log(id1, id2, id3)
+
   draw()
   drawFlag = true
   
@@ -42,10 +45,17 @@ const main = () => {
   const id10 =miniJscad.sketch.addFig("polyline", {points:[[1500,500],[1000,500],[1000,600],[500,500] ]}, {color:"#FF00FF", lineTypeName:"DOT"})
   const id11 =miniJscad.sketch.addFig("circle", {center:[1500,500], radius: 200}, {color:"#10AA05", lineTypeName:"DIVIDE"})
   
+  const idD1 =  miniJscad.sketch.addDimension("horizontal", {points:[[150, 150], [2000, 500]], distance:300, fontSize:100, digit:2, auxiliary:true})
   const idD2 =  miniJscad.sketch.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, auxiliary:true})
   const idD3 =  miniJscad.sketch.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:30, digit:3, auxiliary:false})
+
+  /*****      remove figs or dimensions ****/
   //miniJscad.sketch.removeFig(id1)
-  console.log(id1, id2, id3)
+  //miniJscad.sketch.removeDimension(idD1)
+  //miniJscad.sketch.removeFigsInSheet("sheet0")
+  //miniJscad.sketch.removeDimensionsInSheet("sheet0")
+  //miniJscad.sketch.clearSheet("sheet0")
+
   console.log(miniJscad.sketch.getAllSheets())
 }
 const resize = ()=> {

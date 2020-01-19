@@ -1,10 +1,12 @@
 import {Sketch} from "./sketch/index.js"
+import {version} from "./version.js"
 
 "use strict"
 export {Drawing} from "./dxf-writer/Drawing.js"
 
 export const MiniJscad = class{
   constructor(element, width=300, height=300, eventFlag=false){
+    this.version = version
     this.sketch = null
     this.element = element
     this.setup(element, width, height, eventFlag)
@@ -17,10 +19,10 @@ export const MiniJscad = class{
     minijscadFrame.style.width = String(width)+"px"
     minijscadFrame.style.height = String(height)+"px"
 
-    const elWidth = width -100
+    const elWidth = width// -100
     const elHeight = height-40
-    const sketchWidth = elWidth-2
-    const sketchHeight = elHeight-6
+    const sketchWidth = elWidth//-2
+    const sketchHeight = elHeight//-6
 
     sketch.resize(sketchWidth, sketchHeight)
     return this

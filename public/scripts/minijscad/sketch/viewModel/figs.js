@@ -11,6 +11,12 @@ export const Figs = class{
     this.degreesOfFreedom = new DataClass.Degrees()
     this.attrData = new DataClass.DataManager()
   }
+  removeFig(idF){
+    this.view.figs.removeFig(idF) 
+  }
+  removeFigsInSheet(id){
+    this.view.figs.removeFigsInSheet(id)
+  }
 
   addFig(type, parameters, attr, idF){
     switch(type){

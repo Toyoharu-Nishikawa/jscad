@@ -56,8 +56,8 @@ export const Sketch = class  {
     this.view.svg.removeAllSheets()
   }
   clearSheet(id){
-    this.view.figs.clearSheet(id)
-    this.view.dimensionsLabel.clearSheet(id)
+    this.viewModel.figs.removeFigsInSheet(id)
+    this.viewModel.dimensions.removeDimensionsInSheet(id)
   }
   hideEventObject(){
     this.view.svg.nodeScreen.hide()
@@ -81,8 +81,11 @@ export const Sketch = class  {
     return id
   } 
   removeFig(idF){
-    this.view.figs.remove(idF)
+    this.viewModel.figs.removeFig(idF)
   } 
+  removeFigsInSheet(sheetId){
+    this.viewModel.figs.removeFigsInSheet(sheetId)
+  }
   changeFig(idF, parameters){
     this.viewModel.figs.changeFig(idF, parameters)
   } 
@@ -90,6 +93,12 @@ export const Sketch = class  {
     const id = this.viewModel.dimensions.addDimension(type, ...parameters)
     return id
   }  
+  removeDimension(id){
+    this.viewModel.dimensions.removeDimension(id)
+  } 
+  removeDimensionsInSheet(sheetId){
+    this.viewModel.dimensions.removeDimensionsInSheet(sheetId)
+  }
   getDxf(){
     const dxf = this.view.figs.getDxf()
     return dxf
