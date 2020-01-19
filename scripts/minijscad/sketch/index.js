@@ -19,7 +19,9 @@ export const Sketch = class  {
   }
   export(){
   }
-
+  setBackgroundColor(color){
+    this.view.svg.setBackgroundColor(color)
+  }  
   setScreenSize(width, height){
     this.view.svg.setScreenSize(width, height)
   }
@@ -77,6 +79,9 @@ export const Sketch = class  {
   addFig(type, parameters, attr, idF){
     const id = this.viewModel.figs.addFig(type, parameters, attr, idF)
     return id
+  } 
+  removeFig(idF){
+    this.view.figs.remove(idF)
   } 
   changeFig(idF, parameters){
     this.viewModel.figs.changeFig(idF, parameters)

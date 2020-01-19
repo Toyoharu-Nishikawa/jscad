@@ -4,6 +4,7 @@ import {addExtendElements} from "./extra.js"
 
 const blackLine = {color:"black",opacity: 1.0,width:1}
 const blueLine = {color:"blue",opacity: 1.0,width:1}
+const whiteLine = {color:"white",opacity: 1.0,width:1}
 const nonLine = {color:null,opacity: 0.0,width:1}
 
 export const Svg = class {
@@ -28,10 +29,21 @@ export const Svg = class {
     this.draw.width(width);
     this.draw.height(height);
     this.draw.attr('preserveAspectRatio', 'xMinYMin slice');
-    const style = "margin:0; padding:0; border:1px solid #F5F5F5; background:linear-gradient(to bottom, white, RoyalBlue"
+    const style = "margin:0; padding:0;  background:linear-gradient(to bottom, white, RoyalBlue)" //border:1px solid #F5F5F5;
     this.draw.attr("style" ,style)
 
     this.draw.viewbox(0, 0, width,height).flip('y')
+  }
+  setBackgroundColor(color){
+    const colorParam = color === "default" ? "background:linear-gradient(to bottom, white, RoyalBlue)" : `background:${color}`
+    this.draw.attr("style" ,colorParam)
+    if(color==="black"||color==="#000000"|| color==="#000"){
+      this.changeScreenColor(this.dimensionScreen,"white","white")
+      this.changeScreenColor(this.screen,"white","none")
+      this.changeScreenColor(this.background,"white","white")
+      this.changeScreenColor(this.backgroundNode,"white","white")
+      this.changeScreenColor(this.nodeScreen,"white","white")
+    }
   }
   resize(width, height){
     this.draw.width(width)
@@ -43,6 +55,10 @@ export const Svg = class {
       .stroke(strokeObj)
       .fill(fillObj)
       .attr("vector-effect", "non-scaling-stroke")
+    return screen
+  }
+  changeScreenColor(screen, lineColor, fillColor){
+    screen.stroke({color:lineColor}).fill(fillColor)
     return screen
   }
   makeSheets(screen){
