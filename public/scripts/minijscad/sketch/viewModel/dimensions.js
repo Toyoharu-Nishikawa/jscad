@@ -19,4 +19,13 @@ export const Dimensions = class{
       }
     }
   }
+
+  removeDimension(id){
+    this.view.dimensionsLabel.removeDimension(id)
+  }
+
+  removeDimensionsInSheet(id){
+    this.view.dimensionsLabel.removeDimensionsInSheet(id)
+  }
+
 } 

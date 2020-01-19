@@ -8,7 +8,7 @@ export const DimensionsLabel = class {
     this.dimensionsInSheet = new DataClass.DataManager()
     //this.dimensionScreen = svg.dimensionScreen
   }
-  remove(id){
+  removeDimension(id){
     const label = this.labelData.getDataFromId(id)
     label.remove(id)
   }
@@ -21,12 +21,12 @@ export const DimensionsLabel = class {
     const sheetSet = dimensionsInSheet.getDataFromId(sheetId)
     sheetSet.add(id)
   }
-  clearSheet(id){
+  removeDimensionsInSheet(id){
     const sheetId = id ? id : this.svg.getCurrentSheetId() 
     const includedIds = this.dimensionsInSheet.getDataFromId(sheetId)   
     if(includedIds && includedIds.size){
       includedIds.forEach(v=>{
-        this.remove(v)
+        this.removeDimension(v)
       })
       includedIds.clear()
     }
