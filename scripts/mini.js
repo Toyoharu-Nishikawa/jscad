@@ -13,7 +13,7 @@ const miniJscad = new MiniJscad("minijscad-test", width-50, height-50, false)
 const version = miniJscad.version
 console.log("version", version)
 
-//miniJscad.sketch.setBackgroundColor("black")
+miniJscad.sketch.setBackgroundColor("default")
 
 const draw = () =>{
   const sheet1 = miniJscad.sketch.addSheet("sheet1")

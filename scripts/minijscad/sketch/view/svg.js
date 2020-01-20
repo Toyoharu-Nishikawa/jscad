@@ -44,6 +44,13 @@ export const Svg = class {
       this.changeScreenColor(this.backgroundNode,"white","white")
       this.changeScreenColor(this.nodeScreen,"white","white")
     }
+    else{
+      this.changeScreenColor(this.dimensionScreen,"black","black")
+      this.changeScreenColor(this.screen,"blue","none")
+      this.changeScreenColor(this.background,"black","black")
+      this.changeScreenColor(this.backgroundNode,"black","black")
+      this.changeScreenColor(this.nodeScreen,"black","black")
+    }
   }
   resize(width, height){
     this.draw.width(width)
