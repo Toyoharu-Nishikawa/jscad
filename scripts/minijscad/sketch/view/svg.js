@@ -39,7 +39,7 @@ export const Svg = class {
     this.draw.attr("style" ,colorParam)
     if(color==="black"||color==="#000000"|| color==="#000"){
       this.changeScreenColor(this.dimensionScreen,"white","white")
-      this.changeScreenColor(this.screen,"white","none")
+      this.changeScreenColor(this.screen,"green","none")
       this.changeScreenColor(this.background,"white","white")
       this.changeScreenColor(this.backgroundNode,"white","white")
       this.changeScreenColor(this.nodeScreen,"white","white")
