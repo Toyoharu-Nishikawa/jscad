@@ -53,7 +53,7 @@ export const DimensionsLabel = class {
     const theta = Math.atan2(Dy2-Dy1, Dx2-Dx1)
     const thetaDeg = theta*180/Math.PI
     //console.log(thetaDeg)
-    const text = obj.text(valueText).font({size:size})
+    const text = obj.text(valueText).font({size:size}).attr("stroke-width", 0.1)
       .flip("y",0).rotate(-thetaDeg+180,0,0).translate(tx, ty)
     
     return text
@@ -62,7 +62,7 @@ export const DimensionsLabel = class {
   setLengthLabelD(parameters){
     const [x1, y1, x2, y2] = [].concat(...parameters.points)
     const distance = parameters.distance || 5
-    const size = parameters.size || 20
+    const size = parameters.fontSize || 20
     const digit = parameters.digit || 2
     const auxiliaryFlag = parameters.auxiliary || true
 
@@ -97,7 +97,7 @@ export const DimensionsLabel = class {
 
     const [x1, y1, x2, y2] = [].concat(...parameters.points)
     const distance = parameters.distance || 5
-    const size = parameters.size || 20
+    const size = parameters.fontSize || 20
     const digit = parameters.digit || 2
     const auxiliaryFlag = parameters.auxiliary || true
 
