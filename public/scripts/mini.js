@@ -16,7 +16,9 @@ console.log("version", version)
 miniJscad.sketch.setBackgroundColor("default")
 
 const draw = () =>{
-  const sheet1 = miniJscad.sketch.addSheet("sheet1")
+  const sheet1 = miniJscad.sketch.addSheet("sheet1", {stroke: "green", "stroke-dasharray": "DASHED"})
+  const data = sheet1.data("key")
+  console.log("sheet1 data", sheet1.attr("stroke"))
   const id4 =miniJscad.sketch.addFig("arc", {center:[250,100], radius:50, start:180, end:90}, {color:"orange", lineTypeName:"DASHED2"})
   const id5 =miniJscad.sketch.addFig("arc", {center:[350,100], radius:50, start:0, end:180})
   const id6 =miniJscad.sketch.addFig("arc", {center:[450,100], radius:50, start:180, end:0})
@@ -36,6 +38,8 @@ const main = () => {
   const id3 = miniJscad.sketch.addFig("line", {points:[[150,150],[2000,500]]})
   
   console.log(id1, id2, id3)
+  const currentSheet  = miniJscad.sketch.getCurrentSheet()
+  console.log("sheet0", currentSheet.attr("stroke"))
 
   draw()
   drawFlag = true
@@ -58,6 +62,7 @@ const main = () => {
 
   console.log(miniJscad.sketch.getAllSheets())
 }
+
 const resize = ()=> {
   const minijscadTest = document.getElementById("frame")
   const width = minijscadTest.getBoundingClientRect().width  

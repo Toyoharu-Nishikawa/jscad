@@ -1,6 +1,7 @@
 //import SVG from "../../../@svgdotjs/svg.js/src/svg.js"
 //import * as svgPanzoom from "../../../@svgdotjs/svg.panzoom.js/src/svg.panzoom.js"
 import {addExtendElements} from "./extra.js"
+import {dataMap as dashMap} from "./dash.js"
 
 const blackLine = {color:"black",opacity: 1.0,width:1}
 const blueLine = {color:"blue",opacity: 1.0,width:1}
@@ -70,18 +71,26 @@ export const Svg = class {
   }
   makeSheets(screen){
     const id = "sheet0"
-    const sheet = screen.group().data("key", {sheetId:id})
+    const sheet = screen.group().data("key", {sheetId:id, attr:{}})
     this.currentSheetId = id
     const sheets = new Map([[id, sheet]])
     return sheets 
   }
-  addSheet(id){
+  addSheet(id, attr){
     const screen = this.screen
     const dimensionScreen = this.dimensionScreen
     const sheets = this.sheets
     const dheets = this.dheets
     if(!sheets.has(id)){
-      const newSheet = screen.group().data("key", {sheetId:id})
+      const newSheet = screen.group().data("key", {sheetId:id, attr:attr})
+      if(attr){
+        newSheet.attr(attr)
+        if(attr.hasOwnProperty("stroke-dasharray")){
+          const lineTypeName = attr["stroke-dasharray"]
+          const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+          newSheet.attr("stroke-dasharray", dashCode)
+        }
+      }
       const newDheet = dimensionScreen.group().data("key", {sheetId:id})
       sheets.set(id, newSheet)
       dheets.set(id, newDheet)
