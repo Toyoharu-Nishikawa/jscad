@@ -28,8 +28,9 @@ export const Sketch = class  {
   resize(width, height){
     this.view.svg.resize(width, height)
   }
-  addSheet(id){
-    this.view.svg.addSheet(id)
+  addSheet(id, attr){
+    const newSheet = this.view.svg.addSheet(id, attr)
+    return newSheet
   }
   getSheet(id){
     return this.view.svg.getSheet(id)

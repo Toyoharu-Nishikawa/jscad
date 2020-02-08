@@ -5,6 +5,17 @@ import {arcPath} from "./arcPath.js"
 import {Drawing} from "../../dxf-writer/Drawing.js"
 
 
+const autocadColorMap = new Map([
+  ["black", 0],
+  ["red", 1],
+  ["yellow", 2],
+  ["green", 3],
+  ["cyan", 4],
+  ["blue", 5],
+  ["magenta", 6],
+  ["white", 7],
+])
+
 export const Figs = class {
   constructor(svg){
     this.flag = true 
@@ -18,17 +29,19 @@ export const Figs = class {
     this.flag = false
   }
 
-  removeFig(id){
+  removeFig(id, sheetID){
     const selected = this.data.getDataFromId(id)
     const clone = this.eH.clonesData.getDataFromId(id)
     const nodes = this.eH.nodesData.getDataFromId(id)
-    const sheetId =  this.svg.getCurrentSheetId()
+    const sheetId =  sheetID || this.svg.getCurrentSheetId()
 
     selected.remove()
     this.data.removeData(id)
     this.parameters.removeData(id)
     const includedIds = this.figsInSheet.getDataFromId(sheetId)
-    includedIds.delete(id)
+    if(includedIds){
+      includedIds.delete(id)
+    }
 
     if(this.flag){
       clone.remove()
@@ -52,13 +65,10 @@ export const Figs = class {
 
   removeFigsInSheet(id){
     const sheetId = id ? id : this.svg.getCurrentSheetId() 
-//    console.log(sheetId)
     const includedIds = this.figsInSheet.getDataFromId(sheetId)   
-    console.log("includedIds", includedIds)
-//    console.log("includedIds",includedIds)
     if(includedIds && includedIds.size){
       includedIds.forEach(v=>{
-          this.removeFig(v)
+          this.removeFig(v, sheetId)
       })
       includedIds.clear()
     }
@@ -129,7 +139,7 @@ export const Figs = class {
     lines.data("id",{id:id, type:"lines"})
 
     this.data.addData(id, lines)
-    this.parameters.addData(id, {parameters:parameters, type:"lines"})
+    this.parameters.addData(id, {parameters:parameters, type:"lines", attr: attr})
     this.record(sheetId, id)
 
     if(this.flag){
@@ -167,7 +177,7 @@ export const Figs = class {
     polyline.data("id",{id:id, type:"polyline"})
 
     this.data.addData(id, polyline)
-    this.parameters.addData(id, {parameters:parameters, type:"polyline"})
+    this.parameters.addData(id, {parameters:parameters, type:"polyline", attr: attr})
     this.record(sheetId, id)
 
     if(this.flag){
@@ -207,7 +217,7 @@ export const Figs = class {
     circle.data("id",{id:id, type:"circle"})
 
     this.data.addData(id, circle)
-    this.parameters.addData(id, {parameters:parameters, type:"circle"})
+    this.parameters.addData(id, {parameters:parameters, type:"circle", attr: attr})
     this.record(sheetId, id)
 
     if(this.flag){
@@ -262,7 +272,7 @@ export const Figs = class {
     arc.data("parameters",{cx:cx, cy:cy, r:r, theta1:theta1, theta2: theta2})
 
     this.data.addData(id, arc)
-    this.parameters.addData(id, {parameters:parameters, type:"arc"})
+    this.parameters.addData(id, {parameters:parameters, type:"arc", attr: attr})
     this.record(sheetId, id)
 
     if(this.flag){
@@ -299,37 +309,64 @@ export const Figs = class {
 
   getDxf(){
     const d = new Drawing()
-    const params = this.parameters.getValues()
-    d.addLayer('l_green', Drawing.ACI.GREEN, 'CONTINUOUS');
-    d.setActiveLayer('l_green');
-    params.forEach(v=>{
-      const type = v.type
-      switch(type){
-        case "line":{
-          const points = [].concat(...v.parameters.points)
-          d.drawLine(...points)
-          break
-        }
-        case "polyline":
-        case "lines":{
-          const points = v.parameters.points
-          points.forEach((v,i,arr)=>{
-            if(i>0){
-              d.drawLine(arr[i-1][0], arr[i-1][1],v[0],v[1])
+    const sheets = this.svg.sheets
+    const screen = this.svg.screen
+    const screenStroke = screen.attr("stroke")
+
+    for(let [key, value] of sheets){
+      const figsInSheet = this.figsInSheet.getDataFromId(key)
+      if(figsInSheet && figsInSheet.size){
+        const sheetData = value.data("key")
+        const sheetAttr = sheetData.attr
+        const sheetStroke = sheetAttr.hasOwnProperty("stroke") ? sheetAttr.stroke : undefined
+        const sheetLineType = sheetAttr.hasOwnProperty("stroke-dasharray") ? 
+          sheetAttr["stroke-dasharray"] : undefined
+
+        const stroke = sheetStroke || screenStroke 
+        const color = autocadColorMap.get(stroke)
+        const lineType = sheetLineType || "CONTINUOUS" 
+        d.addLayer(key, color, lineType)
+        d.setActiveLayer(key)
+        for(let figId of figsInSheet){
+          const fig = this.data.getDataFromId(figId) 
+          const param = this.parameters.getDataFromId(figId)
+          const type = param.type
+
+          switch(type){
+            case "line":{
+              const points = [].concat(...param.parameters.points)
+              d.drawLine(...points)
+              break
             }
-          })
-          break
-        }
-        case "arc":{
-          const center = v.parameters.center
-          const radius = v.parameters.radius
-          const start = v.parameters.start
-          const end = v.parameters.end
-          d.drawArc(center[0], center[1], radius, start, end)
-          break
+            case "polyline":
+            case "lines":{
+              const points = param.parameters.points
+              points.forEach((v,i,arr)=>{
+                if(i>0){
+                  d.drawLine(arr[i-1][0], arr[i-1][1],v[0],v[1])
+                }
+              })
+              break
+            }
+            case "circle":{
+              const center = param.parameters.center
+              const radius = param.parameters.radius
+              d.drawCircle(center[0], center[1], radius)
+              break
+            }
+            case "arc":{
+              const center = param.parameters.center
+              const radius = param.parameters.radius
+              const start = param.parameters.start
+              const end = param.parameters.end
+              d.drawArc(center[0], center[1], radius, start, end)
+              break
+            }
+          }
         }
       }
-    })
+    }
+
     const string = d.toDxfString()
     return string
   } 
