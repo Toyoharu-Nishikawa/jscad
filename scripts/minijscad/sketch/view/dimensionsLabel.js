@@ -14,7 +14,7 @@ export const DimensionsLabel = class {
     label.remove(id)
 
     const sheetId =  sheetID || this.svg.getCurrentSheetId()
-    const includedIds = this.figsInSheet.getDataFromId(sheetId)
+    const includedIds = this.dimensionsInSheet.getDataFromId(sheetId)
     if(includedIds){
       includedIds.delete(id)
     }

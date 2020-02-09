@@ -161,5 +161,18 @@ export const Svg = class {
     sheets.clear()
     return this
   }
+  hideSheet(id){
+    const sheet = this.getSheet(id) 
+    const dheet = this.getDheet(id) 
+    sheet.hide() 
+    dheet.hide() 
+  }
+  showSheet(id){
+    const sheet = this.getSheet(id) 
+    const dheet = this.getDheet(id) 
+    sheet.show() 
+    dheet.show() 
+  }
+
 }
 
