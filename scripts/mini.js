@@ -1,5 +1,6 @@
 import {MiniJscad} from "./minijscad/index.js"
 import {dxftosvg, getParamFromDxf} from "./dxftosvg/index.js"
+import DxfParser from "./minijscad/dxf-parser/dxf-parser-module.js"
 
 const frame = document.getElementById("frame")
 const minijscadTest= document.getElementById("minijscad-test")
@@ -83,6 +84,11 @@ document.getElementById("read-dxf").onchange = (e) =>{
   const reader = new FileReader()
   reader.onload = (eve) => {
     const text = eve.target.result  
+
+    const parser = new DxfParser()
+    const dxf = parser.parseSync(text)
+    console.log("dxf", dxf)
+
     const param = getParamFromDxf(text)
     console.log("param", param)
     const svg = dxftosvg(text)
