@@ -307,13 +307,36 @@ export const Figs = class {
     return id
   }
 
-  getDxf(){
+  getDxf(sheetList){
     const d = new Drawing()
+
+    d.addLineType("CENTER", "____ _ ____",[31.75, -6.35, 6.35, -6.35])
+    d.addLineType("CENTER2", "____ _ ____",[19.05, -3.175, 3.175, -3.175])
+    d.addLineType("CENTERX2", "____ _ ____",[63.5, -12.7, 12.7, -12.7])
+    d.addLineType("DASHED", "__  __",[5, -5])
+    d.addLineType("DASHED2", "__  __",[6.35, -3.175])
+    d.addLineType("DASHEDX2", "__  __",[25.4, -12.7])
+    d.addLineType("PHANTOM", "____ _ _ ____",[31.75, -6.35, 6.35, -6.35, 6.35, -6.35])
+    d.addLineType("PHANTOM2", "____ _ _ ____",[15.875, -3.175, 3.175, -3.175, 3.175, -3.175])
+    d.addLineType("PHANTOMX2", "____ _ _ ____",[63.5, -12.7, 12.7, -12.7, 12.7, -12.7])
+    d.addLineType("DASHDOT", "__ . __ . __",[12.7, -6.35, 0.1, -6.35])
+    d.addLineType("DASHDOT2", "__ . __ . __",[6.35, -3.175, 0.1, -3.175])
+    d.addLineType("DASHDOTX2", "__ . __ . __",[25.4, -12.7, 0.1, -12.7])
+    d.addLineType("DOT", ".  . .",[0.1, -6.35])
+    d.addLineType("DOT2", ".  . .",[0.1, -3.175])
+    d.addLineType("DOTX2", ".  . .",[0.1, -12.7])
+    d.addLineType("DIVIDE", "__ . . __",[12.7, -6.35, 0.1, -6.35, 0.1, -6.35])
+    d.addLineType("DIVIDE2", "__ . . __",[6.35, -3.175, 0.1, -3.175, 0.1, -3.175])
+    d.addLineType("DIVIDEX2", "__ . . __",[25.4, -12.7, 0.1, -12.7, 0.1, -12.7])
+
     const sheets = this.svg.sheets
     const screen = this.svg.screen
     const screenStroke = screen.attr("stroke")
 
     for(let [key, value] of sheets){
+      if(sheetList && !sheetList.includes(key) ){
+        continue
+      }
       const figsInSheet = this.figsInSheet.getDataFromId(key)
       if(figsInSheet && figsInSheet.size){
         const sheetData = value.data("key")

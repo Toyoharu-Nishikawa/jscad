@@ -16,10 +16,10 @@ console.log("version", version)
 miniJscad.sketch.setBackgroundColor("default")
 
 const draw = () =>{
-  const sheet1 = miniJscad.sketch.addSheet("sheet1", {stroke: "green", "stroke-dasharray": "DASHED"})
+  const sheet1 = miniJscad.sketch.addSheet("sheet1", {stroke: "green", "stroke-dasharray": "DIVIDE"})
   const data = sheet1.data("key")
   console.log("sheet1 data", sheet1.attr("stroke"))
-  const id4 =miniJscad.sketch.addFig("arc", {center:[250,100], radius:50, start:180, end:90}, {color:"orange", lineTypeName:"DASHED2"})
+  const id4 =miniJscad.sketch.addFig("arc", {center:[250,100], radius:50, start:180, end:90}, {color:"orange", lineTypeName:"PHANTOM"})
   const id5 =miniJscad.sketch.addFig("arc", {center:[350,100], radius:50, start:0, end:180})
   const id6 =miniJscad.sketch.addFig("arc", {center:[450,100], radius:50, start:180, end:0})
   const id7 =miniJscad.sketch.addFig("arc", {center:[550,100], radius:50, start:0, end:270})
@@ -60,7 +60,12 @@ const main = () => {
   //miniJscad.sketch.removeDimensionsInSheet("sheet0")
   //miniJscad.sketch.clearSheet("sheet0")
 
+  miniJscad.sketch.hideSheet("sheet1")
+
+  miniJscad.sketch.showSheet("sheet1")
   console.log(miniJscad.sketch.getAllSheets())
+  //miniJscad.sketch.removeAllSheets()
+  //console.log(miniJscad.sketch.getAllSheetIds())
 }
 
 const resize = ()=> {
@@ -90,7 +95,7 @@ document.getElementById("read-dxf").onchange = (e) =>{
 }
 
 document.getElementById("download-dxf").onclick = () =>{
-  const exportText = miniJscad.sketch.getDxf()
+  const exportText = miniJscad.sketch.getDxf(["sheet1", "sheet0"])
   const filename = "mini.dxf"
   const exportFileBOM = true
   const blob = new Blob([exportText], {type: 'text/plain; charset=utf-8'})

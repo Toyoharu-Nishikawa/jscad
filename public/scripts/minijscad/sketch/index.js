@@ -50,15 +50,29 @@ export const Sketch = class  {
   getAllSheets(){
     return this.view.svg.getAllSheets()
   }
-  removeSheet(id){
-    this.view.svg.removeSheet(id)
-  }
-  removeAllSheets(){
-    this.view.svg.removeAllSheets()
-  }
   clearSheet(id){
     this.viewModel.figs.removeFigsInSheet(id)
     this.viewModel.dimensions.removeDimensionsInSheet(id)
+  }
+  clearAllSheets(){
+    const sheets = this.getAllSheetIds()
+    for(let id of sheets){
+      this.clearSheet(id)
+    }
+  }
+  removeSheet(id){
+    this.clearSheet(id)
+    this.view.svg.removeSheet(id)
+  }
+  removeAllSheets(){
+    this.clearAllSheets()
+    this.view.svg.removeAllSheets()
+  }
+  hideSheet(id){
+    this.view.svg.hideSheet(id)
+  }
+  showSheet(id){
+    this.view.svg.showSheet(id)
   }
   hideEventObject(){
     this.view.svg.nodeScreen.hide()
@@ -100,8 +114,8 @@ export const Sketch = class  {
   removeDimensionsInSheet(sheetId){
     this.viewModel.dimensions.removeDimensionsInSheet(sheetId)
   }
-  getDxf(){
-    const dxf = this.view.figs.getDxf()
+  getDxf(sheetList){
+    const dxf = this.view.figs.getDxf(sheetList)
     return dxf
   }
 } 
