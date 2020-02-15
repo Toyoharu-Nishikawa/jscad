@@ -17,7 +17,7 @@ console.log("version", version)
 miniJscad.sketch.setBackgroundColor("default")
 
 const draw = () =>{
-  const sheet1 = miniJscad.sketch.addSheet("sheet1", {stroke: "green", "stroke-dasharray": "DIVIDE"})
+  const sheet1 = miniJscad.sketch.addSheet("sheet1", {stroke: "#FFBF00", "stroke-dasharray": "DIVIDE"})
   const data = sheet1.data("key")
   console.log("sheet1 data", sheet1.attr("stroke"))
   const id4 =miniJscad.sketch.addFig("arc", {center:[250,100], radius:50, start:180, end:90}, {color:"orange", lineTypeName:"PHANTOM"})
