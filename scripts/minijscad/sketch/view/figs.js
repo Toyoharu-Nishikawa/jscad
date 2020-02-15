@@ -3,18 +3,9 @@ import * as DataClass from "../data.js"
 import {EventHandler} from "./eventHandler.js"
 import {arcPath} from "./arcPath.js"
 import {Drawing} from "../../dxf-writer/Drawing.js"
+import {autocadColorMap} from "./color.js"
 
 
-const autocadColorMap = new Map([
-  ["black", 0],
-  ["red", 1],
-  ["yellow", 2],
-  ["green", 3],
-  ["cyan", 4],
-  ["blue", 5],
-  ["magenta", 6],
-  ["white", 7],
-])
 
 export const Figs = class {
   constructor(svg){
