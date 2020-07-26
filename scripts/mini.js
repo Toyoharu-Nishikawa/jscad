@@ -20,11 +20,12 @@ const draw = () =>{
   const sheet1 = miniJscad.sketch.addSheet("sheet1", {stroke: "#FFBF00", "stroke-dasharray": "DIVIDE"})
   const data = sheet1.data("key")
   console.log("sheet1 data", sheet1.attr("stroke"))
-  const id4 =miniJscad.sketch.addFig("arc", {center:[250,100], radius:50, start:180, end:90}, {color:"orange", lineTypeName:"PHANTOM"})
+  const id4 =miniJscad.sketch.addFig("arc", {center:[250,100], radius:50, start:180, end:90}, {stroke:"orange",fill:"green", lineTypeName:"PHANTOM"})
   const id5 =miniJscad.sketch.addFig("arc", {center:[350,100], radius:50, start:0, end:180})
   const id6 =miniJscad.sketch.addFig("arc", {center:[450,100], radius:50, start:180, end:0})
   const id7 =miniJscad.sketch.addFig("arc", {center:[550,100], radius:50, start:0, end:270})
   const id8 =miniJscad.sketch.addFig("arc", {center:[650,100], radius:50, start:270, end:0})
+  const id9 =miniJscad.sketch.addFig("bspline", {points: [[0,0],[0,100],[100,100], [100,0]], degree:3, knots:[0,0,0,0,1,1,1,1]})
 }
 
 console.log(miniJscad)

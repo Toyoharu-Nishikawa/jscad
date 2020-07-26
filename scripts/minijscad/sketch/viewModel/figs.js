@@ -18,57 +18,62 @@ export const Figs = class{
     this.view.figs.removeFigsInSheet(id)
   }
 
-  addFig(type, parameters, attr, idF){
+  addFig(type, parameters, attr, sheetId, idF){
     switch(type){
       case "line":{
-        const id= this.addLine(parameters, attr, idF)
+        const id= this.addLine(parameters, attr, sheetId, idF)
         return id 
       }
       case "lines":{
-        const id = this.addLines(parameters, attr, idF)
+        const id = this.addLines(parameters, attr, sheetId, idF)
         return id 
       }
       case "polyline":{
-        const id = this.addPolyline(parameters, attr, idF)
+        const id = this.addPolyline(parameters, attr, sheetId, idF)
         return id 
       }
       case "circle":{
-        const id = this.addCircle(parameters, attr, idF)
+        const id = this.addCircle(parameters, attr, sheetId, idF)
         return id 
       }
       case "arc":{
         const id = this.addArc(parameters, attr, idF)
         return id 
       }
+      case "bspline":{
+        const id = this.addBSpline(parameters, attr, idF)
+        return id 
+      }
+
       default:{
       }
     }
   }
 
-  changeFig(id, params){
+  changeFig(id, params, attr){
     const fig = this.view.figs.data.getDataFromId(id) 
     const type = fig.data("id").type
     switch(type){
       case "line":{
-        this.view.figs.changeLine(id, ...params)
+        this.view.figs.changeLine(id, params, attr)
         break
       }
       case "arc":{
-        this.view.figs.changeArc(id, ...params)
+        this.view.figs.changeArc(id, params, attr)
         break
       }
 
     }
   }
 
-  addLine(parameters, id){
-    const fid = this.view.figs.addLine(parameters, id)
+  addLine(parameters, attr, sheetId, id){
+    const fid = this.view.figs.addLine(parameters, attr, sheetId, id)
 
-    this.degreesOfFreedom.increase(4)
-    const attr = {
-      degreesOfFreedom: new DataClass.Degrees("line"),
-      constraint: new Map(),
-    }
+    //this.degreesOfFreedom.increase(4)
+    //const attr = {
+    //  degreesOfFreedom: new DataClass.Degrees("line"),
+    //  constraint: new Map(),
+    //}
     //this.initialParameters.param.addData(fId, [x1, y1, x2, y2])
     //this.initialParameters.valid.addData(fId, [true, true, true, true])
     //this.attrData.addData(fId, attr)
@@ -76,18 +81,19 @@ export const Figs = class{
     return fid 
   }
   
-  changeline(id, x1, y1, x2, y2){
-    this.view.figs.changeline(id, x1, y1, x2, y2)
+  changeline(id, params, attr){
+    this.view.figs.changeline(id, params, attr)
+    return id
   }
 
-  addLines(parameters, id){
-    const fid = this.view.figs.addLines(parameters, id)
+  addLines(parameters, attr, sheetId, id){
+    const fid = this.view.figs.addLines(parameters, attr, sheetId, id)
 
-    this.degreesOfFreedom.increase(4)
-    const attr = {
-      degreesOfFreedom: new DataClass.Degrees("line"),
-      constraint: new Map(),
-    }
+    //this.degreesOfFreedom.increase(4)
+    //const attr = {
+    //  degreesOfFreedom: new DataClass.Degrees("line"),
+    //  constraint: new Map(),
+    //}
     //this.initialParameters.param.addData(fId, points)
     //this.initialParameters.valid.addData(fId, [true, true, true, true])
     //this.attrData.addData(fId, attr)
@@ -95,14 +101,14 @@ export const Figs = class{
     return fid
   }
 
-  addPolyline(parameters, id){
-    const fid = this.view.figs.addPolyline(parameters, id)
+  addPolyline(parameters, attr, sheetId, id){
+    const fid = this.view.figs.addPolyline(parameters, attr, sheetId, id)
 
-    this.degreesOfFreedom.increase(4)
-    const attr = {
-      degreesOfFreedom: new DataClass.Degrees("line"),
-      constraint: new Map(),
-    }
+    //this.degreesOfFreedom.increase(4)
+    //const attr = {
+    //  degreesOfFreedom: new DataClass.Degrees("line"),
+    //  constraint: new Map(),
+    //}
     //this.initialParameters.param.addData(fId, points)
     //this.initialParameters.valid.addData(fId, [true, true, true, true])
     //this.attrData.addData(fId, attr)
@@ -110,14 +116,14 @@ export const Figs = class{
     return fid
   }
 
-  addCircle(parameters, id){
-    const fid = this.view.figs.addCircle(parameters, id)
+  addCircle(parameters, attr, sheetId, id){
+    const fid = this.view.figs.addCircle(parameters, attr, sheetId, id)
 
-    this.degreesOfFreedom.increase(3)
-    const attr = {
-      degreesOfFreedom: new DataClass.Degrees("circle"),
-      constraint: new Map(),
-    }
+    //this.degreesOfFreedom.increase(3)
+    //const attr = {
+    //  degreesOfFreedom: new DataClass.Degrees("circle"),
+    //  constraint: new Map(),
+    //}
     //this.initialParameters.param.addData(fId, points)
     //this.initialParameters.valid.addData(fId, [true, true, true, true])
     //this.attrData.addData(fId, attr)
@@ -125,22 +131,38 @@ export const Figs = class{
     return fid
   }
 
-  addArc(parameters, id){
+  addArc(parameters, attr, sheetId, id){
  
-    const fid = this.view.figs.addArc(parameters, id)
+    const fid = this.view.figs.addArc(parameters, attr, sheetId, id)
 
     //this.initialParameters.param.addData(fId, [cx, cy, r, theta1, theta2])
     //this.initialParameters.valid.addData(fId, [true, true, true, true, true])
     //this.degreesOfFreedom.increase(5)
-    const attr = {
-      degreesOfFreedom: new DataClass.Degrees("arc"),
-      constraint: new Map(),
-    }
-    this.attrData.addData(fid, attr)
+    //const attr = {
+    //  degreesOfFreedom: new DataClass.Degrees("arc"),
+    //  constraint: new Map(),
+    //}
+    //this.attrData.addData(fid, attr)
     return fid
   }
 
-  changeArc(id, cx, cy, r, theta1, theta2){
-    this.view.figs.changeArc(id, cx, cy, r, theta1, theta2)
+  changeArc(id, params, attr){
+    this.view.figs.changeArc(id, params, attr)
+    return id
+  }
+
+  addBSpline(parameters, attr, sheetId, id){
+ 
+    const fid = this.view.figs.addBSpline(parameters, attr, sheetId, id)
+
+    //this.initialParameters.param.addData(fId, [cx, cy, r, theta1, theta2])
+    //this.initialParameters.valid.addData(fId, [true, true, true, true, true])
+    //this.degreesOfFreedom.increase(5)
+    //const attr = {
+    //  degreesOfFreedom: new DataClass.Degrees("bspline"),
+    //  constraint: new Map(),
+    //}
+    //this.attrData.addData(fid, attr)
+    return fid
   }
 }
