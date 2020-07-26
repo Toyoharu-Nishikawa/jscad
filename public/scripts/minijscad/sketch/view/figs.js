@@ -4,6 +4,7 @@ import {EventHandler} from "./eventHandler.js"
 import {arcPath} from "./arcPath.js"
 import {Drawing} from "../../dxf-writer/Drawing.js"
 import {autocadColorMap} from "./color.js"
+import {bspline} from "../../bspline/index.js"
 
 
 
@@ -20,11 +21,11 @@ export const Figs = class {
     this.flag = false
   }
 
-  removeFig(id, sheetID){
+  removeFig(id){
     const selected = this.data.getDataFromId(id)
     const clone = this.eH.clonesData.getDataFromId(id)
     const nodes = this.eH.nodesData.getDataFromId(id)
-    const sheetId =  sheetID || this.svg.getCurrentSheetId()
+    const sheetId =  this.parameters.getDataFromId(id).sheetId
 
     selected.remove()
     this.data.removeData(id)
@@ -54,8 +55,8 @@ export const Figs = class {
     sheetSet.add(fid)
   }
 
-  removeFigsInSheet(id){
-    const sheetId = id ? id : this.svg.getCurrentSheetId() 
+  removeFigsInSheet(sheetID){
+    const sheetId = sheetID || this.svg.getCurrentSheetId() 
     const includedIds = this.figsInSheet.getDataFromId(sheetId)   
     if(includedIds && includedIds.size){
       includedIds.forEach(v=>{
@@ -65,28 +66,29 @@ export const Figs = class {
     }
   }
 
-  addLine(parameters, attr, fid){
-    const sheetId =  this.svg.getCurrentSheetId()
-    const sheet = this.svg.getCurrentSheet()
-    const id = fid ? fid : this.data.getId()
+  addLine(parameters, attr, sheetID, fid){
+    if(fid){
+      const checkFlag = this.data.hasData(fid)
+      if(checkFlag){
+        throw new Error(`Figure ID ${fid} exitsts more than two`)
+      }
+    }
+    const sheetId =  sheetID || this.svg.getCurrentSheetId()
+    const sheet = this.svg.getSheet(sheetId)
+    const id = fid || this.data.getId()
  
-    this.data.setId(id)
     const [x1, y1, x2, y2] = [].concat(...parameters.points)
     const line = sheet.line(x1, y1, x2, y2)
-
-    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
-    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
-    if(color){
-      line.stroke({color: color})
-    }
+    line.attr(attr) 
+    const lineTypeName =  attr?.lineTypeName
     if(lineTypeName){
       const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
       line.attr("stroke-dasharray", dashCode)
     }
 
-    line.data("id",{id:id, type:"line"})
+    line.data("id",{id:id, type:"line", sheetId: sheetId, parmeters: parameters})
     this.data.addData(id, line)
-    this.parameters.addData(id, {parameters:parameters, type:"line"})
+    this.parameters.addData(id, {parameters:parameters, attr: attr, sheetId: sheetId, type:"line"})
     this.record(sheetId, id)
 
     if(this.flag){
@@ -96,126 +98,6 @@ export const Figs = class {
       line.data("nodes",nodes)
       const pointType =  ["start", "end"]
       this.eH.makeClone(line, 5, id, "elementclick")
-      this.eH.makeNodes(nodes, pointType, id, "nodeclick")
-    }
-
-    return id 
-  }
-
-  addLines(parameters, attr, fid){
-    const sheetId =  this.svg.getCurrentSheetId()
-    const sheet = this.svg.getCurrentSheet()
-    const id = fid ? fid : this.data.getId()
-
-    this.data.setId(id)
-    const points = parameters.points
-    const lines = sheet.group()
-
-    points.forEach((v,i,arr)=>{
-      if(i>0){
-        lines.line(arr[i-1][0], arr[i-1][1], v[0], v[1])
-      }
-    })
-    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
-    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
- 
-    if(color){
-      lines.stroke({color: color})
-    }
-    if(lineTypeName){
-      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
-      lines.attr("stroke-dasharray", dashCode)
-    }
-
-    lines.data("id",{id:id, type:"lines"})
-
-    this.data.addData(id, lines)
-    this.parameters.addData(id, {parameters:parameters, type:"lines", attr: attr})
-    this.record(sheetId, id)
-
-    if(this.flag){
-      lines.data("nodes",points)
-      const pointType =  ["start", "end"]
-      this.eH.makeClone(lines, 5, id, "elementclick")
-      this.eH.makeNodes(points, pointType, id, "nodeclick")
-    }
-
-    return id 
-  }
-
-  addPolyline(parameters, attr, fid){
-    const sheetId =  this.svg.getCurrentSheetId()
-    const sheet = this.svg.getCurrentSheet()
-    const id = fid ? fid : this.data.getId()
-
-
-    this.data.setId(id)
-    const points = parameters.points
-    const polyline = sheet.polyline(points)
-
-    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
-    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
- 
-    if(color){
-      polyline.stroke({color: color})
-      
-    }
-    if(lineTypeName){
-      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
-      polyline.attr("stroke-dasharray", dashCode)
-    }
-
-    polyline.data("id",{id:id, type:"polyline"})
-
-    this.data.addData(id, polyline)
-    this.parameters.addData(id, {parameters:parameters, type:"polyline", attr: attr})
-    this.record(sheetId, id)
-
-    if(this.flag){
-      polyline.data("nodes",points)
-      const pointType =  ["start", "end"]
-      this.eH.makeClone(polyline, 5, id, "elementclick")
-      this.eH.makeNodes(points, pointType, id, "nodeclick")
-    }
-
-    return id 
-  }
-
-  addCircle(parameters, attr, fid){
-    const sheetId =  this.svg.getCurrentSheetId()
-    const sheet = this.svg.getCurrentSheet()
-    const id = fid ? fid : this.data.getId()
-
-
-    this.data.setId(id)
-    const [cx, cy] = parameters.center 
-    const r = parameters.radius
-    const circle = sheet.circle(2*r).center(cx, cy)
-
-    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
-    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
- 
-    if(color){
-      circle.stroke({color: color})
-      
-    }
-    if(lineTypeName){
-      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
-      circle.attr("stroke-dasharray", dashCode)
-    }
-
-  
-    circle.data("id",{id:id, type:"circle"})
-
-    this.data.addData(id, circle)
-    this.parameters.addData(id, {parameters:parameters, type:"circle", attr: attr})
-    this.record(sheetId, id)
-
-    if(this.flag){
-      const nodes = [[cx, cy]]
-      circle.data("nodes",nodes)
-      const pointType =  ["center"]
-      this.eH.makeClone(circle, 5, id, "elementclick")
       this.eH.makeNodes(nodes, pointType, id, "nodeclick")
     }
 
@@ -233,37 +115,162 @@ export const Figs = class {
     return id
   }
 
-  addArc( parameters, attr, fid){
-    const sheetId =  this.svg.getCurrentSheetId()
-    const sheet = this.svg.getCurrentSheet()
-    const id = fid ? fid : this.data.getId()
+  addLines(parameters, attr, sheetID, fid){
+    if(fid){
+      const checkFlag = this.data.hasData(fid)
+      if(checkFlag){
+        throw new Error(`Figure ID ${fid} exitsts more than two`)
+      }
+    }
+    const sheetId =  sheetID || this.svg.getCurrentSheetId()
+    const sheet = this.svg.getSheet(sheetId)
+    const id = fid || this.data.getId()
 
-    this.data.setId(id)
-    //console.log("parameters",parameters)
+    const points = parameters.points
+    const lines = sheet.group()
+
+    points.forEach((v,i,arr)=>{
+      if(i>0){
+        lines.line(arr[i-1][0], arr[i-1][1], v[0], v[1])
+      }
+    })
+    const lineTypeName =  attr?.lineTypeName
+ 
+    lines.attr(attr) 
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      lines.attr("stroke-dasharray", dashCode)
+    }
+
+    lines.data("id",{id:id, type:"lines", sheetId: sheetId, parameters:parameters})
+
+    this.data.addData(id, lines)
+    this.parameters.addData(id, {parameters:parameters, type:"lines", attr: attr, sheetId: sheetId})
+    this.record(sheetId, id)
+
+    if(this.flag){
+      lines.data("nodes",points)
+      const pointType =  ["start", "end"]
+      this.eH.makeClone(lines, 5, id, "elementclick")
+      this.eH.makeNodes(points, pointType, id, "nodeclick")
+    }
+
+    return id 
+  }
+
+  addPolyline(parameters, attr, sheetID, fid){
+    if(fid){
+      const checkFlag = this.data.hasData(fid)
+      if(checkFlag){
+        throw new Error(`Figure ID ${fid} exitsts more than two`)
+      }
+    }
+    const sheetId =  sheetID || this.svg.getCurrentSheetId()
+    const sheet = this.svg.getSheet(sheetId)
+    const id = fid || this.data.getId()
+
+
+    const points = parameters.points
+    const polyline = sheet.polyline(points)
+
+    const lineTypeName = attr?.lineTypeName
+ 
+    polyline.attr(attr) 
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      polyline.attr("stroke-dasharray", dashCode)
+    }
+
+    polyline.data("id",{id:id, type:"polyline", sheetId: sheetId, paramters: parameters})
+
+    this.data.addData(id, polyline)
+    this.parameters.addData(id, {parameters:parameters, type:"polyline", attr: attr, parameters: parameters})
+    this.record(sheetId, id)
+
+    if(this.flag){
+      polyline.data("nodes",points)
+      const pointType =  ["start", "end"]
+      this.eH.makeClone(polyline, 5, id, "elementclick")
+      this.eH.makeNodes(points, pointType, id, "nodeclick")
+    }
+
+    return id 
+  }
+
+  addCircle(parameters, attr, sheetID, fid){
+    if(fid){
+      const checkFlag = this.data.hasData(fid)
+      if(checkFlag){
+        throw new Error(`Figure ID ${fid} exitsts more than two`)
+      }
+    }
+    const sheetId =  sheetID || this.svg.getCurrentSheetId()
+    const sheet = this.svg.getSheet(sheetId)
+    const id = fid || this.data.getId()
+
+
+    const [cx, cy] = parameters.center 
+    const r = parameters.radius
+    const circle = sheet.circle(2*r).center(cx, cy)
+
+    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
+    
+    circle.attr(attr) 
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      circle.attr("stroke-dasharray", dashCode)
+    }
+
+  
+    circle.data("id",{id:id, type:"circle", sheetId: sheetId, parameters:parameters})
+
+    this.data.addData(id, circle)
+    this.parameters.addData(id, {parameters:parameters, type:"circle", attr: attr, sheetId: sheetId})
+    this.record(sheetId, id)
+
+    if(this.flag){
+      const nodes = [[cx, cy]]
+      circle.data("nodes",nodes)
+      const pointType =  ["center"]
+      this.eH.makeClone(circle, 5, id, "elementclick")
+      this.eH.makeNodes(nodes, pointType, id, "nodeclick")
+    }
+
+    return id 
+  }
+
+
+  addArc( parameters, attr, sheetID, fid){
+    if(fid){
+      const checkFlag = this.data.hasData(fid)
+      if(checkFlag){
+        throw new Error(`Figure ID ${fid} exitsts more than two`)
+      }
+    }
+
+    const sheetId =  sheetID || this.svg.getCurrentSheetId()
+    const sheet = this.svg.getSheet(sheetId)
+    const id = fid || this.data.getId()
+
     const [cx, cy] = parameters.center 
     const r = parameters.radius
     const theta1 = parameters.start
     const theta2 = parameters.end
     const arc = sheet.arc(cx, cy, r, theta1, theta2)
 
-    const color = (attr !== undefined && attr.hasOwnProperty("color")) ? attr.color : undefined
-    const lineTypeName = (attr !== undefined && attr.hasOwnProperty("lineTypeName")) ? attr.lineTypeName : undefined
+    const lineTypeName =  attr?.lineTypeName
  
-    if(color){
-      arc.stroke({color: color})
-      
-    }
+    arc.attr(attr)
     if(lineTypeName){
       const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
       arc.attr("stroke-dasharray", dashCode)
     }
 
 
-    arc.data("id",{id:id, type:"arc"})
-    arc.data("parameters",{cx:cx, cy:cy, r:r, theta1:theta1, theta2: theta2})
+    arc.data("id",{id:id, type:"arc", sheetId: sheetId, parameters: parameters })
 
     this.data.addData(id, arc)
-    this.parameters.addData(id, {parameters:parameters, type:"arc", attr: attr})
+    this.parameters.addData(id, {parameters:parameters, type:"arc", attr: attr, sheetId: sheetId})
     this.record(sheetId, id)
 
     if(this.flag){
@@ -280,12 +287,12 @@ export const Figs = class {
     return id 
   }
 
-  changeArc(id, cx, cy, r, theta1, theta2){
+  changeArc(id, parameters, attr){
+    const {center, r, theta1, theta2} = parameters
+
     const arc = this.data.getDataFromId(id)
     const cloneArc = this.eH.clonesData.getDataFromId(id)
     const nodes = this.eH.nodesData.getDataFromId(id)
-    //console.log(arc)
-    //console.log(cloneArc)
     const pathText = arcPath(cx, cy, r, theta1, theta2)
     arc.attr({d:pathText})
     cloneArc.attr({d:pathText})
@@ -296,6 +303,45 @@ export const Figs = class {
     nodes[1].center(p1[0], p1[1])
     nodes[2].center(p2[0], p2[1])
     return id
+  }
+
+  addBSpline( parameters, attr, sheetID, fid){
+    if(fid){
+      const checkFlag = this.data.hasData(fid)
+      if(checkFlag){
+        throw new Error(`Figure ID ${fid} exitsts more than two`)
+      }
+    }
+
+    const sheetId =  sheetID || this.svg.getCurrentSheetId()
+    const sheet = this.svg.getSheet(sheetId)
+    const id = fid || this.data.getId()
+
+    const knots = parameters.knots
+    const points = parameters.points
+    const degree = parameters.degree
+
+    const func = bspline(points, degree, knots) 
+    const N = 100
+    const curvePoints = [...Array(N+1)].map((v,i)=>func(i/N,0))
+    const bsplineCurve = sheet.polyline(curvePoints)
+
+    const lineTypeName =  attr?.lineTypeName
+ 
+    bsplineCurve.attr(attr)
+    if(lineTypeName){
+      const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+      bspline.attr("stroke-dasharray", dashCode)
+    }
+
+
+    bsplineCurve.data("id",{id:id, type:"bspline", sheetId: sheetId, parameters: parameters })
+
+    this.data.addData(id, bsplineCurve)
+    this.parameters.addData(id, {parameters:parameters, type:"bspline", attr: attr, sheetId: sheetId})
+    this.record(sheetId, id)
+
+    return id 
   }
 
   getDxf(sheetList){

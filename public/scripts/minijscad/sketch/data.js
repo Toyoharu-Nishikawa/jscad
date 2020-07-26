@@ -32,12 +32,10 @@ export const countUpDataManager = class extends DataManager {
     super()
     this.id = -1
   }
-  setId(id){
-    this.id = id
-  }
   getId(){
     this.id++
     const id = this.id
+    this.addData(id, null)
     return id
   }
   getCurrentId(){
