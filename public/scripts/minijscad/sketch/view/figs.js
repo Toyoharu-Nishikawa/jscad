@@ -104,14 +104,27 @@ export const Figs = class {
     return id 
   }
 
-  changeLine(id, x1,y1,x2,y2){
+  changeLine(id, parameters, attr){
     const line = this.data.getDataFromId(id)
-    const cloneLine = this.eH.clonesData.getDataFromId(id)
-    const nodes = this.eH.nodesData.getDataFromId(id)
-    line.plot(x1, y1, x2, y2)
-    cloneLine.plot(x1, y1, x2, y2)
-    nodes[0].center(x1, y1)
-    nodes[1].center(x2, y2)
+    if(parameters){
+      const [p1, p2] = parameters.points 
+      const [x1,y1] = p1
+      const [x2,y2] = p2
+      line.plot(x1, y1, x2, y2)
+    }
+    if(attr){
+      line.attr(attr) 
+      const lineTypeName =  attr?.lineTypeName
+      if(lineTypeName){
+        const dashCode = dashMap.has(lineTypeName) ? dashMap.get(lineTypeName) : lineTypeName
+        line.attr("stroke-dasharray", dashCode)
+      }
+    }
+    //const cloneLine = this.eH.clonesData.getDataFromId(id)
+    //const nodes = this.eH.nodesData.getDataFromId(id)
+    //cloneLine.plot(x1, y1, x2, y2)
+    //nodes[0].center(x1, y1)
+    //nodes[1].center(x2, y2)
     return id
   }
 
