@@ -1,16 +1,15 @@
-import {Sketch} from "./sketch/index.js"
+import {Svg} from "./sketch/view/svg.js"
+//import {Sketch} from "./sketch/index.js"
 import {version} from "./version.js"
 
 "use strict"
 export {Drawing} from "./dxf-writer/Drawing.js"
 
 export const MiniJscad = class{
-  constructor(element, width=300, height=300, eventFlag=false){
+  constructor(element, width=300, height=300){
     this.version = version
-    this.sketch = null
     this.element = element
-    this.setup(element, width, height, eventFlag)
-    return this
+    this.sketch = this.setup(element, width, height)
   }
   resize(width, height){
     const element = this.element
@@ -42,22 +41,18 @@ export const MiniJscad = class{
     //const elHeight = main.getBoundingClientRect().height || (height-40)
     const elHeight = height-40
 
-    const sketch = new Sketch(element+"-minijscad-main")
     const sketchWidth = elWidth//-2
     const sketchHeight = elHeight//-6
-    console.log("height",height, "elHeight", elHeight,"sketchHeight", sketchHeight)
-    sketch.setScreenSize(sketchWidth, sketchHeight)
-    if(!eventFlag){
-      sketch.invalidEvent()
-    }
+    //console.log("height",height, "elHeight", elHeight,"sketchHeight", sketchHeight)
+    //sketch.setScreenSize(sketchWidth, sketchHeight)
+    const sketch = new Svg(element+"-minijscad-main",sketchWidth, sketchHeight)
 
     main.addEventListener("sketch.mouse.move",(e)=>{
       const coord = e.detail
       coordinateDOM.textContent=` x: ${(coord.x*100+0.5|0)/100}, y:${(coord.y*100+0.5|0)/100}`
     })
 
-    this.sketch = sketch
-    return this
+    return sketch
   }
 }
 
