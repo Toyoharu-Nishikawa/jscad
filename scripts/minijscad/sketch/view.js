@@ -1,7 +1,7 @@
 import {Svg} from "./view/svg.js"
-import {Background} from "./view/background.js"
-import {Figs} from "./view/figs.js"
-import {DimensionsLabel} from "./view/dimensionsLabel.js"
+//import {Background} from "./view/background.js"
+//import {Figs} from "./view/figs.js"
+//import {DimensionsLabel} from "./view/dimensionsLabel.js"
 
 
 export const View = class  {
