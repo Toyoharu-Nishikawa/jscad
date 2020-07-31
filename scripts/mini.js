@@ -1,6 +1,6 @@
 import {MiniJscad} from "./minijscad/index.js"
 import {dxftosvg, getParamFromDxf} from "./dxftosvg/index.js"
-import DxfParser from "./minijscad/dxf-parser/dxf-parser-module.js"
+import DxfParser from "./dxf-parser/dxf-parser-module.js"
 
 
 let miniJscad = null
@@ -60,10 +60,15 @@ const initialDraw = () =>{
 
 
 
-//  
-//  const idD1 =  miniJscad.sketch.addDimension("horizontal", {points:[[150, 150], [2000, 500]], distance:300, fontSize:100, digit:2, auxiliary:true})
-//  const idD2 =  miniJscad.sketch.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, auxiliary:true})
-//  const idD3 =  miniJscad.sketch.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:5, digit:3, auxiliary:false})
+  
+  const sheet3 = miniJscad.sketch.screen.addSheet("sheet3",  {}, {stroke: "orange", fill:"red"}, {} )
+  const dim1 =  sheet0.addDimension("horizontal", {points:[[150, 150], [2000, 500]], distance:300, fontSize:100, digit:2, auxiliary:true})
+  const dim2 =  sheet3.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, auxiliary:true})
+  const dim3 =  sheet3.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:5, digit:3, auxiliary:false})
+
+
+  const sheet4 = miniJscad.sketch.screen.addSheet("sheet4",  {}, {stroke: "orange", fill:"red"}, {stroke:"brown", fill:"purple"} )
+  const text1 = sheet4.addText({text:"minijscad", position:[500,100], theta: 45, font: {size: 40}})
 //
 //  /*****      remove figs or dimensions ****/
 //  //miniJscad.sketch.removeFig(id1)
@@ -105,10 +110,15 @@ document.getElementById("read-dxf").onchange = (e) =>{
     const param = getParamFromDxf(text)
     console.log("param", param)
     const svg = dxftosvg(text)
-    console.log("svg", svg)
-    const sheet = miniJscad.sketch.getCurrentSheet()
-    sheet.svg(svg)
     
+    const existFlag = miniJscad.sketch.screen.hasSheet("sheetRead")
+    if(existFlag){
+      miniJscad.sketch.screen.removeSheet("sheetRead")
+    }
+    const sheetRead = miniJscad.sketch.screen.addSheet("sheetRead")
+    param.forEach(v=>{
+      sheetRead.addFig(v.type, v.param, v.attr)
+    })
   }
   reader.readAsText(file, "UTF-8")    
 }
@@ -142,6 +152,12 @@ const setUpEvent = () => {
   
   document.getElementById("show-dimension").onclick = () =>{
     miniJscad.sketch.showDimensions()
+  }
+  
+  document.getElementById("backgroundColor").onchange = (e) =>{
+    const value = e.target.value
+    console.log(value)
+    miniJscad.sketch.setBackgroundColor(value)
   }
 }
 

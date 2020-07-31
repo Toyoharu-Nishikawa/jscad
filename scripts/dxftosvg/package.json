@@ -1,0 +1,20 @@
+{
+  "name": "dxftosvg",
+  "version": "2.4.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:10080/tnishikawa/dxftosvg.git"
+  },
+  "keywords": [
+    "dxf",
+    "svg"
+  ],
+  "author": "nishikawa",
+  "license": "MIT",
+  "dependencies": {}
+}

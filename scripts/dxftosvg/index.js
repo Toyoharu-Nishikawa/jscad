@@ -1,9 +1,9 @@
-
 "use strict";
 
-import interpolate from '../b-spline/index.js'
+import {bspline} from "./bspline.js"
 import {data as colorCode} from './colorCode.js'
 import {dataMap as lineTypeMap} from './dash.js'
+export {version} from "./version.js"
 
 
 const groupCodes = new Map([
@@ -72,7 +72,7 @@ const getSvgSnippet = (type, param, attr) => {
   switch (type) {
     case 'line': {
       const points = param.points
-      const color = attr.color
+      const color = attr.stroke
       const lineTypeName = attr.lineTypeName
       const svg = getLineSvg(points[0][0], points[0][1], points[1][0], points[1][1], color, lineTypeName)
       return svg 
@@ -81,7 +81,7 @@ const getSvgSnippet = (type, param, attr) => {
       const cx = param.center[0]
       const cy = param.center[1]
       const radius = param.radius
-      const color = attr.color
+      const color = attr.stroke
       const lineTypeName = attr.lineTypeName
       const tmpMain = `<circle cx=${cx} cy=${cy} r=${radius} `
       const tmpColorLineType  = getColorLineTypeSvg(color, lineTypeName)
@@ -96,7 +96,7 @@ const getSvgSnippet = (type, param, attr) => {
       const radius = param.radius
       const start = param.start
       const end = param.end
-      const color = attr.color
+      const color = attr.stroke
       const lineTypeName = attr.lineTypeName
 
       const x1 = center[0] + radius * Math.cos(deg2rad(start))
@@ -119,7 +119,7 @@ const getSvgSnippet = (type, param, attr) => {
     case 'polyline': {
       let svgSnippet = '';
       const vertices = param.points
-      const color = attr.color
+      const color = attr.stroke
       const lineTypeName = attr.lineTypeName
       for (let i=0; i<vertices.length-1; i++) {
         const vertice1 = vertices[i]
@@ -134,11 +134,14 @@ const getSvgSnippet = (type, param, attr) => {
       const numOfKnots = param.numOfKnots
       const knots = param.knots
       const degree = param.degree
-      const color = attr.color
+      const color = attr.stroke
       const lineTypeName = attr.lineTypeName
       const vertices = []
+      const func = bspline(controlPoints, degree, knots)
+
       for(let t=0;t<=100;t++){
-        vertices.push(interpolate(t/100, degree, controlPoints, knots))
+        const p = func(t/100)
+        vertices.push(p)
       }
       for (let i=0; i<vertices.length-1; i++) {
         const vertice1 = vertices[i]
@@ -154,7 +157,7 @@ const dxfToObj = dxfObject => {
   const color = dxfObject.color
   const lineTypeName = dxfObject.lineTypeName
   const {rgbCode, dashCode} = getColorAndLineType(color, lineTypeName) 
-  const attr = {color: rgbCode, lineTypeName: dashCode}
+  const attr = {stroke: rgbCode, lineTypeName: dashCode}
 
   switch (dxfObject.type) {
     case 'LINE': {
