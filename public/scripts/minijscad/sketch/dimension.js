@@ -1,12 +1,38 @@
 
-import * as DataClass from "../data.js"
 
-export const DimensionsLabel = class {
-  constructor(svg){
-    this.svg = svg
-    this.labelData = new DataClass.countUpDataManager()
-    this.dimensionsInSheet = new DataClass.DataManager()
-    //this.dimensionScreen = svg.dimensionScreen
+export const Dimension = class {
+  constructor(parentObj, id, type, param, attr){
+    this.id = id
+    this.parentObj = parentObj
+
+    const dimension = this.addDimension(type, param, attr)
+
+    this.dimension = dimension
+    this.param = param
+    this.attr = attr
+    this.type = type
+  }
+
+  setAttr(attr){
+    const dimension = this.dimension
+    dimension.attr(attr)
+  }
+
+  addDimension(type, param, attr){
+    switch(type){
+      case "horizontal":{
+        const dimension = this.addHorizontal(param, attr) 
+        return dimension
+      }
+      case "vertical":{
+        const dimension = this.addVertical(param, attr) 
+        return dimension
+      }
+      case "length":{
+        const dimension = this.addLength(param, attr) 
+        return dimension
+      }
+    } 
   }
 
   removeDimension(id, sheetID){
@@ -20,26 +46,6 @@ export const DimensionsLabel = class {
     }
   }
 
-  record(sheetId, id){
-    const dimensionsInSheet = this.dimensionsInSheet
-    const flag = dimensionsInSheet.hasData(sheetId)
-    if(!flag){
-      dimensionsInSheet.addData(sheetId, new Set)
-    }
-    const sheetSet = dimensionsInSheet.getDataFromId(sheetId)
-    sheetSet.add(id)
-  }
-
-  removeDimensionsInSheet(id){
-    const sheetId = id ? id : this.svg.getCurrentSheetId() 
-    const includedIds = this.dimensionsInSheet.getDataFromId(sheetId)   
-    if(includedIds && includedIds.size){
-      includedIds.forEach(v=>{
-        this.removeDimension(v)
-      })
-      includedIds.clear()
-    }
-  }
  
   makeArrow(arrow, x1, y1, x2, y2, size){
     arrow.line(x1, y1, x2, y2)
@@ -61,24 +67,22 @@ export const DimensionsLabel = class {
       
     const theta = Math.atan2(Dy2-Dy1, Dx2-Dx1)
     const thetaDeg = theta*180/Math.PI
-    //console.log(thetaDeg)
-    const text = obj.text(valueText).font({size:size}).attr("stroke-width", 0.1)
+    const text = obj.text(valueText).font({size:size}).attr({"stroke-width": 0.1})
       .flip("y",0).rotate(-thetaDeg+180,0,0).translate(tx, ty)
     
     return text
   }
 
-  setLengthLabelD(parameters){
-    const [x1, y1, x2, y2] = [].concat(...parameters.points)
-    const distance = parameters.distance || 5
-    const size = parameters.fontSize || 20
-    const digit = parameters.digit || 2
-    const auxiliaryFlag = parameters.auxiliary || true
+  addLength(param, attr){
+    const [x1, y1, x2, y2] = [].concat(...param.points)
+    const distance = param.distance || 5
+    const size = param.fontSize || 20
+    const digit = param.digit || 2
+    const auxiliaryFlag = param.auxiliary || true
 
-    const sheetId = this.svg.getCurrentSheetId()
-    const ds = this.svg.getCurrentDheet()
-    const id = this.labelData.getId()
+    const ds = this.parentObj
     const label = ds.group()
+    label.attr(attr)
 
     const length = Math.sqrt((x2-x1)**2+(y2-y1)**2)
     const dx = distance/length*(y2-y1)
@@ -97,23 +101,20 @@ export const DimensionsLabel = class {
       label.add(l2)
     }
  
-    this.labelData.addData(id, label)
-    this.record(sheetId, id)
-    return id
+    return label 
   }
 
-  setVerticalLabelD(parameters){
+  addVertical(param, attr){
 
-    const [x1, y1, x2, y2] = [].concat(...parameters.points)
-    const distance = parameters.distance || 5
-    const size = parameters.fontSize || 20
-    const digit = parameters.digit || 2
-    const auxiliaryFlag = parameters.auxiliary || true
+    const [x1, y1, x2, y2] = [].concat(...param.points)
+    const distance = param.distance || 5
+    const size = param.fontSize || 20
+    const digit = param.digit || 2
+    const auxiliaryFlag = param.auxiliary || true
 
-    const sheetId = this.svg.getCurrentSheetId()
-    const ds = this.svg.getCurrentDheet()
-    const id = this.labelData.getId()
+    const ds = this.parentObj
     const label = ds.group()
+    label.attr(attr)
 
     const length = Math.abs(y2-y1) 
     const xAve = (x1+x2)/2
@@ -131,23 +132,20 @@ export const DimensionsLabel = class {
       label.add(l2)
     }
  
-    this.labelData.addData(id, label)
-    this.record(sheetId, id)
-    return id
+    return label
   }
 
-  setHorizontalLabelD(parameters){
+  addHorizontal(param, attr){
 
-    const [x1, y1, x2, y2] = [].concat(...parameters.points)
-    const distance = parameters.distance || 5
-    const size = parameters.fontSize || 20
-    const digit = parameters.digit || 2
-    const auxiliaryFlag = parameters.auxiliary || true
+    const [x1, y1, x2, y2] = [].concat(...param.points)
+    const distance = param.distance || 5
+    const size = param.fontSize || 20
+    const digit = param.digit || 2
+    const auxiliaryFlag = param.auxiliary || true
 
-    const sheetId = this.svg.getCurrentSheetId()
-    const ds = this.svg.getCurrentDheet()
-    const id = this.labelData.getId()
+    const ds = this.parentObj
     const label = ds.group()
+    label.attr(attr)
 
     const length = Math.abs(x2-x1) 
     const yAve = (y1+y2)/2
@@ -165,9 +163,7 @@ export const DimensionsLabel = class {
       label.add(l2)
     }
  
-    this.labelData.addData(id, label)
-    this.record(sheetId, id)
-    return id
+    return label
   }
 
 

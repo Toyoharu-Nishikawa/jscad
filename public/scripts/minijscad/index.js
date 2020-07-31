@@ -1,9 +1,8 @@
-import {Svg} from "./sketch/view/svg.js"
+import {Svg} from "./sketch/svg.js"
 //import {Sketch} from "./sketch/index.js"
 import {version} from "./version.js"
 
 "use strict"
-export {Drawing} from "./dxf-writer/Drawing.js"
 
 export const MiniJscad = class{
   constructor(element, width=300, height=300){
@@ -11,6 +10,7 @@ export const MiniJscad = class{
     this.element = element
     this.sketch = this.setup(element, width, height)
   }
+
   resize(width, height){
     const element = this.element
     const sketch = this.sketch
@@ -26,18 +26,14 @@ export const MiniJscad = class{
     sketch.resize(sketchWidth, sketchHeight)
     return this
   }
-  hideEventObject(){
-    this.sketch.hideEventObject()
-    return this
-  }
+
   setup(element="drawing", width=300, height=300, eventFlag=false){
- 
     setDOM(element)
     setCSS(element,width, height)
     const coordinateDOM = document.querySelector("#"+element +"-minijscad-footer > small:nth-child(2)")
     const minijscadFrame = document.getElementById(element+"-minijscad-frame")
     const main = document.getElementById(element+"-minijscad-main")
-    const elWidth = main.getBoundingClientRect().width || (width -100)
+    const elWidth = main.getBoundingClientRect().width || width 
     //const elHeight = main.getBoundingClientRect().height || (height-40)
     const elHeight = height-40
 
