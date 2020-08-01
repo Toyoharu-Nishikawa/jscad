@@ -52,12 +52,12 @@ export const Sheet = class {
   }
   getAllFigIds(){
     const figsData = this.figsData
-    const ids = [...figsData.getKeys()]
+    const ids = figsData.getKeys()
     return ids
   }
   getAllFigs(){
     const figsData = this.figsData
-    const figs = [...figssData.getValues()]
+    const figs = figsData.getValues()
     return figs 
   }
   removeFig(obj){
@@ -85,19 +85,28 @@ export const Sheet = class {
     ids.forEach(v=>this.removeFig(v))
   }
   hideAllFigs(){
-    const figsData = this.figsData
-    const figs = figsData.getValues()
+    const figs = this.getAllFigs()
     figs.forEach(v=>v.hide())
   }
   showAllFigs(){
-    const figsData = this.figsData
-    const figs = figsData.getValues()
+    const figs = this.getAllFigs()
     figs.forEach(v=>v.show())
   }
   setFigsAttr(attr){
     const figs = this.figs
     figs.attr(attr)
     setLineType(figs, attr)
+  }
+
+  getAllDimensionIds(){
+    const dimensionsData = this.dimensionsData
+    const ids = dimensionsData.getKeys()
+    return ids
+  }
+  getAllDimensions(){
+    const dimensionsData = this.dimensionsData
+    const dimensions = dimensionsData.getValues()
+    return dimensions
   }
   addDimension(type, param, attr){
     const id = this.dimensionsData.getId()
@@ -109,13 +118,47 @@ export const Sheet = class {
     return dimension
   }
 
-  removeDimension(id){
+  removeDimension(obj){
+    if(obj instanceof Dimension){
+      const dimension = obj
+      const id = dimension.getId()    
+      dimension.remove()
+      const dimensionsData = this.dimensionsData
+      dimensionsData.removeData(id)
+    }
+    else if(Number.isInteger(obj)){
+      const id = obj
+      const dimensionsData = this.dimensionsData
+      const dimension = dimensionsData.getDataFromId(id)
+      dimension.remove()
+      dimensionsData.removeData(id)
+    }
+    else{
+      throw new Error("arg is out of defined type")
+    }
+    return this
   }
   removeAllDimensions(){
+    const ids = this.getAllDimensionIds()
+    ids.forEach(v=>this.removeDimension(v))
   }
-  hideAllDimension(){
+  hideAllDimensions(){
+    const dimensions = this.getAllDimensions() 
+    dimensions.forEach(v=>v.hide())
   }
-  showAllDimension(){
+  showAllDimensions(){
+    const dimensions = this.getAllDimensions() 
+    dimensions.forEach(v=>v.show())
+  }
+  getAllTextIds(){
+    const textsData = this.textsData
+    const ids = textsData.getKeys()
+    return ids
+  }
+  getAllTexts(){
+    const textsData = this.textsData
+    const texts = textsData.getValues()
+    return texts
   }
   addText(param, attr){
     const id = this.textsData.getId()
@@ -126,18 +169,51 @@ export const Sheet = class {
  
     return text 
   }
-  removeText(id){
+  removeText(obj){
+    if(obj instanceof Dimension){
+      const text = obj
+      const id = text.getId()    
+      text.remove()
+      const textsData = this.textsData
+      textsData.removeData(id)
+    }
+    else if(Number.isInteger(obj)){
+      const id = obj
+      const textsData = this.textsData
+      const text = textsData.getDataFromId(id)
+      text.remove()
+      textsData.removeData(id)
+    }
+    else{
+      throw new Error("arg is out of defined type")
+    }
+    return this
   }
   removeAllTexts(){
+    const ids = this.getAllTextIds()
+    ids.forEach(v=>this.removeText(v))
   }
   hideAllTexts(){
+    const texts = this.getAllTexts() 
+    texts.forEach(v=>v.hide())
   }
-  showAllText(){
+  showAllTexts(){
+    const texts = this.getAllTexts() 
+    texts.forEach(v=>v.show())
   }
-  clear(){
+  hide(){
+    this.hideAllFigs()
+    this.hideAllDimensions()
+    this.hideAllTexts()
+  }
+  show(){
+    this.showAllFigs()
+    this.showAllDimensions()
+    this.showAllTexts()
+  }
+  remove(){
     this.removeAllFigs()
     this.removeAllDimensions()
     this.removeAllTexts()
   }
-
 }
