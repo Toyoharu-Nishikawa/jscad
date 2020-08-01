@@ -67,26 +67,36 @@ const initialDraw = () =>{
   const dim3 =  sheet3.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:5, digit:3, auxiliary:false})
 
 
-  const sheet4 = miniJscad.sketch.screen.addSheet("sheet4",  {}, {stroke: "orange", fill:"red"}, {stroke:"brown", fill:"purple"} )
+  sheet3.hideAllDimensions()
+  sheet3.showAllDimensions()
+
+  const sheet4 = miniJscad.sketch.screen.addSheet("sheet4",  {}, {}, {stroke:"brown", fill:"purple"} )
   const text1 = sheet4.addText({text:"minijscad", position:[500,100], theta: 45, font: {size: 40}})
-//
-//  /*****      remove figs or dimensions ****/
-//  //miniJscad.sketch.removeFig(id1)
-//  //miniJscad.sketch.removeDimension(idD1)
-//  //miniJscad.sketch.removeFigsInSheet("sheet0")
-//  //miniJscad.sketch.removeDimensionsInSheet("sheet0")
-//  //miniJscad.sketch.clearSheet("sheet0")
-//
-//  miniJscad.sketch.hideSheet("sheet1")
-//
-//  miniJscad.sketch.showSheet("sheet1")
-//  console.log(miniJscad.sketch.getAllSheets())
-//  //miniJscad.sketch.removeAllSheets()
-//  //console.log(miniJscad.sketch.getAllSheetIds())
+  const text2 = sheet4.addText({text:"hello world", position:[1000,0], theta: 0, font: {size: 15}}, {stroke: "red", fill: "red"})
+
+
+  sheet4.hideAllTexts()
+  sheet4.showAllTexts()
+
 
 }
 
+const clearSheets = () =>{
+  miniJscad.sketch.screen.removeAllSheets()
+}
 
+const secondDraw = () =>{
+  const sheet0 = miniJscad.sketch.screen.addSheet("sheet0")
+  const line1 = sheet0.addFig("line", {points:[[0,0],[500,500]]}, {stroke:"orange", lineTypeName:"DASHED"})
+  const line2 = sheet0.addFig("line", {points:[[500,500],[0,500]]} )
+
+  const sheet1 = miniJscad.sketch.screen.addSheet("sheet1", null, {stroke: "red", fill:"green"}, null)
+  const line3 = sheet1.addDimension("vertical", {points:[[0, 0], [0, 500]], distance:-30, fontSize:30, digit:2, auxiliary:true})
+
+  sheet0.hide()
+  sheet0.show()
+}
+ 
 
 const resize = ()=> {
   const minijscadTest = document.getElementById("frame")
@@ -166,6 +176,8 @@ const initialize = () => {
   setUpMiniJscad()
   setUpEvent()
   initialDraw()
+  clearSheets()
+  secondDraw()
   drawFlag = true
   
   window.onresize = resize

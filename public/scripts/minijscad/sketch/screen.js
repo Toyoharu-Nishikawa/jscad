@@ -19,7 +19,7 @@ export const Screen  = class {
   addSheet(sheetId, attrFigs,attrDimensions, attrTexts){
     const flag = this.sheetsData.hasData(sheetId)
     if(flag){
-      const sheet = sheetsData.getData(sheetId)
+      const sheet = this.sheetsData.getDataFromId(sheetId)
       return sheet
     }
     const backgroundColor = this.backgroundColor
@@ -51,7 +51,7 @@ export const Screen  = class {
   removeSheet(sheetId){
     const sheet = this.getSheetFromId(sheetId) 
     const sheetsData = this.sheetsData
-    sheet.clear()
+    sheet.remove()
     sheetsData.removeData(sheetId)
 
     return this
@@ -66,6 +66,14 @@ export const Screen  = class {
   } 
   showSheet(sheetId){
     const sheet = this.getSheetFromId(sheetId) 
-    sheetshow()
+    sheet.show()
   } 
+  hideAllSheet(){
+    const allSheetIds = this.getAllSheetIds()
+    allSheetIds.forEach(v=>this.hideSheet(v))
+  }
+  showAllSheet(){
+    const allSheetIds = this.getAllSheetIds()
+    allSheetIds.forEach(v=>this.showSheet(v))
+  }
 }

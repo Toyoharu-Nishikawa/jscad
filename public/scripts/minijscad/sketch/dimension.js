@@ -5,20 +5,28 @@ export const Dimension = class {
     this.id = id
     this.parentObj = parentObj
 
-    const dimension = this.addDimension(type, param, attr)
+    const element = this.add(type, param, attr)
 
-    this.dimension = dimension
+    this.element = element
     this.param = param
     this.attr = attr
     this.type = type
   }
 
   setAttr(attr){
-    const dimension = this.dimension
-    dimension.attr(attr)
+    const element = this.element
+    element.attr(attr)
+  }
+  getId(){
+    const id = this.id
+    return id
+  }
+  getElement(){
+    const element = this.element
+    return element 
   }
 
-  addDimension(type, param, attr){
+  add(type, param, attr){
     switch(type){
       case "horizontal":{
         const dimension = this.addHorizontal(param, attr) 
@@ -34,18 +42,18 @@ export const Dimension = class {
       }
     } 
   }
-
-  removeDimension(id, sheetID){
-    const label = this.labelData.getDataFromId(id)
-    label.remove(id)
-
-    const sheetId =  sheetID || this.svg.getCurrentSheetId()
-    const includedIds = this.dimensionsInSheet.getDataFromId(sheetId)
-    if(includedIds){
-      includedIds.delete(id)
-    }
+  remove(){
+    const element = this.element
+    element.remove()
   }
-
+  hide(){
+    const element = this.element
+    element.hide()
+  }
+  show(){
+    const element = this.element
+    element.show()
+  }
  
   makeArrow(arrow, x1, y1, x2, y2, size){
     arrow.line(x1, y1, x2, y2)

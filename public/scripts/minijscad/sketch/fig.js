@@ -6,21 +6,25 @@ export const Fig = class {
     this.id = id
     this.parentObj = parentObj
 
-    const fig = this.addFig(type, param, attr)
-    this.fig = fig
+    const element = this.add(type, param, attr)
+    this.element = element
     this.param = param
     this.attr = attr
     this.type = type
+  }
+  setAttr(attr){
+    const element = this.element
+    element.setAttr(attr)
   }
   getId(){
     const id = this.id
     return id
   }
-  getFig(){
-    const fig = this.fig
-    return fig
+  getElement(){
+    const element = this.element
+    return element
   }
-  addFig(type, param, attr){
+  add(type, param, attr){
     switch(type){
       case "line":{
         const fig = this.addLine(param, attr)
@@ -53,16 +57,16 @@ export const Fig = class {
     }  
   }
   remove(){
-    const fig = this.fig
-    fig.remove()
+    const element = this.element
+    element.remove()
   }
   hide(){
-    const fig = this.fig
-    fig.hide()
+    const element = this.element
+    element.hide()
   }
   show(){
-    const fig = this.fig
-    fig.show()
+    const element = this.element
+    element.show()
   }
   addLine(param, attr){
     const parentObj = this.parentObj
