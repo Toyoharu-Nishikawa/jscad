@@ -6,16 +6,31 @@ export class Layer
         this.colorNumber = colorNumber;
         this.lineTypeName = lineTypeName;
         this.shapes = [];
+        this.trueColor = -1;
     }
 
     toDxfString()
     {
         let s = '0\nLAYER\n';
+        s += '100\nAcDbSymbolTableRecord\n'
+        s += '100\nAcDbLayerTableRecord\n'
         s += '70\n64\n';
         s += `2\n${this.name}\n`;
-        s += `62\n${this.colorNumber}\n`;
+        if (this.trueColor !== -1)
+        {
+            s += `420\n${this.trueColor}\n`
+        }
+        else
+        {
+            s += `62\n${this.colorNumber}\n`;
+        }
         s += `6\n${this.lineTypeName}\n`;
         return s;        
+    }
+
+    setTrueColor(color)
+    {
+        this.trueColor = color;
     }
 
     addShape(shape)

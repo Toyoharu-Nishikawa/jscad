@@ -7,7 +7,7 @@ import {Text} from "./text.js"
 import {Svg} from "./svg.js"
 
 export const Sheet = class {
-  constructor(parentObj, id, attrFigs, attrDimensions, attrTexts, backgroundColor){
+  constructor(parentObj, id, figsAttr, dimensionsAttr, textsAttr, backgroundColor){
     const color = backgroundColor
     const dimAndTextColor = (color==="black"||color==="#000000"|| color==="#000") ? "white" : "black"
 
@@ -15,11 +15,11 @@ export const Sheet = class {
     const dimensions = parentObj.group().stroke(dimAndTextColor).fill(dimAndTextColor)
     const texts = parentObj.group().stroke(dimAndTextColor).fill(dimAndTextColor) 
   
-    figs.attr(attrFigs)
-    dimensions.attr(attrDimensions)
-    texts.attr(attrTexts)
+    figs.attr(figsAttr)
+    dimensions.attr(dimensionsAttr)
+    texts.attr(textsAttr)
 
-    setLineType(figs, attrFigs)
+    setLineType(figs, figsAttr)
 
     this.id = id 
     this.figs = figs
@@ -29,6 +29,10 @@ export const Sheet = class {
     this.figsData =new DataClass.countUpDataManager() 
     this.textsData =new DataClass.countUpDataManager() 
     this.dimensionsData =new DataClass.countUpDataManager() 
+
+    this.figsAttr = figsAttr
+    this.dimensionsAttr = dimensionsAttr
+    this.textsAttr = textsAttr
   } 
   setBackgroundColor(backgroundColor){
     this.backgroundColor = backgroundColor
@@ -215,5 +219,27 @@ export const Sheet = class {
     this.removeAllFigs()
     this.removeAllDimensions()
     this.removeAllTexts()
+  }
+  getParam(){
+    const figs = this.getAllFigs() 
+    const dimensions = this.getAllDimensions() 
+    const texts = this.getAllTexts() 
+    const figsAttr = this.figsAttr
+    const dimensionsAttr = this.dimensionsAttr
+    const textsAttr = this.textsAttr
+
+    const figsParam = figs.map(v=>v.getParam())
+    const dimensionsParam = dimensions.map(v=>v.getParam())
+    const textsParam = texts.map(v=>v.getParam())
+
+    const obj = {
+      figs: figsParam,
+      dimensions: dimensionsParam,
+      texts: textsParam,
+      figsAttr: figsAttr,
+      dimensionsAttr: dimensionsAttr,
+      textsAttr: textsAttr,
+    }
+    return obj
   }
 }

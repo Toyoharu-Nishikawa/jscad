@@ -14,8 +14,21 @@ export const Text = class {
 
   setAttr(attr){
     const element = this.element
-    element.attr(attr)
+    const attrOri = this.attr
+    const newAttr = Object.assign(attrOri, attr)
+    element.attr(newAttr)
+    this.attr = newAttr 
   }
+  getParam(){
+    const param = this.param
+    const attr = this.attr
+    const obj = {
+      param: param,
+      attr: attr,
+    }
+    return obj
+  }
+
   getId(){
     const id = this.id
     return id
