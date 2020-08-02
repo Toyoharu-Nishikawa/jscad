@@ -68,12 +68,22 @@ export const Screen  = class {
     const sheet = this.getSheetFromId(sheetId) 
     sheet.show()
   } 
-  hideAllSheet(){
+  hideAllSheets(){
     const allSheetIds = this.getAllSheetIds()
     allSheetIds.forEach(v=>this.hideSheet(v))
   }
-  showAllSheet(){
+  showAllSheets(){
     const allSheetIds = this.getAllSheetIds()
     allSheetIds.forEach(v=>this.showSheet(v))
+  }
+  getSheetParam(sheetId){
+    const sheet = this.getSheetFormId(sheetId)
+    const param = sheet.getParam() 
+    return param
+  }
+  getAllSheetsParam(){
+    const sheets = this.getAllSheets()
+    const params = sheets.map(v=>[v.getId(),v.getParam()])
+    return params
   }
 }

@@ -1,6 +1,7 @@
 import {MiniJscad} from "./minijscad/index.js"
 import {dxftosvg, getParamFromDxf} from "./dxftosvg/index.js"
 import DxfParser from "./dxf-parser/dxf-parser-module.js"
+import {getDxf} from "./export-dxf/index.js"
 
 
 let miniJscad = null
@@ -97,6 +98,11 @@ const secondDraw = () =>{
   sheet0.show()
 }
  
+const thirdDrow = () =>{
+  const sheet2 = miniJscad.sketch.screen.addSheet("sheet2" )
+  const bspline1 = sheet2.addFig("bspline", {points: [[0,0],[0,100],[100,100], [100,0]], degree:3, knots:[0,0,0,0,1,1,1,1]})
+}
+
 
 const resize = ()=> {
   const minijscadTest = document.getElementById("frame")
@@ -131,37 +137,44 @@ document.getElementById("read-dxf").onchange = (e) =>{
     })
   }
   reader.readAsText(file, "UTF-8")    
+
+  drawFlag = true
 }
 
 const setUpEvent = () => {
   document.getElementById("download-dxf").onclick = () =>{
-    const exportText = miniJscad.sketch.getDxf(["sheet1", "sheet0"])
+    const param = miniJscad.sketch.screen.getAllSheetsParam()
+    console.log("param", param)
+
     const filename = "mini.dxf"
     const exportFileBOM = true
+    const exportText = getDxf(param)
     const blob = new Blob([exportText], {type: 'text/plain; charset=utf-8'})
     saveAs(blob, filename,exportFileBOM)
   }
   
   document.getElementById("clear").onclick = () =>{
     if(drawFlag){
-      miniJscad.sketch.clearSheet("sheet1")
+      clearSheets()
       drawFlag = false
     }
   }
   
   document.getElementById("draw").onclick = () =>{
     if(!drawFlag){
-      draw()
+      initialDraw()
       drawFlag = true
     }
   }
   
   document.getElementById("hide-dimension").onclick = () =>{
-    miniJscad.sketch.hideDimensions()
+    const sheets = miniJscad.sketch.screen.getAllSheets()
+    sheets.forEach(v=>v.hideAllDimensions())
   }
   
   document.getElementById("show-dimension").onclick = () =>{
-    miniJscad.sketch.showDimensions()
+    const sheets = miniJscad.sketch.screen.getAllSheets()
+    sheets.forEach(v=>v.showAllDimensions())
   }
   
   document.getElementById("backgroundColor").onchange = (e) =>{
@@ -176,8 +189,10 @@ const initialize = () => {
   setUpMiniJscad()
   setUpEvent()
   initialDraw()
-  clearSheets()
-  secondDraw()
+//  clearSheets()
+//  secondDraw()
+//  clearSheets()
+//  thirdDraw()
   drawFlag = true
   
   window.onresize = resize

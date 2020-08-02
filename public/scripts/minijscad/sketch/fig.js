@@ -14,7 +14,21 @@ export const Fig = class {
   }
   setAttr(attr){
     const element = this.element
-    element.setAttr(attr)
+    const attrOri = this.attr
+    const newAttr = Object.assign(attrOri, attr) 
+    element.attr(newAttr)
+    this.attr = newAttr 
+  }
+  getParam(){
+    const type = this.type
+    const param = this.param
+    const attr = this.attr
+    const obj = {
+      type: type,
+      param: param,
+      attr: attr,
+    }
+    return obj
   }
   getId(){
     const id = this.id
