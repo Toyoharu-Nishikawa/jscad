@@ -1,3 +1,5 @@
+import {getHandle} from "./handle.js"
+
 export class Layer
 {
     constructor(name, colorNumber, lineTypeName)
@@ -11,20 +13,26 @@ export class Layer
 
     toDxfString()
     {
-        let s = '0\nLAYER\n';
-        s += '100\nAcDbSymbolTableRecord\n'
-        s += '100\nAcDbLayerTableRecord\n'
-        s += '70\n64\n';
-        s += `2\n${this.name}\n`;
+        const handle = getHandle()
+        let s =""
+        s+='  0\nLAYER\n';
+        s+=`  5\n${handle}\n`
+        s+='330\n2\n';
+        s+='100\nAcDbSymbolTableRecord\n'
+        s+='100\nAcDbLayerTableRecord\n'
+        s+= `2\n${this.name}\n`;
+        s+=' 70\n0\n';
         if (this.trueColor !== -1)
         {
             s += `420\n${this.trueColor}\n`
         }
         else
         {
-            s += `62\n${this.colorNumber}\n`;
+            s += ` 62\n${this.colorNumber}\n`;
         }
-        s += `6\n${this.lineTypeName}\n`;
+        s+=`  6\n${this.lineTypeName}\n`;
+        s+='370\n0\n'
+        s+='390\nF\n'
         return s;        
     }
 

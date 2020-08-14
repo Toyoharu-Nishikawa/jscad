@@ -6,6 +6,7 @@ import {getDxf} from "./export-dxf/index.js"
 
 let miniJscad = null
 let drawFlag = false
+let readDXF = null
 
 const setUpMiniJscad = () => {
   const frame = document.getElementById("frame")
@@ -122,6 +123,7 @@ document.getElementById("read-dxf").onchange = (e) =>{
     const parser = new DxfParser()
     const dxf = parser.parseSync(text)
     console.log("dxf", dxf)
+    readDXF = dxf
 
     const param = getParamFromDxf(text)
     console.log("param", param)
@@ -151,6 +153,7 @@ const setUpEvent = () => {
     const exportText = getDxf(param)
     const blob = new Blob([exportText], {type: 'text/plain; charset=utf-8'})
     saveAs(blob, filename,exportFileBOM)
+
   }
   
   document.getElementById("clear").onclick = () =>{

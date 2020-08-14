@@ -1,15 +1,18 @@
+import {getHandle} from "./handle.js"
+
 export class Spline
 {
     /**
      * @param {array} controlPoints - Array of points like [ [x1, y1], [x2, y2]... ]
      */
-    constructor(type, degree, controlPoints, knots, fitPoints)
+    constructor(type, degree, controlPoints, knots, fitPoints, lineType)
     {
         this.controlPoints = controlPoints
         this.knots = knots
         this.fitPoints = fitPoints
         this.type = type
         this.degree = degree
+        this.lineType = lineType || "ByLayer"
 
         // const closed = 0
         // const periodic = 0
@@ -25,10 +28,15 @@ export class Spline
     toDxfString()
     {
       // https://www.autodesk.com/techpubs/autocad/acad2000/dxf/spline_dxf_06.htm
-        let s = `0\nSPLINE\n`
-        s += `8\n${this.layer.name}\n`
-        s += `100\nAcDbSpline\n`
-        s += `210\n0.0\n220\n0.0\n230\n1.0\n`
+        const handle = getHandle()
+        let s = ""
+        s+=`  0\nSPLINE\n`
+        s+=`  5\n${handle}\n`
+        s+=`100\nAcDbEntity\n`
+        s+=`  8\n${this.layer.name}\n`
+        s+=`  6\n${this.lineType}\n`
+        s+=`100\nAcDbSpline\n`
+        s+=`210\n0\n220\n0\n230\n0\n`
 
         s+= `70\n${this.type}\n`
         s+= `71\n${this.degree}\n`
