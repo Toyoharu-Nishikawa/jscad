@@ -1,3 +1,5 @@
+import {getHandle} from "./handle.js"
+
 export class LineType
 {
     /**
@@ -17,17 +19,24 @@ export class LineType
      */
     toDxfString()
     {
-        let s = '0\nLTYPE\n';
-        s += '72\n65\n';
-        s += '70\n64\n';
-        s += `2\n${this.name}\n`;
-        s += `3\n${this.description}\n`;
-        s += `73\n${this.elements.length}\n`;
-        s += `40\n${this.getElementsSum()}\n`;
+        const handle = getHandle()
+        let s = ""
+        s+='  0\nLTYPE\n';
+        s+=`  5\n${handle}\n`
+        s+='330\n5\n'
+        s+='100\nAcDbSymbolTableRecord\n'
+        s+='100\nAcDbLinetypeTableRecord\n'
+        s+=`  2\n${this.name}\n`;
+        s+=' 70\n64\n'
+        s+=`  3\n${this.description}\n`;
+        s+=' 72\n65\n'
+        s+=` 73\n${this.elements.length}\n`;
+        s+=` 40\n${this.getElementsSum()}\n`;
 
         for (let i = 0; i < this.elements.length; ++i)
         {
-            s += `49\n${this.elements[i]}\n`;
+            s += ` 49\n${this.elements[i]}\n`
+            s += ` 74\n   0\n`
         }
 
         return s;
