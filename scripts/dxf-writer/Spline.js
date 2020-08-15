@@ -5,7 +5,7 @@ export class Spline
     /**
      * @param {array} controlPoints - Array of points like [ [x1, y1], [x2, y2]... ]
      */
-    constructor(type, degree, controlPoints, knots, fitPoints, lineType)
+    constructor(type, degree, controlPoints, knots, fitPoints, lineType, colorIndex)
     {
         this.controlPoints = controlPoints
         this.knots = knots
@@ -13,6 +13,7 @@ export class Spline
         this.type = type
         this.degree = degree
         this.lineType = lineType || "ByLayer"
+        this.colorIndex = colorIndex === 0 ? 0 : (colorIndex || 256 )
 
         // const closed = 0
         // const periodic = 0
@@ -35,16 +36,18 @@ export class Spline
         s+=`100\nAcDbEntity\n`
         s+=`  8\n${this.layer.name}\n`
         s+=`  6\n${this.lineType}\n`
+        s+=` 62\n  ${this.colorIndex}\n`
+        s+=`370\n   -1\n`
         s+=`100\nAcDbSpline\n`
         s+=`210\n0\n220\n0\n230\n0\n`
 
-        s+= `70\n${this.type}\n`
-        s+= `71\n${this.degree}\n`
-        s+= `72\n${this.knots.length}\n`
-        s+= `73\n${this.controlPoints.length}\n`
-        s+= `74\n${this.fitPoints.length}\n`
-        s+= `42\n1e-6\n`
-        s+= `43\n1e-6\n`
+        s+=` 70\n${this.type}\n`
+        s+=` 71\n${this.degree}\n`
+        s+=` 72\n${this.knots.length}\n`
+        s+=` 73\n${this.controlPoints.length}\n`
+        s+=` 74\n${this.fitPoints.length}\n`
+        s+=` 42\n1e-6\n`
+        s+=` 43\n1e-6\n`
 
         for (let i = 0; i < this.knots.length; ++i)
         {

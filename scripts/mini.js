@@ -72,9 +72,10 @@ const initialDraw = () =>{
   sheet3.hideAllDimensions()
   sheet3.showAllDimensions()
 
-  const sheet4 = miniJscad.sketch.screen.addSheet("sheet4",  {}, {}, {stroke:"brown", fill:"purple"} )
+  const sheet4 = miniJscad.sketch.screen.addSheet("sheet4",  {}, {}, {stroke:"fuchsia", fill:"fuchsia"} )
   const text1 = sheet4.addText({text:"minijscad", position:[500,100], theta: 45, font: {size: 40}})
   const text2 = sheet4.addText({text:"hello world", position:[1000,0], theta: 0, font: {size: 15}}, {stroke: "red", fill: "red"})
+  const text3 = sheet4.addText({text:"style test", position:[0,0], theta: 0, font: {size: 20}}, {stroke: "red", fill: "red"})
 
 
   sheet4.hideAllTexts()

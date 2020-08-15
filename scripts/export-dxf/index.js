@@ -282,58 +282,92 @@ export const getDxf = (param) => {
     const sheetId = v[0]
     const sheetParams = v[1]
 
-    const lineType = sheetParams.figsAttr?.lineType || "CONTINUOUS"
-    const stroke = sheetParams.figsAttr?.stroke || screenStroke
-    const colorId = autocadColorMap.get(stroke)
-    d.addLayer(sheetId, colorId, lineType)
-    d.setActiveLayer(sheetId)
+    if(sheetParams.figs.length>0){
+      const lineType = sheetParams.figsAttr?.lineType || "CONTINUOUS"
+      const stroke = sheetParams.figsAttr?.stroke || screenStroke
+      const colorId = autocadColorMap.get(stroke)
+      d.addLayer(sheetId, colorId, lineType)
+      d.setActiveLayer(sheetId)
 
-    const figs = sheetParams.figs
-    figs.forEach(v=>{
-      const type = v.type
-      const param = v.param
-      const attr = v.attr
-      switch(type){
-        case "line":{
-          const points = [].concat(...param.points)
-          d.drawLine(...points)
-          break
+      const figs = sheetParams.figs
+      figs.forEach(v=>{
+        const type = v.type
+        const param = v.param
+        const attr = v.attr
+        const lineTypeName = attr?.lineTypeName
+        const lineColor = attr?.stroke 
+        const colorIndex =autocadColorMap.get(lineColor)
+        switch(type){
+          case "line":{
+            const points = [].concat(...param.points)
+            d.drawLine(...points, lineTypeName, colorIndex)
+            break
+          }
+          case "polyline":
+          case "lines":{
+            const points = param.points
+            points.forEach((v,i,arr)=>{
+              if(i>0){
+                d.drawLine(arr[i-1][0], arr[i-1][1],v[0],v[1], lineTypeName, colorIndex)
+              }
+            })
+            break
+          }
+          case "circle":{
+            const center = param.center
+            const radius = param.radius
+            d.drawCircle(center[0], center[1], radius, lineTypeName, colorIndex)
+            break
+          }
+          case "arc":{
+            const center = param.center
+            const radius = param.radius
+            const start = param.start
+            const end = param.end
+            d.drawArc(center[0], center[1], radius, start, end, lineTypeName, colorIndex)
+            break
+          }
+          case "bspline":{
+            const points  = param.points
+            const knots = param.knots
+            const degree = param.degree
+            d.drawSpline(8, degree, points, knots, [], lineTypeName, colorIndex )
+            break
+          }
         }
-        case "polyline":
-        case "lines":{
-          const points = param.points
-          points.forEach((v,i,arr)=>{
-            if(i>0){
-              d.drawLine(arr[i-1][0], arr[i-1][1],v[0],v[1])
-            }
-          })
-          break
+      })
+    }
+    if(sheetParams.texts.length>0){
+
+      const textStroke = sheetParams.textsAttr?.stroke || screenStroke
+      const textColorId = autocadColorMap.get(textStroke)
+      const textSheetId = sheetId + "_text"
+      d.addLayer(textSheetId, textColorId, "CONTINUOUS")
+      d.setActiveLayer(textSheetId)
+
+      const texts = sheetParams.texts
+      texts.forEach(v=>{
+
+        const param = v.param
+        const attr = v.attr
+
+        const lineTypeName = attr?.lineTypeName
+        const lineColor = attr?.stroke 
+        const colorIndex =autocadColorMap.get(lineColor)
+
+        const position = param.position
+        const font = param.font
+        const text = param.text
+        const theta = param?.theta || 0
+        const size = font?.size || 24
+        const height = size /1.6
+        if(position.length>1){
+          d.drawText(position[0], position[1], height, theta, text, "left", "baseline", lineTypeName, colorIndex)  
         }
-        case "circle":{
-          const center = param.center
-          const radius = param.radius
-          d.drawCircle(center[0], center[1], radius)
-          break
-        }
-        case "arc":{
-          const center = param.center
-          const radius = param.radius
-          const start = param.start
-          const end = param.end
-          d.drawArc(center[0], center[1], radius, start, end)
-          break
-        }
-        case "bspline":{
-          const points  = param.points
-          const knots = param.knots
-          const degree = param.degree
-          d.drawSpline(8, degree, points, knots, [] )
-          break
-        }
-      }
-    })
+      })
+    }
   })
-
+ 
 
   const string = d.toDxfString()
   return string

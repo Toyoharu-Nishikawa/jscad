@@ -75,9 +75,9 @@ export class Drawing
         return this;
     }
 
-    drawLine(x1, y1, x2, y2)
+    drawLine(x1, y1, x2, y2, lineType, colorIndex)
     {
-        this.activeLayer.addShape(new Line(x1, y1, x2, y2));
+        this.activeLayer.addShape(new Line(x1, y1, x2, y2, lineType, colorIndex));
         return this;
     }
 
@@ -103,9 +103,9 @@ export class Drawing
      * @param {number} startAngle - degree 
      * @param {number} endAngle - degree 
      */
-    drawArc(x1, y1, r, startAngle, endAngle)
+    drawArc(x1, y1, r, startAngle, endAngle, lineType, colorIndex)
     {
-        this.activeLayer.addShape(new Arc(x1, y1, r, startAngle, endAngle));
+        this.activeLayer.addShape(new Arc(x1, y1, r, startAngle, endAngle, lineType, colorIndex));
         return this;
     }
 
@@ -114,9 +114,9 @@ export class Drawing
      * @param {number} y1 - Center y
      * @param {number} r - radius
      */
-    drawCircle(x1, y1, r)
+    drawCircle(x1, y1, r, lineType, colorIndex)
     {
-        this.activeLayer.addShape(new Circle(x1, y1, r));
+        this.activeLayer.addShape(new Circle(x1, y1, r, lineType, colorIndex));
         return this;
     }
 
@@ -129,9 +129,9 @@ export class Drawing
      * @param {string} [horizontalAlignment="left"] left | center | right
      * @param {string} [verticalAlignment="baseline"] baseline | bottom | middle | top
      */
-    drawText(x1, y1, height, rotation, value, horizontalAlignment = 'left', verticalAlignment = 'baseline')
+    drawText(x1, y1, height, rotation, value, horizontalAlignment = 'left', verticalAlignment = 'baseline', lineType, colorIndex)
     {
-        this.activeLayer.addShape(new Text(x1, y1, height, rotation, value, horizontalAlignment, verticalAlignment));
+        this.activeLayer.addShape(new Text(x1, y1, height, rotation, value, horizontalAlignment, verticalAlignment, lineType, colorIndex));
         return this;
     }
 
@@ -191,9 +191,9 @@ export class Drawing
         return this;
     }
 
-    drawSpline(type, degree, controlPoints, knots, fitPoints)
+    drawSpline(type, degree, controlPoints, knots, fitPoints, lineType, colorIndex)
     {
-        this.activeLayer.addShape(new Spline(type, degree, controlPoints, knots, fitPoints));
+        this.activeLayer.addShape(new Spline(type, degree, controlPoints, knots, fitPoints, lineType, colorIndex));
         return this;
     }
     _getDxfVPortTable(){
@@ -379,6 +379,25 @@ export class Drawing
       s+=' 42\n1\n'
       s+='  3\ntxt\n'
       s+='  4\n\n'
+
+      const handle2 = getHandle()
+      s+='  0\nSTYLE\n'
+      s+=`  5\n${handle2}\n`
+      s+='330\n2\n'
+      s+='100\nAcDbSymbolTableRecord\n'
+      s+='100\nAcDbTextStyleTableRecord\n'
+      s+='  2\nArial\n'
+      s+=' 70\n0\n'
+      s+=' 40\n0\n'
+      s+=' 41\n1\n'
+      s+=' 50\n0\n'
+      s+=' 71\n    0\n'
+      s+=' 42\n1\n'
+      s+='  3\n\n'
+      s+='  4\n\n'
+      s+='1071\n    0\n'
+
+
       s+='  0\nENDTAB\n'    
 
       return s
