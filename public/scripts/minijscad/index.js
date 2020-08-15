@@ -126,6 +126,11 @@ const setCSS = (element, width ,height)=>{
       vector-effect: non-scaling-stroke; 
     }`,0) 
 
+    style.sheet.insertRule(`
+    #${element}-minijscad-main  text {
+      dominant-baseline: text-after-edge ; 
+    }`,0) 
+
 
     style.sheet.insertRule(`
     #${element}-minijscad-frame {

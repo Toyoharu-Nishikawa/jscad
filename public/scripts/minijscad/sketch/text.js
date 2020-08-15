@@ -47,7 +47,10 @@ export const Text = class {
     const att = attr || {}
     const x = position ? position[0] : 0
     const y = position ? position[1] : 0
-    const text = parentObj.text(string).font(font).attr(att)
+    const text = parentObj.text(add=>{
+      add.tspan(string)
+    })
+    text.font(font).attr(att)
       .flip("y",0).rotate(-theta+180,0,0).translate(x, y)
     text.attr(attr)
  
