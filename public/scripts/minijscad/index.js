@@ -79,6 +79,7 @@ const setDOM = (element)=>{
  liA.textContent= "A"
  liS.textContent= "S"
 
+ minijscadCopyright.textContent = "version" + String(version)
  minijscadCoordinate.textContent = "x: 0.00 ,y: 0.00"
 
  ul.appendChild(liM)

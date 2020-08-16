@@ -1,4 +1,4 @@
-import {Drawing} from "../dxf-writer/Drawing.js"
+import {Drawing} from "../dxfwriter/index.js"
 import {autocadColorMap} from "./color.js"
 
 const addHeader = (d) => {
@@ -272,7 +272,7 @@ export const getDxf = (param) => {
   addHeader(d)
   addLineTypeTemplate(d)
 
-  const screenStroke = "black"
+  const screenStroke = "white"
 
   param.forEach(v=>{
     const sheetId = v[0]

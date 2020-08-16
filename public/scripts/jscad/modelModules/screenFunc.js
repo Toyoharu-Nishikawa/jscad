@@ -6,7 +6,8 @@ export const screenFunc = {
     execute:function(){
       const width =view.elements.drawing.getBoundingClientRect().width 
       const height = view.elements.drawing.getBoundingClientRect().height
-      model.sketch.setScreenSize(width, height)
+      //model.sketch.setScreenSize(width, height)
+      model.sketch.resize(width, height)
     }
   },
   resize: {

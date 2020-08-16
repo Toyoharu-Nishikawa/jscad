@@ -98,10 +98,10 @@ export const Dimension = class {
 
   addLength(param, attr){
     const [x1, y1, x2, y2] = [].concat(...param.points)
-    const distance = param.distance || 5
+    const distance = param.distance===0 ? 0 : param.distance || 5
     const size = param.fontSize || 20
     const digit = param.digit || 2
-    const auxiliaryFlag = param.auxiliary || true
+    const auxiliaryFlag = param?.auxiliary 
 
     const ds = this.parentObj
     const label = ds.group()

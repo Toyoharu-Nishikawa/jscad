@@ -5,18 +5,18 @@ export class Layer
     constructor(name, colorNumber, lineTypeName)
     {
         this.name = name;
-        this.colorNumber = colorNumber;
+        this.colorNumber = colorNumber===0 ? 0 : (colorNumber || 256)
         this.lineTypeName = lineTypeName;
         this.shapes = [];
         this.trueColor = -1;
+        this.handle = getHandle()
     }
 
     toDxfString()
     {
-        const handle = getHandle()
         let s =""
         s+='  0\nLAYER\n';
-        s+=`  5\n${handle}\n`
+        s+=`  5\n${this.handle}\n`
         s+='330\n2\n';
         s+='100\nAcDbSymbolTableRecord\n'
         s+='100\nAcDbLayerTableRecord\n'

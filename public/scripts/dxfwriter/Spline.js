@@ -14,6 +14,7 @@ export class Spline
         this.degree = degree
         this.lineType = lineType || "ByLayer"
         this.colorIndex = colorIndex === 0 ? 0 : (colorIndex || 256 )
+        this.handle = getHandle()
 
         // const closed = 0
         // const periodic = 0
@@ -29,10 +30,9 @@ export class Spline
     toDxfString()
     {
       // https://www.autodesk.com/techpubs/autocad/acad2000/dxf/spline_dxf_06.htm
-        const handle = getHandle()
         let s = ""
         s+=`  0\nSPLINE\n`
-        s+=`  5\n${handle}\n`
+        s+=`  5\n${this.handle}\n`
         s+=`100\nAcDbEntity\n`
         s+=`  8\n${this.layer.name}\n`
         s+=`  6\n${this.lineType}\n`

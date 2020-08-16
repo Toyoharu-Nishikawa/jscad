@@ -12,6 +12,7 @@ export class LineType
         this.name = name;
         this.description = description;
         this.elements = elements;
+        this.handle = getHandle()
     }
 
     /**
@@ -19,10 +20,9 @@ export class LineType
      */
     toDxfString()
     {
-        const handle = getHandle()
         let s = ""
         s+='  0\nLTYPE\n';
-        s+=`  5\n${handle}\n`
+        s+=`  5\n${this.handle}\n`
         s+='330\n5\n'
         s+='100\nAcDbSymbolTableRecord\n'
         s+='100\nAcDbLinetypeTableRecord\n'
