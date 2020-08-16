@@ -20,7 +20,8 @@ import {Polyline3d} from './Polyline3d.js'
 import {Face} from './Face.js'
 import {Point} from './Point.js'
 import {Spline} from './Spline.js'
-import {getHandle, resetHandle} from "./handle.js"
+import {Dimension} from './Dimension.js'
+import {getHandle, resetHandle, resetDHandle} from "./handle.js"
 
 
 export class Drawing
@@ -28,6 +29,7 @@ export class Drawing
     constructor()
     {
         resetHandle()
+        resetDHandle()
         this.layers = {};
         this.activeLayer = null;
         this.lineTypes = {};
@@ -133,6 +135,11 @@ export class Drawing
     {
         this.activeLayer.addShape(new Text(x1, y1, height, rotation, value, horizontalAlignment, verticalAlignment, lineType, colorIndex));
         return this;
+    }
+
+    drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type,  lineType, colorIndex){
+        this.activeLayer.addShape(new Dimension(x1, y1, x2, y2, x3, y3, x4, y4, type,  lineType, colorIndex))
+        return this
     }
 
     /**

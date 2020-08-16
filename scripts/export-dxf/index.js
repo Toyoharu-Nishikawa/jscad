@@ -1,11 +1,7 @@
-
 import {Drawing} from "../dxf-writer/Drawing.js"
 import {autocadColorMap} from "./color.js"
 
 const addHeader = (d) => {
-  //d.header("ACADVER", [[1, "AC1021"]])
-  //d.header("SPLINETYPE", [[70, 2]])
-  //d.header("SPLINESEGS", [[70, 8]])
 
   d.header("ACADVER", [[1,"AC1021"]])
   d.header("DWGCODEPAGE", [[3,"ANSI_1252"]])
@@ -276,7 +272,7 @@ export const getDxf = (param) => {
   addHeader(d)
   addLineTypeTemplate(d)
 
-  const screenStroke = "green"
+  const screenStroke = "black"
 
   param.forEach(v=>{
     const sheetId = v[0]
@@ -332,6 +328,77 @@ export const getDxf = (param) => {
             const knots = param.knots
             const degree = param.degree
             d.drawSpline(8, degree, points, knots, [], lineTypeName, colorIndex )
+            break
+          }
+        }
+      })
+
+      const dimensions = sheetParams.dimensions
+      dimensions.forEach(v=>{
+        const type = v.type
+        const param = v.param
+        const attr = v.attr
+        const lineTypeName = attr?.lineTypeName
+        const lineColor = attr?.stroke 
+        const colorIndex =autocadColorMap.get(lineColor)
+
+        const [x1, y1] = param.points[0]
+        const [x2, y2] = param.points[1]
+        const distance = param.distance
+        switch(type){
+          case "length" :{
+            const length = Math.sqrt((x2-x1)**2+(y2-y1)**2)
+            const dx = distance/length*(y2-y1)
+            const dy =  -distance/length*(x2-x1)
+            const Dx1 = x1+dx
+            const Dy1 = y1+dy
+            const Dx2 = x2+dx
+            const Dy2 = y2+dy
+            const tx = (Dx1 + Dx2)/2
+            const ty = (Dy1 + Dy2)/2
+ 
+            const x3 = Dx2
+            const y3 = Dy2
+            const x4 = tx
+            const y4 = ty
+
+            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
+            break
+          }
+          case "horizontal" :{
+            const yAve = (y1+y2)/2
+            const Dx1 = x1
+            const Dy1 = yAve - distance
+            const Dx2 = x2 
+            const Dy2 = yAve - distance
+ 
+            const tx = (Dx1 + Dx2)/2
+            const ty = (Dy1 + Dy2)/2
+ 
+            const x3 = Dx2
+            const y3 = Dy2
+            const x4 = tx
+            const y4 = ty
+
+            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
+            break
+          }
+          case "vertical" :{
+            const xAve = (x1+x2)/2
+            const Dx1 = xAve + distance
+            const Dy1 = y1
+            const Dx2 = xAve + distance
+            const Dy2 = y2
+ 
+            const tx = (Dx1 + Dx2)/2
+            const ty = (Dy1 + Dy2)/2
+ 
+            const x3 = Dx2
+            const y3 = Dy2
+            const x4 = tx
+            const y4 = ty
+
+            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
             break
           }
         }
