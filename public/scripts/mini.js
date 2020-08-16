@@ -63,11 +63,13 @@ const initialDraw = () =>{
 
 
   
-  const sheet3 = miniJscad.sketch.screen.addSheet("sheet3",  {}, {stroke: "orange", fill:"red"}, {} )
   const dim1 =  sheet0.addDimension("horizontal", {points:[[150, 150], [2000, 500]], distance:300, fontSize:100, digit:2, auxiliary:true})
-  const dim2 =  sheet3.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, auxiliary:true})
-  const dim3 =  sheet3.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:5, digit:3, auxiliary:false})
+  const dim2 =  sheet0.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, auxiliary:true})
+  const dim3 =  sheet0.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0, fontSize:5, digit:3, auxiliary:false})
 
+  const sheet3 = miniJscad.sketch.screen.addSheet("sheet3",  {}, {stroke: "orange", fill:"red"}, {} )
+  const lineTmp10 = sheet3.addFig("line", {points:[[100,0],[100,500]]})
+  const dim4 =  sheet3.addDimension("length", {points:[[100, 0], [100, 500]], distance:100, fontSize:5, digit:3, auxiliary:true})
 
   sheet3.hideAllDimensions()
   sheet3.showAllDimensions()
