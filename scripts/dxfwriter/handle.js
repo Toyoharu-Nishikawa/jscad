@@ -1,5 +1,5 @@
 let handle = 0x30
-let dHandle = 1
+let dHandle = 0
 
 export const getHandle = () =>{
   handle += 0x1
@@ -18,5 +18,16 @@ export const getDHandle = () => {
 }
 
 export const resetDHandle = () => {
-  dHandle = 1
+  dHandle = 0
 }
+
+export const getCurrentHandle = () =>{
+  const str = handle.toString(16).toUpperCase()
+  return str 
+}
+
+export const getDHandleList = () => {
+  const list = [...Array(dHandle)].map((v,i)=>"*D"+String(i+1))
+  return list 
+}
+

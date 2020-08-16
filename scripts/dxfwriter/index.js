@@ -1,14 +1,3 @@
-//const LineType = require('./LineType');
-//const Layer = require('./Layer');
-//const Line = require('./Line');
-//const Arc = require('./Arc');
-//const Circle = require('./Circle');
-//const Text = require('./Text');
-//const Polyline = require('./Polyline');
-//const Polyline3d = require('./Polyline3d');
-//const Face = require('./Face');
-//const Point = require('./Point');
-
 import {LineType}  from './LineType.js'
 import {Layer} from './Layer.js'
 import {Line} from './Line.js'
@@ -21,7 +10,7 @@ import {Face} from './Face.js'
 import {Point} from './Point.js'
 import {Spline} from './Spline.js'
 import {Dimension} from './Dimension.js'
-import {getHandle, resetHandle, resetDHandle} from "./handle.js"
+import {getHandle, resetHandle, resetDHandle, getDHandleList} from "./handle.js"
 
 
 export class Drawing
@@ -570,6 +559,22 @@ export class Drawing
         s+=' 70\n0\n'
         s+='280\n1\n'
         s+='281\n0\n'
+
+        const dHandleList = getDHandleList()
+        dHandleList.forEach(v=>{
+          const handle = getHandle()
+          
+          s+="  0\nBLOCK_RECORD\n"
+          s+=`  5\n${handle}\n`
+          s+="330\n1\n"
+          s+="100\nAcDbSymbolTableRecord\n"
+          s+="100\nAcDbBlockTableRecord\n"
+          s+=`  2\n${v}\n`
+          s+=" 70\n0\n"
+          s+="280\n1\n"
+          s+="281\n0\n"
+        })
+
         s+='  0\nENDTAB\n'
 
         return s;
@@ -620,8 +625,41 @@ export class Drawing
         s+='100\nAcDbBlockEnd\n'
 
         return s
-
     }
+    _getDxfBlock(){
+        let s =""
+
+        const dHandleList = getDHandleList()
+
+        dHandleList.forEach(v=>{
+          const handle1 = getHandle()
+          const handle2 = getHandle()
+          const handle3 = getHandle()
+ 
+          s+='  0\nBLOCK\n'; //start Model Space
+          s+=`  5\n${handle2}\n`
+          s+=`330\n${handle1}\n`
+          s+='100\nAcDbEntity\n'
+          s+='  8\n0\n'
+          s+='100\nAcDbBlockBegin\n'
+          s+=`  2\n${v}\n`
+          s+=' 70\n0\n'
+          s+=' 10\n0\n'
+          s+=' 20\n0\n'
+          s+=' 30\n0\n'
+          s+=`  3\n${v}\n`
+          s+='  1\n \n'
+          s+='  0\nENDBLK\n'
+          s+=`  5\n${handle3}\n`
+          s+=`330\n${handle1}\n`
+          s+='100\nAcDbEntity\n'
+          s+='  8\n0\n'
+          s+='100\nAcDbBlockEnd\n'
+        })
+
+        return s
+    }
+
     _getDxfObjects(){
       let s = ''
       s+='  0\nDICTIONARY\n'
@@ -720,6 +758,8 @@ export class Drawing
         s += '  2\nBLOCKS\n';
         s += this._getDxfModelSpace()
         s += this._getDxfPaperSpace()
+        s += this._getDxfBlock()
+
         //end section
         s += '  0\nENDSEC\n';
  
@@ -805,4 +845,3 @@ Drawing.UNITS = {
     'Parsecs':20
 }
 
-//module.exports = Drawing;

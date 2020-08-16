@@ -26,16 +26,16 @@ export class Text
 
         this.lineType = lineType || "ByLayer"
         this.colorIndex = colorIndex === 0 ? 0 : (colorIndex || 256 )
+        this.handle = getHandle()
     }
 
     toDxfString()
     {
         //https://www.autodesk.com/techpubs/autocad/acadr14/dxf/text_al_u05_c.htm
 
-        const handle = getHandle()
         let s = ""
         s+=`  0\nTEXT\n`;
-        s+=`  5\n${handle}\n`;
+        s+=`  5\n${this.handle}\n`;
         s+=`100\nAcDbEntity\n`
         s+=`  8\n${this.layer.name}\n`;
         s+=`  6\n${this.lineType}\n`;

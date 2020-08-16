@@ -25,23 +25,25 @@ export class Dimension {
 
         this.lineType = lineType || "ByLayer"
         this.colorIndex = colorIndex === 0 ? 0 : (colorIndex || 256 )
+
+        this.handle = getHandle()
+        this.dHandle = getDHandle()  
+
     }
 
     toDxfString(){
         //https://www.autodesk.com/techpubs/autocad/acadr14/dxf/text_al_u05_c.htm
 
-      const handle = getHandle()
-      const dHandle = getDHandle()  
       let s = ""
       s+='  0\nDIMENSION\n'
-      s+=`  5\n${handle}\n`
+      s+=`  5\n${this.handle}\n`
       s+='100\nAcDbEntity\n'
       s+=`  8\n${this.layer.name}\n`;
       s+=`  6\n${this.lineType}\n`
       s+=` 62\n${this.colorIndex}\n`
-      s+='370\n-1\n'
+      s+='370\n   -1\n'
       s+='100\nAcDbDimension\n'
-      s+=`  2\n${dHandle}\n`
+      s+=`  2\n${this.dHandle}\n`
       s+=` 10\n${this.x3}\n`
       s+=` 20\n${this.y3}\n`
       s+=' 30\n0\n'
@@ -51,19 +53,20 @@ export class Dimension {
      
       switch(this.type){
         case "length": {
-          s+=' 70\n33\n'
+          s+=' 70\n   33\n'
           break
         }
         case "horizontal": {
-          s+=' 70\n32\n'
+          s+=' 70\n   32\n'
           break
         }
         case "vertical": {
-          s+=' 70\n32\n'
+          s+=' 70\n   32\n'
           break
         }
       }
-      s+=' 71\n5\n'
+      s+=' 71\n    5\n'
+      s+=' 72\n    0\n'
       s+='  3\nStandard\n'
       s+=' 53\n0\n'
       s+='210\n0\n'
