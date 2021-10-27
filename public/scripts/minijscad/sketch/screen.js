@@ -77,7 +77,7 @@ export const Screen  = class {
     allSheetIds.forEach(v=>this.showSheet(v))
   }
   getSheetParam(sheetId){
-    const sheet = this.getSheetFormId(sheetId)
+    const sheet = this.getSheetFromId(sheetId)
     const param = sheet.getParam() 
     return param
   }
