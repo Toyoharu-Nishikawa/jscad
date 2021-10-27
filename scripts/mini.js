@@ -82,8 +82,6 @@ const initialDraw = () =>{
 
   sheet4.hideAllTexts()
   sheet4.showAllTexts()
-
-
 }
 
 const clearSheets = () =>{
