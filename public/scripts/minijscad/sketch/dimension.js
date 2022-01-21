@@ -1,11 +1,11 @@
 
 
 export const Dimension = class {
-  constructor(parentObj, id, type, param, attr){
+  constructor(parentObj, id, type, param, attr, alterText){
     this.id = id
     this.parentObj = parentObj
 
-    const element = this.add(type, param, attr)
+    const element = this.add(type, param, attr, alterText)
 
     this.element = element
     this.param = param
@@ -41,18 +41,18 @@ export const Dimension = class {
     return element 
   }
 
-  add(type, param, attr){
+  add(type, param, attr, alterText){
     switch(type){
       case "horizontal":{
-        const dimension = this.addHorizontal(param, attr) 
+        const dimension = this.addHorizontal(param, attr,alterText) 
         return dimension
       }
       case "vertical":{
-        const dimension = this.addVertical(param, attr) 
+        const dimension = this.addVertical(param, attr,alterText) 
         return dimension
       }
       case "length":{
-        const dimension = this.addLength(param, attr) 
+        const dimension = this.addLength(param, attr,alterText) 
         return dimension
       }
     } 
@@ -82,24 +82,26 @@ export const Dimension = class {
     return arrow 
   }
 
-  makeValueText(obj, length, Dx1, Dy1, Dx2, Dy2, size, digit){
-    const valueText = length.toFixed(digit)
+  makeValueText(obj, length, Dx1, Dy1, Dx2, Dy2, font, digit, alterText){
+    const valueText = alterText || length.toFixed(digit)
 
     const tx = (Dx1 + Dx2)/2
     const ty = (Dy1 + Dy2)/2
       
     const theta = Math.atan2(Dy2-Dy1, Dx2-Dx1)
     const thetaDeg = theta*180/Math.PI
-    const text = obj.text(valueText).font({size:size}).attr({"stroke-width": 0.1})
+    const text = obj.text(valueText).attr(font)
       .flip("y",0).rotate(-thetaDeg+180,0,0).translate(tx, ty)
     
+    console.log("text",text)
     return text
   }
 
-  addLength(param, attr){
+  addLength(param, attr,alterText){
     const [x1, y1, x2, y2] = [].concat(...param.points)
     const distance = param.distance===0 ? 0 : param.distance || 5
-    const size = param.fontSize || 20
+    const font = param.font || {"font-size": 20, "stroke-width":0.1}
+    const size = font?.["font-size"] || 20
     const digit = param.digit || 2
     const auxiliaryFlag = param?.auxiliary 
 
@@ -114,8 +116,8 @@ export const Dimension = class {
     const Dy1 = y1+dy
     const Dx2 = x2+dx
     const Dy2 = y2+dy
-    const arrow = this.makeArrow(label, Dx1, Dy1, Dx2, Dy2,size)
-    const text = this.makeValueText(arrow,length, Dx1, Dy1, Dx2, Dy2, size, digit)
+    const arrow = this.makeArrow(label, Dx1, Dy1, Dx2, Dy2, size)
+    const text = this.makeValueText(arrow,length, Dx1, Dy1, Dx2, Dy2, font, digit, alterText)
     
     if(auxiliaryFlag){
       const l1 = ds.line(x1, y1, Dx1, Dy1)
@@ -127,11 +129,12 @@ export const Dimension = class {
     return label 
   }
 
-  addVertical(param, attr){
+  addVertical(param, attr, alterText){
 
     const [x1, y1, x2, y2] = [].concat(...param.points)
     const distance = param.distance || 5
-    const size = param.fontSize || 20
+    const font = param.font || {"font-size": 20, "stroke-width":0.1}
+    const size = font?.size || 20
     const digit = param.digit || 2
     const auxiliaryFlag = param.auxiliary || true
 
@@ -146,7 +149,7 @@ export const Dimension = class {
     const Dx2 = xAve + distance
     const Dy2 = y2
     const arrow = this.makeArrow(label, Dx1, Dy1, Dx2, Dy2,size)
-    const text = this.makeValueText(arrow,length, Dx1, Dy1, Dx2, Dy2, size, digit)
+    const text = this.makeValueText(arrow,length, Dx1, Dy1, Dx2, Dy2, font, digit, alterText)
     
     if(auxiliaryFlag){
       const l1 = ds.line(x1, y1, Dx1, Dy1)
@@ -158,11 +161,12 @@ export const Dimension = class {
     return label
   }
 
-  addHorizontal(param, attr){
+  addHorizontal(param, attr,alterText){
 
     const [x1, y1, x2, y2] = [].concat(...param.points)
     const distance = param.distance || 5
-    const size = param.fontSize || 20
+    const font = param.font || {"font-size": 20, "stroke-width":0.1}
+    const size = font?.["font-size"] || 20
     const digit = param.digit || 2
     const auxiliaryFlag = param.auxiliary || true
 
@@ -177,7 +181,7 @@ export const Dimension = class {
     const Dx2 = x2 
     const Dy2 = yAve - distance
     const arrow = this.makeArrow(label, Dx1, Dy1, Dx2, Dy2,size)
-    const text = this.makeValueText(arrow,length, Dx1, Dy1, Dx2, Dy2, size, digit)
+    const text = this.makeValueText(arrow,length, Dx1, Dy1, Dx2, Dy2, font, digit, alterText)
     
     if(auxiliaryFlag){
       const l1 = ds.line(x1, y1, Dx1, Dy1)
