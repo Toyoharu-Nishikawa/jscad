@@ -93,7 +93,6 @@ export const Dimension = class {
     const text = obj.text(valueText).attr(font)
       .flip("y",0).rotate(-thetaDeg+180,0,0).translate(tx, ty)
     
-    console.log("text",text)
     return text
   }
 
