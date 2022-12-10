@@ -15,7 +15,6 @@ const setUpMiniJscad = () => {
   const height = frame.getBoundingClientRect().height 
   minijscadTest.style.width = (width-50) + "px"
   minijscadTest.style.height = (height-50) + "px"
-  console.log(width, height)
   
   miniJscad = new MiniJscad("minijscad-test", width-50, height-50)
   const version = miniJscad.version
@@ -32,6 +31,15 @@ const initialDraw = () =>{
   const arc1  = sheet0.addFig("arc", {center:[150,100], radius:50, start:90, end:180})
   const line2 =sheet0.addFig("line", {points:[[150,150],[2000,500]]})
   
+  const ellipse1 =sheet0.addFig("ellipse", {center:[350,100], radius:[100,50], rotation: 45})
+  const rec1 =sheet0.addFig("rectangle", {width: 100, height: 500, center:[0,100], rotation: 30})
+  const polygon1 =sheet0.addFig("polygon", {points:[[0,0],[45,45],[-100,45],[-100,0]]})
+
+  const rotAngle = 45 
+  const rotAngleRad = rotAngle*Math.PI/180
+  const line3 =sheet0.addFig("line", {points:[[0,0],[300*Math.cos(rotAngleRad), 300*Math.sin(rotAngleRad)]]})
+  const line4 =sheet0.addFig("line", {points:[[0,0],[-100*Math.sin(rotAngleRad), 100*Math.cos(rotAngleRad)]]})
+  const ellipticalArc1 =sheet0.addFig("ellipticalArc", {center:[0,0],radius:[300,100],rotation:rotAngle,start:0,end:90})
 
 
   const sheet1 = miniJscad.sketch.screen.addSheet("sheet1", {stroke: "#FFBF00", "stroke-dasharray": "DIVIDE"})
@@ -43,7 +51,7 @@ const initialDraw = () =>{
   const arc6 = sheet1.addFig("arc", {center:[650,100], radius:50, start:270, end:0})
 
   const sheet2 = miniJscad.sketch.screen.addSheet("sheet2" )
-  const bspline1 = sheet2.addFig("bspline", {points: [[0,0],[0,100],[100,100], [100,0]], degree:3, knots:[0,0,0,0,1,1,1,1]})
+  const bspline1 = sheet2.addFig("bspline", {points: [[0,0],[0,100],[100,-100], [200,0]], degree:3, knots:[0,0,0,0,1,1,1,1],segments:100})
 
   const lines1 = sheet0.addFig("lines", {points:[[2000,500],[2000,600],[1500,600],[1500,500] ]}, {stroke:"black", lineTypeName:"CONTINUOUS"})
   const polyline1 = sheet0.addFig("polyline", {points:[[1500,500],[1000,500],[1000,600],[500,500] ]}, {stroke:"#FF00FF", lineTypeName:"DOT"})

@@ -52,6 +52,14 @@ export const Fig = class {
         const fig = this.addPolyline(param, attr)
         return fig 
       }
+      case "rectangle":{
+        const fig = this.addRectangle(param, attr)
+        return fig 
+      }
+      case "polygon":{
+        const fig = this.addPolygon(param, attr)
+        return fig 
+      }
       case "bspline":{
         const fig = this.addBSpline(param, attr)
         return fig 
@@ -60,10 +68,19 @@ export const Fig = class {
         const fig = this.addCircle(param, attr)
         return fig 
       }
+      case "ellipse":{
+        const fig = this.addEllipse(param, attr)
+        return fig 
+      }
       case "arc":{
         const fig = this.addArc(param, attr)
         return fig 
       }
+      case "ellipticalArc":{
+        const fig = this.addEllipticalArc(param, attr)
+        return fig 
+      }
+
       default:{
         console.log("type is out of list", type)
         return null
@@ -121,15 +138,41 @@ export const Fig = class {
     return fig
   }
 
+  addPolygon(param, attr){
+    const parentObj = this.parentObj
+ 
+    const points = param.points
+    const fig = parentObj.polygon(points)
+
+    fig.attr(attr) 
+    setLineType(fig, attr)
+
+    return fig
+  }
+  addRectangle(param, attr){
+    const parentObj = this.parentObj
+ 
+    const width = param.width
+    const height = param.height
+    const [cx,cy] = param.center
+    const rotation = param?.rotation || 0
+    const fig = parentObj.rect(width, height).center(cx,cy).rotate(rotation)
+    fig.attr(attr) 
+    setLineType(fig, attr)
+
+    return fig
+  }
+
   addBSpline(param, attr){
     const parentObj = this.parentObj
 
     const knots = param.knots
     const points = param.points
     const degree = param.degree
+    const segments = param?.segments || 100
 
     const func = bspline(points, degree, knots) 
-    const N = 100
+    const N = segments 
     const curvePoints = [...Array(N+1)].map((v,i)=>func(i/N,0))
     const fig = parentObj.polyline(curvePoints)
 
@@ -152,6 +195,20 @@ export const Fig = class {
     return fig
   }
 
+  addEllipse(param, attr){
+    const parentObj = this.parentObj
+
+    const [cx, cy] = param.center 
+    const [rx, ry] = param.radius
+    const rotation = param?.rotation || 0
+    const fig = parentObj.ellipse(rx,ry).center(cx, cy).rotate(rotation)
+
+    fig.attr(attr) 
+    setLineType(fig, attr)
+
+    return fig
+  }
+
   addArc(param, attr){
     const parentObj = this.parentObj
 
@@ -167,4 +224,22 @@ export const Fig = class {
     return fig
  
   }
+
+  addEllipticalArc(param, attr){
+    const parentObj = this.parentObj
+
+    const [cx, cy] = param.center 
+    const [rx,ry] = param.radius
+    const rotation = param?.rotation || 0
+    const theta1 = param.start
+    const theta2 = param.end
+    const fig = parentObj.ellipticalArc(cx, cy, rx, ry,rotation, theta1, theta2)
+
+    fig.attr(attr) 
+    setLineType(fig, attr)
+
+    return fig
+ 
+  }
+
 }

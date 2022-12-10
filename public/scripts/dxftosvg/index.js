@@ -15,6 +15,8 @@ const groupCodes = new Map([
   [20, 'y'],
   [21, 'y1'],
   [40, 'r'],
+  [41, 's1'],
+  [42, 's2'],
   [50, 'a0'],
   [51, 'a1'],
   [62, 'color'],
@@ -28,8 +30,9 @@ const supportedEntities = new Set([
   'LINE',
   'CIRCLE',
   'ARC',
+  'ELLIPSE',
   'LWPOLYLINE',
-  'SPLINE'
+  'SPLINE',
 ])
 
 
@@ -176,6 +179,33 @@ const dxfToObj = dxfObject => {
       const obj = {type: "arc",  param: param, attr: attr }
       return obj 
     }
+    case 'ELLIPSE': {
+      const center = [dxfObject.x, dxfObject.y]
+      const endP = [dxfObject.x1, dxfObject.y1]
+      const ratio = dxfObject.r
+      const vec = [endP[0] - center[0],endP[1] - center[1]]
+      const rx = Math.sqrt(vec[0]**2 + vec[1]**2)
+      const ry = rx * ratio
+      const radius = [rx,ry]
+
+      const startRad = dxfObject.s1
+      const endRad = dxfObject.s2
+      const start = startRad/Math.PI*180
+      const end = endRad/Math.PI*180
+      const rotationRad = Math.atan2(vec[1],vec[0])
+      const rotation = rotationRad/Math.PI*180
+
+      if(start===0 && end===360){
+        const param = {center, radius,rotation}
+        const obj = {type: "ellipse",  param: param, attr: attr }
+        return obj
+      }
+      else{
+        const param = {center, radius,rotation, start, end}
+        const obj = {type: "ellipticalArc",  param: param, attr: attr }
+        return obj
+      }
+    }
     case 'LWPOLYLINE': {
       const vertices = dxfObject.vertices;
       const points = []
@@ -203,7 +233,8 @@ const dxfToObj = dxfObject => {
 
       const knots = dxfObject.knots;
       const degree = dxfObject.degree;
-      const param = {points: points, knots: knots, degree: degree}
+      const segments = 100
+      const param = {points: points, knots: knots, degree: degree, segments:segments}
       const obj = {type: "bspline",  param: param, attr: attr }
 
       return obj 
