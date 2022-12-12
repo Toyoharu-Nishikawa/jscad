@@ -201,7 +201,7 @@ export const Fig = class {
     const [cx, cy] = param.center 
     const [rx, ry] = param.radius
     const rotation = param?.rotation || 0
-    const fig = parentObj.ellipse(rx,ry).center(cx, cy).rotate(rotation)
+    const fig = parentObj.ellipse(rx*2,ry*2).center(cx, cy).rotate(rotation)
 
     fig.attr(attr) 
     setLineType(fig, attr)
