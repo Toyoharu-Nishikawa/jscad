@@ -26,6 +26,7 @@ const setUpMiniJscad = () => {
 const initialDraw = () =>{
 
   const sheet0 = miniJscad.sketch.screen.addSheet("sheet0")
+
   const line1 = sheet0.addFig("line", {points:[[100,0],[100,100]]}, {stroke:"red", lineTypeName:"DASHED"})
 
   const arc1  = sheet0.addFig("arc", {center:[150,100], radius:50, start:90, end:180})
@@ -56,6 +57,10 @@ const initialDraw = () =>{
   const lines1 = sheet0.addFig("lines", {points:[[2000,500],[2000,600],[1500,600],[1500,500] ]}, {stroke:"black", lineTypeName:"CONTINUOUS"})
   const polyline1 = sheet0.addFig("polyline", {points:[[1500,500],[1000,500],[1000,600],[500,500] ]}, {stroke:"#FF00FF", lineTypeName:"DOT"})
   const circle1 = sheet0.addFig("circle", {center:[1500,500], radius: 200}, {stroke:"#10AA05", lineTypeName:"DIVIDE"})
+  //const circle2 = sheet0.addFig("circle", {center:[1000,900], radius: 100},{"stroke-width":1})
+  const circle2 = sheet0.addFig("circle", {center:[1000,900], radius: 100})
+  const ellipse2 = sheet0.addFig("ellipse", {center:[1000,900], radius: [200,100]})
+  const dimCircle =  sheet0.addDimension("diameter", {points:[1000,900], distance:50, font:{"font-size":100, "stroke-width":0.001}, digit:3, auxiliary:true}, {fill:"green"})
 
 
   const lineTmp1 = sheet0.addFig("line", {points:[[0,0],[200,200]]})
@@ -73,7 +78,7 @@ const initialDraw = () =>{
 
   
   const dim1 =  sheet0.addDimension("horizontal", {points:[[150, 150], [2000, 500]], distance:300, font:{"font-size":100}, digit:2, auxiliary:true}, {},"1850.00mm")
-  const dim2 =  sheet0.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, auxiliary:true})
+  const dim2 =  sheet0.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, offset:-10,auxiliary:true})
   const dim3 =  sheet0.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0,  digit:3, auxiliary:false})
 
   const sheet3 = miniJscad.sketch.screen.addSheet("sheet3",  {}, {stroke: "orange", fill:"red"}, {} )
@@ -92,6 +97,7 @@ const initialDraw = () =>{
   const text3 = sheet4.addText({text:"style test", position:[0,0], theta: 0, font: {size: 20}}, {stroke: "red", fill: "red"})
 
 
+  
   sheet4.hideAllTexts()
   sheet4.showAllTexts()
 }
