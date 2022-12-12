@@ -118,6 +118,21 @@ const setCSS = (element, width ,height)=>{
     }`,0) 
 
     style.sheet.insertRule(`
+    #${element}-minijscad-main  ellipse {
+      vector-effect: non-scaling-stroke; 
+    }`,0) 
+
+    style.sheet.insertRule(`
+    #${element}-minijscad-main  rect {
+      vector-effect: non-scaling-stroke; 
+    }`,0) 
+
+    style.sheet.insertRule(`
+    #${element}-minijscad-main  polygon {
+      vector-effect: non-scaling-stroke; 
+    }`,0) 
+
+    style.sheet.insertRule(`
     #${element}-minijscad-main  path {
       vector-effect: non-scaling-stroke; 
     }`,0) 
