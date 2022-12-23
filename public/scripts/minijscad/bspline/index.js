@@ -1,10 +1,14 @@
-
 const quickSearch = (knots, degree, x) => {
   const order = degree + 1
-  const cand = knots.slice(0, -order)
+  //const cand = knots.slice(0, -order)
+  const cand = knots
+  const max = cand[cand.length-1]
   let index = 0
   for(let i=0;i<cand.length;i++){
-    if(cand[i] <=x){
+    if(max<=cand[i]){
+      break
+    }
+    else if(cand[i] <=x){
       index= i
     }
     else{
@@ -14,11 +18,13 @@ const quickSearch = (knots, degree, x) => {
   return index
 }
 
-const makeNmatrix = (knots, degree, x) => {
+export const makeNmatrix = (knots, degree, x) => {
   const order = degree + 1
   const i = quickSearch(knots, degree, x)
   const u = knots 
   const m = u.length -order
+
+  const knotIni = knots[0]
   
   const Ntensor = [[[1]]]
   for(let p=1;p<=degree;p++){
@@ -28,10 +34,11 @@ const makeNmatrix = (knots, degree, x) => {
       for(let j=0;j<=p;j++){
         const n= i-p+j
         if(k==0){
-          const N1 = j==0 ? 0 : Ntensor[p-1][0][j-1]
-          const N2 = j==p ? 0 : Ntensor[p-1][0][j]
+          const N1 =  Ntensor[p-1][0][j-1] || 0
+          const N2 =  Ntensor[p-1][0][j]|| 0
           const c1 = u[n+p]-u[n] >0 ?  (x -u[n])/(u[n+p]-u[n])*N1 : 0
           const c2 = u[n+p+1]-u[n+1] > 0 ? (u[n+p+1]-x)/(u[n+p+1]-u[n+1])*N2 : 0
+ 
           const Nip = c1 + c2 
 
           list.push(Nip)
@@ -55,15 +62,20 @@ const makeNmatrix = (knots, degree, x) => {
 
   //zero padding left and right
   const N = Nmatrix.map(v=>{
-    const prefix = i-degree>0 ? [...Array(i-degree)].fill(0): []
-    const suffix = m-1-i>0 ? [...Array(m-1-i)].fill(0) :[] 
-    const list = [].concat(prefix, v, suffix)
+    const tmp = i-degree
+    const vv = tmp < 0 ?  v.slice(-tmp):
+               i > m-1 ? v.slice(0,-i+m-1):
+               v
+    const prefix = tmp >0? [...Array(tmp)].fill(0): []
+    const prefixLength = prefix.length
+    const suffixLength = m-vv.length-prefixLength
+    const suffix = suffixLength>0 ? [...Array(suffixLength)].fill(0) :[] 
+    const list = [].concat(prefix, vv, suffix)
     return list
   }) 
 
   return N
 }
-
 
 const checkSchoenbergWhitneyCondition = (pointsLength, knotsLength, order) => {
   const flag = knotsLength - (pointsLength + order) === 0
@@ -108,8 +120,9 @@ const bsplineBasis = (knots, degree=3,  normalizedFlag=true) => {
 
   // default knot vector is open uniform
   const order = degree+1
-  const min = knots[0]
-  const max = knots[knots.length-1]
+  const min = knots[degree]
+  const max = knots[knots.length-1-degree]
+
   if(normalizedFlag){
     return (t)=>{  // 0 <= t <=1
       const s = min + t * (max - min)
