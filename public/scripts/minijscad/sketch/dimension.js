@@ -98,7 +98,7 @@ export const Dimension = class {
     return arrow 
   }
   makeValueText(obj, length, Dx1, Dy1, Dx2, Dy2, font, digit, prefix, offsetX=0, offsetY=0, alterText){
-    const valueText = alterText || length.toFixed(digit)
+    const valueText = alterText || prefix + length.toFixed(digit)
 
     const tx = (Dx1 + Dx2)/2 + offsetX
     const ty = (Dy1 + Dy2)/2 + offsetY
