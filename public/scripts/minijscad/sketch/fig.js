@@ -166,9 +166,9 @@ export const Fig = class {
   addBSpline(param, attr){
     const parentObj = this.parentObj
 
-    const knots = param.knots
     const points = param.points
     const degree = param.degree
+    const knots = param.knots
     const segments = param?.segments || 100
 
     const func = bspline(points, degree, knots) 

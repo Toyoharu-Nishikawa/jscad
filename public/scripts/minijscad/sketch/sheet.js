@@ -112,10 +112,10 @@ export const Sheet = class {
     const dimensions = dimensionsData.getValues()
     return dimensions
   }
-  addDimension(type, param, attr, alterText){
+  addDimension(type, param, dimStyle={}, attr){
     const id = this.dimensionsData.getId()
     const dimensions = this.dimensions
-    const dimension = new Dimension(dimensions, id, type, param, attr, alterText)
+    const dimension = new Dimension(dimensions, id, type, param, dimStyle, attr)
     const dimensionsData = this.dimensionsData
     dimensionsData.addData(id, dimension)
  

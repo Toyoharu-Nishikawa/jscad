@@ -1,4 +1,4 @@
-import {Drawing} from "../dxfwriter/index.js"
+import {DxfWriter,point3d} from "../@tarikjabiri/dxf/lib/esm/index.js"
 import {autocadColorMap} from "./color.js"
 
 const addHeader = (d) => {
@@ -246,33 +246,33 @@ const addHeader = (d) => {
 }
 
 const addLineTypeTemplate = (d) =>{
-  d.addLineType("CENTER", "____ _ ____",[31.75, -6.35, 6.35, -6.35])
-  d.addLineType("CENTER2", "____ _ ____",[19.05, -3.175, 3.175, -3.175])
-  d.addLineType("CENTERX2", "____ _ ____",[63.5, -12.7, 12.7, -12.7])
-  d.addLineType("DASHED", "__  __",[5, -5])
-  d.addLineType("DASHED2", "__  __",[6.35, -3.175])
-  d.addLineType("DASHEDX2", "__  __",[25.4, -12.7])
-  d.addLineType("PHANTOM", "____ _ _ ____",[31.75, -6.35, 6.35, -6.35, 6.35, -6.35])
-  d.addLineType("PHANTOM2", "____ _ _ ____",[15.875, -3.175, 3.175, -3.175, 3.175, -3.175])
-  d.addLineType("PHANTOMX2", "____ _ _ ____",[63.5, -12.7, 12.7, -12.7, 12.7, -12.7])
-  d.addLineType("DASHDOT", "__ . __ . __",[12.7, -6.35, 0.1, -6.35])
-  d.addLineType("DASHDOT2", "__ . __ . __",[6.35, -3.175, 0.1, -3.175])
-  d.addLineType("DASHDOTX2", "__ . __ . __",[25.4, -12.7, 0.1, -12.7])
-  d.addLineType("DOT", ".  . .",[0.1, -6.35])
-  d.addLineType("DOT2", ".  . .",[0.1, -3.175])
-  d.addLineType("DOTX2", ".  . .",[0.1, -12.7])
-  d.addLineType("DIVIDE", "__ . . __",[12.7, -6.35, 0.1, -6.35, 0.1, -6.35])
-  d.addLineType("DIVIDE2", "__ . . __",[6.35, -3.175, 0.1, -3.175, 0.1, -3.175])
-  d.addLineType("DIVIDEX2", "__ . . __",[25.4, -12.7, 0.1, -12.7, 0.1, -12.7])
+  d.addLType("CENTER", "____ _ ____",[31.75, -6.35, 6.35, -6.35])
+  d.addLType("CENTER2", "____ _ ____",[19.05, -3.175, 3.175, -3.175])
+  d.addLType("CENTERX2", "____ _ ____",[63.5, -12.7, 12.7, -12.7])
+  d.addLType("DASHED", "__  __",[5, -5])
+  d.addLType("DASHED2", "__  __",[6.35, -3.175])
+  d.addLType("DASHEDX2", "__  __",[25.4, -12.7])
+  d.addLType("PHANTOM", "____ _ _ ____",[31.75, -6.35, 6.35, -6.35, 6.35, -6.35])
+  d.addLType("PHANTOM2", "____ _ _ ____",[15.875, -3.175, 3.175, -3.175, 3.175, -3.175])
+  d.addLType("PHANTOMX2", "____ _ _ ____",[63.5, -12.7, 12.7, -12.7, 12.7, -12.7])
+  d.addLType("DASHDOT", "__ . __ . __",[12.7, -6.35, 0.1, -6.35])
+  d.addLType("DASHDOT2", "__ . __ . __",[6.35, -3.175, 0.1, -3.175])
+  d.addLType("DASHDOTX2", "__ . __ . __",[25.4, -12.7, 0.1, -12.7])
+  d.addLType("DOT", ".  . .",[0.1, -6.35])
+  d.addLType("DOT2", ".  . .",[0.1, -3.175])
+  d.addLType("DOTX2", ".  . .",[0.1, -12.7])
+  d.addLType("DIVIDE", "__ . . __",[12.7, -6.35, 0.1, -6.35, 0.1, -6.35])
+  d.addLType("DIVIDE2", "__ . . __",[6.35, -3.175, 0.1, -3.175, 0.1, -3.175])
+  d.addLType("DIVIDEX2", "__ . . __",[25.4, -12.7, 0.1, -12.7, 0.1, -12.7])
 }
 
 
 export const getDxf = (param) => {
-  const d = new Drawing()
-  addHeader(d)
+  const d = new DxfWriter()
+  //addHeader(d)
   addLineTypeTemplate(d)
 
-  const screenStroke = "white"
+  const screenStroke = "black"
 
   param.forEach(v=>{
     const sheetId = v[0]
@@ -283,7 +283,6 @@ export const getDxf = (param) => {
       const stroke = sheetParams.figsAttr?.stroke || screenStroke
       const colorId = autocadColorMap.get(stroke)
       d.addLayer(sheetId, colorId, lineType)
-      d.setActiveLayer(sheetId)
 
       const figs = sheetParams.figs
       figs.forEach(v=>{
@@ -293,60 +292,114 @@ export const getDxf = (param) => {
         const lineTypeName = attr?.lineTypeName
         const lineColor = attr?.stroke 
         const colorIndex =autocadColorMap.get(lineColor)
+        const option = {
+          lineType: lineTypeName, 
+          colorNumber:colorIndex,
+          layerName: sheetId,
+        }
+
         switch(type){
           case "line":{
-            const points = [].concat(...param.points)
-            d.drawLine(...points, lineTypeName, colorIndex)
+            const points = param.points.map(v=>point3d(...v))
+            d.addLine(...points,option )
             break
           }
-          case "polyline":
           case "lines":{
-            const points = param.points
+            const points = param.points.map(v=>point3d(...v))
             points.forEach((v,i,arr)=>{
               if(i>0){
-                d.drawLine(arr[i-1][0], arr[i-1][1],v[0],v[1], lineTypeName, colorIndex)
+                d.addLine(arr[i-1], v, option)
               }
             })
             break
           }
+          case "polyline": {
+            const vertices = param.points.map(v=>Object({point:point3d(...v)}))
+            d.addLWPolyline(vertices, option);
+            break
+          }
           case "circle":{
-            const center = param.center
+            const center = point3d(...param.center)
             const radius = param.radius
-            d.drawCircle(center[0], center[1], radius, lineTypeName, colorIndex)
+            d.addCircle(center, radius, option)
+            break
+          }
+          case "ellipse":{
+            const center = point3d(...param.center)
+            const [rx,ry] = param.radius
+            const rotation = param.rotation || 0
+            const endPointX = rx*Math.cos(rotation/180*Math.PI)
+            const endPointY = rx*Math.sin(rotation/180*Math.PI)
+            const endPoint = point3d(endPointX,endPointY,0)
+            const ellipticity = ry/rx
+            d.addEllipse(center, endPoint, ellipticity,0, 2*Math.PI, option)
             break
           }
           case "arc":{
-            const center = param.center
+            const center = point3d(...param.center)
             const radius = param.radius
             const start = param.start
             const end = param.end
-            d.drawArc(center[0], center[1], radius, start, end, lineTypeName, colorIndex)
+            d.addArc(center, radius, start, end, option)
             break
           }
+          case "ellipticalArc":{
+            const center = point3d(...param.center)
+            const [rx,ry] = param.radius
+            const rotation = param.rotation || 0
+            const endPointX = rx*Math.cos(rotation/180*Math.PI)
+            const endPointY = rx*Math.sin(rotation/180*Math.PI)
+            const endPoint = point3d(endPointX,endPointY,0)
+            const ellipticity = ry/rx
+ 
+            const start = param.start/180*Math.PI
+            const end = param.end/180*Math.PI
+            d.addEllipse(center, endPoint, ellipticity,start, end, option)
+            break
+          }
+
           case "bspline":{
-            const points  = param.points
+            const controlPoints = param.points.map(v=>point3d(v))
             const knots = param.knots
-            const degree = param.degree
-            d.drawSpline(8, degree, points, knots, [], lineTypeName, colorIndex )
+            const degreeCurve = param.degree
+            const weights= []
+            const parameters = {
+              controlPoints ,
+              knots,
+              degreeCurve,
+              weights,
+            }
+            d.addSpline(parameters, option)
             break
           }
         }
       })
 
       const dimensions = sheetParams.dimensions
-      dimensions.forEach(v=>{
+      dimensions.forEach((v,i)=>{
         const type = v.type
         const param = v.param
+        const dimStyle = v.dimStyle
         const attr = v.attr
         const lineTypeName = attr?.lineTypeName
         const lineColor = attr?.stroke 
         const colorIndex =autocadColorMap.get(lineColor)
 
-        const [x1, y1] = param.points[0]
-        const [x2, y2] = param.points[1]
-        const distance = param.distance
+        const options = {
+          lineType: lineTypeName, 
+          colorNumber:colorIndex,
+          layerName: sheetId,
+        }
+
         switch(type){
-          case "length" :{
+          case "aligned" :{
+            const [x1, y1] = param.points[0]
+            const [x2, y2] = param.points[1]
+            const distance = param.distance
+            const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+            const size = font?.["font-size"] || 20
+
+
             const length = Math.sqrt((x2-x1)**2+(y2-y1)**2)
             const dx = distance/length*(y2-y1)
             const dy =  -distance/length*(x2-x1)
@@ -362,15 +415,32 @@ export const getDxf = (param) => {
             const x4 = tx
             const y4 = ty
 
-            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
+            const first  = {x:x1,y:y1,z:0}
+            const second = {x:x2,y:y2,z:0}
+            const definitionPoint= {x:x3,y:y3,z:0}
+            const middlePoint= {x:x4,y:y4,z:0}
+
+            const dimStyleName = "dim"+i
+            const r = d.addDimStyle(dimStyleName)
+            r.DIMTXT =size 
+
+            options.definitionPoint = definitionPoint
+            options.middlePoint = middlePoint
+            options.styleName = dimStyleName
+            d.addAlignedDim(first, second, options)
             break
           }
           case "horizontal" :{
-            const yAve = (y1+y2)/2
+            const [x1, y1] = param.points[0]
+            const [x2, y2] = param.points[1]
+            const distance = param.distance
+
+
+            const yMin = Math.min(y1,y2) 
             const Dx1 = x1
-            const Dy1 = yAve - distance
+            const Dy1 = yMin - distance
             const Dx2 = x2 
-            const Dy2 = yAve - distance
+            const Dy2 = yMin - distance
  
             const tx = (Dx1 + Dx2)/2
             const ty = (Dy1 + Dy2)/2
@@ -380,14 +450,25 @@ export const getDxf = (param) => {
             const x4 = tx
             const y4 = ty
 
-            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
+            const first  = {x:x1,y:y1,z:0}
+            const second = {x:x2,y:y2,z:0}
+            const definitionPoint= {x:x3,y:y3,z:0}
+            const middlePoint= {x:x4,y:y4,z:0}
+            options.definitionPoint = definitionPoint
+            options.middlePoint = middlePoint
+            options.angle = 0
+            d.addLinearDim(first, second, options)
             break
           }
           case "vertical" :{
-            const xAve = (x1+x2)/2
-            const Dx1 = xAve + distance
+            const [x1, y1] = param.points[0]
+            const [x2, y2] = param.points[1]
+            const distance = param.distance
+
+            const xMax = (x1+x2)/2
+            const Dx1 = xMax + distance
             const Dy1 = y1
-            const Dx2 = xAve + distance
+            const Dx2 = xMax + distance
             const Dy2 = y2
  
             const tx = (Dx1 + Dx2)/2
@@ -398,44 +479,53 @@ export const getDxf = (param) => {
             const x4 = tx
             const y4 = ty
 
-            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
+            const first  = {x:x1,y:y1,z:0}
+            const second = {x:x2,y:y2,z:0}
+            const definitionPoint= {x:x3,y:y3,z:0}
+            const middlePoint= {x:x4,y:y4,z:0}
+            options.definitionPoint = definitionPoint
+            options.middlePoint = middlePoint
+
+            options.angle = 90
+            d.addLinearDim(first, second, options)
+ 
             break
           }
         }
       })
     }
-    if(sheetParams.texts.length>0){
-
-      const textStroke = sheetParams.textsAttr?.stroke || screenStroke
-      const textColorId = autocadColorMap.get(textStroke)
-      const textSheetId = sheetId + "_text"
-      d.addLayer(textSheetId, textColorId, "CONTINUOUS")
-      d.setActiveLayer(textSheetId)
-
-      const texts = sheetParams.texts
-      texts.forEach(v=>{
-
-        const param = v.param
-        const attr = v.attr
-
-        const lineTypeName = attr?.lineTypeName
-        const lineColor = attr?.stroke 
-        const colorIndex =autocadColorMap.get(lineColor)
-
-        const position = param.position
-        const font = param.font
-        const text = param.text
-        const theta = param?.theta || 0
-        const size = font?.size || 24
-        const height = size /1.6
-        if(position.length>1){
-          d.drawText(position[0], position[1], height, theta, text, "left", "baseline", lineTypeName, colorIndex)  
-        }
-      })
-    }
+//    if(sheetParams.texts.length>0){
+//
+//      const textStroke = sheetParams.textsAttr?.stroke || screenStroke
+//      const textColorId = autocadColorMap.get(textStroke)
+//      const textSheetId = sheetId + "_text"
+//      d.addLayer(textSheetId, textColorId, "CONTINUOUS")
+//      d.setActiveLayer(textSheetId)
+//
+//      const texts = sheetParams.texts
+//      texts.forEach(v=>{
+//
+//        const param = v.param
+//        const attr = v.attr
+//
+//        const lineTypeName = attr?.lineTypeName
+//        const lineColor = attr?.stroke 
+//        const colorIndex =autocadColorMap.get(lineColor)
+//
+//        const position = param.position
+//        const font = param.font
+//        const text = param.text
+//        const theta = param?.theta || 0
+//        const size = font?.size || 24
+//        const height = size /1.6
+//        if(position.length>1){
+//          d.drawText(position[0], position[1], height, theta, text, "left", "baseline", lineTypeName, colorIndex)  
+//        }
+//      })
+//    }
   })
  
 
-  const string = d.toDxfString()
+  const string = d.stringify()
   return string
 } 
