@@ -24,10 +24,12 @@ export const Dimension = class {
   getParam(){
     const type = this.type
     const param = this.param
+    const dimStyle = this.dimStyle
     const attr = this.attr
     const obj = {
       type: type,
       param: param,
+      dimStyle: dimStyle,
       attr: attr,
     }
     return obj

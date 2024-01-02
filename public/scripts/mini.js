@@ -21,6 +21,8 @@ const setUpMiniJscad = () => {
   console.log("version", version)
   
   miniJscad.sketch.setBackgroundColor("default")
+
+  console.log({miniJscad})
 }
 
 const initialDraw = () =>{
@@ -280,6 +282,12 @@ const clearSheets = () =>{
   miniJscad.sketch.screen.removeAllSheets()
 }
 
+const resetScreen = () =>{
+  console.log("resetScreen")
+  miniJscad.sketch.screen.setScreenSize({originX:0,origingY:0,direction:"x",length:850})
+}
+
+
 const secondDraw = () =>{
   const sheet0 = miniJscad.sketch.screen.addSheet("sheet0")
   const line1 = sheet0.addFig("line", {points:[[0,0],[500,500]]}, {stroke:"orange", lineTypeName:"DASHED"})
@@ -378,6 +386,8 @@ const setUpEvent = () => {
     console.log(value)
     miniJscad.sketch.setBackgroundColor(value)
   }
+  document.getElementById("resetScreen").onclick = resetScreen
+ 
 }
 
 const initialize = () => {
