@@ -12,6 +12,7 @@
     "@svgdotjs/svg.draggable.js": "^3.0.2",
     "@svgdotjs/svg.js": "^3.0.12",
     "@svgdotjs/svg.panzoom.js": "^2.0.2",
+    "@tarikjabiri/dxf": "^2.8.9",
     "ace-builds": "^1.4.3",
     "dxf-parser": "^1.0.0-alpha.2",
     "file-saver": "^2.0.1",

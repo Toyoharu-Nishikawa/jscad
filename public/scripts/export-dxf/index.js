@@ -1,441 +1,657 @@
-import {Drawing} from "../dxfwriter/index.js"
 import {autocadColorMap} from "./color.js"
+
+import { Writer, point } from "../@tarikjabiri/writer/index.js";
 
 const addHeader = (d) => {
 
-  d.header("ACADVER", [[1,"AC1021"]])
-  d.header("DWGCODEPAGE", [[3,"ANSI_1252"]])
-  d.header("INSBASE", [[10,0],[20,0],[30,0]])
-  d.header("EXTMIN", [[10,-0.25],[20,-0.5],[30,0]])
-  d.header("EXTMAX", [[10,300.75],[20,107.7194881156377],[30,0]])
-  d.header("LIMMIN", [[10,0],[20,0]])
-  d.header("LIMMAX", [[10,420],[20,297]])
-  d.header("ORTHOMODE", [[70,0]])
-  d.header("REGENMODE", [[70,1]])
-  d.header("FILLMODE", [[70,1]])
-  d.header("QTEXTMODE", [[70,0]])
-  d.header("MIRRTEXT", [[70,0]])
-  d.header("LTSCALE", [[40,1]])
-  d.header("ATTMODE", [[70,0]])
-  d.header("TEXTSIZE", [[40,2.5]])
-  d.header("TRACEWID", [[40,15.68]])
-  d.header("TEXTSTYLE", [[7,"STANDARD"]])
-  d.header("CLAYER", [[8,0]])
-  d.header("CELTYPE", [[6,"BYLAYER"]])
-  d.header("CECOLOR", [[62,256]])
-  d.header("CELTSCALE", [[40,1]])
-  d.header("DISPSILH", [[70,0]])
-  d.header("DIMSCALE", [[40,2.5]])
-  d.header("DIMASZ", [[40,2.5]])
-  d.header("DIMEXO", [[40,0.625]])
-  d.header("DIMDLI", [[40,3.75]])
-  d.header("DIMRND", [[40,0]])
-  d.header("DIMDLE", [[40,0]])
-  d.header("DIMEXE", [[40,1.25]])
-  d.header("DIMTP", [[40,0]])
-  d.header("DIMTM", [[40,0]])
-  d.header("DIMTXT", [[40,2.5]])
-  d.header("DIMCEN", [[40,2.5]])
-  d.header("DIMTSZ", [[40,0]])
-  d.header("DIMTOL", [[70,0]])
-  d.header("DIMLIM", [[70,0]])
-  d.header("DIMTIH", [[70,0]])
-  d.header("DIMTOH", [[70,0]])
-  d.header("DIMSE1", [[70,0]])
-  d.header("DIMSE2", [[70,0]])
-  d.header("DIMTAD", [[70,1]])
-  d.header("DIMZIN", [[70,8]])
-  d.header("DIMBLK", [[1,""]])
-  d.header("DIMASO", [[70,1]])
-  d.header("DIMSHO", [[70,1]])
-  d.header("DIMPOST", [[1,""]])
-  d.header("DIMAPOST", [[1,""]])
-  d.header("DIMALT", [[70,0]])
-  d.header("DIMALTD", [[70,3]])
-  d.header("DIMALTF", [[40,0.03937]])
-  d.header("DIMLFAC", [[40,1]])
-  d.header("DIMTOFL", [[70,1]])
-  d.header("DIMTVP", [[40,0]])
-  d.header("DIMTIX", [[70,0]])
-  d.header("DIMSOXD", [[70,0]])
-  d.header("DIMSAH", [[70,0]])
-  d.header("DIMBLK1", [[1,""]])
-  d.header("DIMBLK2", [[1,""]])
-  d.header("DIMSTYLE", [[2,"STANDARD"]])
-  d.header("DIMCLRD", [[70,0]])
-  d.header("DIMCLRE", [[70,0]])
-  d.header("DIMCLRT", [[70,0]])
-  d.header("DIMTFAC", [[40,1]])
-  d.header("DIMGAP", [[40,0.625]])
-  d.header("DIMJUST", [[70,0]])
-  d.header("DIMSD1", [[70,0]])
-  d.header("DIMSD2", [[70,0]])
-  d.header("DIMTOLJ", [[70,0]])
-  d.header("DIMTZIN", [[70,8]])
-  d.header("DIMALTZ", [[70,0]])
-  d.header("DIMALTTZ", [[70,0]])
-  d.header("DIMUPT", [[70,0]])
-  d.header("DIMDEC", [[70,2]])
-  d.header("DIMTDEC", [[70,2]])
-  d.header("DIMALTU", [[70,2]])
-  d.header("DIMALTTD", [[70,3]])
-  d.header("DIMTXSTY", [[7,"STANDARD"]])
-  d.header("DIMAUNIT", [[70,0]])
-  d.header("DIMADEC", [[70,0]])
-  d.header("DIMALTRND", [[40,0]])
-  d.header("DIMAZIN", [[70,0]])
-  d.header("DIMDSEP", [[70,44]])
-  d.header("DIMATFIT", [[70,3]])
-  d.header("DIMFRAC", [[70,0]])
-  d.header("DIMLDRBLK", [[1,"STANDARD"]])
-  d.header("DIMLUNIT", [[70,2]])
-  d.header("DIMLWD", [[70,-2]])
-  d.header("DIMLWE", [[70,-2]])
-  d.header("DIMTMOVE", [[70,0]])
-  d.header("DIMFXL", [[40,1]])
-  d.header("DIMFXLON", [[70,0]])
-  d.header("DIMJOGANG", [[40,0.7854]])
-  d.header("DIMTFILL", [[70,0]])
-  d.header("DIMTFILLCLR", [[70,0]])
-  d.header("DIMARCSYM", [[70,0]])
-  d.header("DIMLTYPE", [[6,""]])
-  d.header("DIMLTEX1", [[6,""]])
-  d.header("DIMLTEX2", [[6,""]])
-  d.header("LUNITS", [[70,2]])
-  d.header("LUPREC", [[70,4]])
-  d.header("SKETCHINC", [[40,1]])
-  d.header("FILLETRAD", [[40,0]])
-  d.header("AUNITS", [[70,0]])
-  d.header("AUPREC", [[70,2]])
-  d.header("MENU", [[1,"."]])
-  d.header("ELEVATION", [[40,0]])
-  d.header("PELEVATION", [[40,0]])
-  d.header("THICKNESS", [[40,0]])
-  d.header("LIMCHECK", [[70,0]])
-  d.header("CHAMFERA", [[40,0]])
-  d.header("CHAMFERB", [[40,0]])
-  d.header("CHAMFERC", [[40,0]])
-  d.header("CHAMFERD", [[40,0]])
-  d.header("SKPOLY", [[70,0]])
-  d.header("USRTIMER", [[70,1]])
-  d.header("ANGBASE", [[50,0]])
-  d.header("ANGDIR", [[70,0]])
-  d.header("PDMODE", [[70,34]])
-  d.header("PDSIZE", [[40,0]])
-  d.header("PLINEWID", [[40,0]])
-  d.header("SPLFRAME", [[70,0]])
-  d.header("SPLINETYPE", [[70,2]])
-  d.header("SPLINESEGS", [[70,8]])
-  d.header("HANDSEED", [[5,20000]])
-  d.header("SURFTAB1", [[70,6]])
-  d.header("SURFTAB2", [[70,6]])
-  d.header("SURFTYPE", [[70,6]])
-  d.header("SURFU", [[70,6]])
-  d.header("SURFV", [[70,6]])
-  d.header("UCSBASE", [[2,""]])
-  d.header("UCSNAME", [[2,""]])
-  d.header("UCSORG", [[10,0],[20,0],[30,0]])
-  d.header("UCSXDIR", [[10,1],[20,0],[30,0]])
-  d.header("UCSYDIR", [[10,0],[20,1],[30,0]])
-  d.header("UCSORTHOREF", [[2,""]])
-  d.header("UCSORTHOVIEW", [[70,0]])
-  d.header("UCSORGTOP", [[10,0],[20,0],[30,0]])
-  d.header("UCSORGBOTTOM", [[10,0],[20,0],[30,0]])
-  d.header("UCSORGLEFT", [[10,0],[20,0],[30,0]])
-  d.header("UCSORGRIGHT", [[10,0],[20,0],[30,0]])
-  d.header("UCSORGFRONT", [[10,0],[20,0],[30,0]])
-  d.header("UCSORGBACK", [[10,0],[20,0],[30,0]])
-  d.header("PUCSBASE", [[2,""]])
-  d.header("PUCSNAME", [[2,""]])
-  d.header("PUCSORG", [[10,0],[20,0],[30,0]])
-  d.header("PUCSXDIR", [[10,1],[20,0],[30,0]])
-  d.header("PUCSYDIR", [[10,0],[20,1],[30,0]])
-  d.header("PUCSORTHOREF", [[2,""]])
-  d.header("PUCSORTHOVIEW", [[70,0]])
-  d.header("PUCSORGTOP", [[10,0],[20,0],[30,0]])
-  d.header("PUCSORGBOTTOM", [[10,0],[20,0],[30,0]])
-  d.header("PUCSORGLEFT", [[10,0],[20,0],[30,0]])
-  d.header("PUCSORGRIGHT", [[10,0],[20,0],[30,0]])
-  d.header("PUCSORGFRONT", [[10,0],[20,0],[30,0]])
-  d.header("PUCSORGBACK", [[10,0],[20,0],[30,0]])
-  d.header("USERI1", [[70,0]])
-  d.header("USERI2", [[70,0]])
-  d.header("USERI3", [[70,0]])
-  d.header("USERI4", [[70,0]])
-  d.header("USERI5", [[70,0]])
-  d.header("USERR1", [[40,0]])
-  d.header("USERR2", [[40,0]])
-  d.header("USERR3", [[40,0]])
-  d.header("USERR4", [[40,0]])
-  d.header("USERR5", [[40,0]])
-  d.header("WORLDVIEW", [[70,1]])
-  d.header("SHADEDGE", [[70,3]])
-  d.header("SHADEDIF", [[70,70]])
-  d.header("TILEMODE", [[70,1]])
-  d.header("MAXACTVP", [[70,64]])
-  d.header("PINSBASE", [[10,0],[20,0],[30,0]])
-  d.header("PLIMCHECK", [[70,0]])
-  d.header("PEXTMIN", [[10,0],[20,0],[30,0]])
-  d.header("PEXTMAX", [[10,0],[20,0],[30,0]])
-  d.header("SNAPSTYLE", [[70,0]])
-  d.header("PLIMMIN", [[10,0],[20,0]])
-  d.header("PLIMMAX", [[10,210],[20,297]])
-  d.header("UNITMODE", [[70,0]])
-  d.header("VISRETAIN", [[70,1]])
-  d.header("PLINEGEN", [[70,0]])
-  d.header("PSLTSCALE", [[70,1]])
-  d.header("TREEDEPTH", [[70,3020]])
-  d.header("CMLSTYLE", [[2,"Standard"]])
-  d.header("CMLJUST", [[70,0]])
-  d.header("CMLSCALE", [[40,20]])
-  d.header("PROXYGRAPHICS", [[70,1]])
-  d.header("MEASUREMENT", [[70,1]])
-  d.header("CELWEIGHT", [[370,-1]])
-  d.header("ENDCAPS", [[280,0]])
-  d.header("JOINSTYLE", [[280,0]])
-  d.header("LWDISPLAY", [[290,0]])
-  d.header("INSUNITS", [[70,4]])
-  d.header("HYPERLINKBASE", [[1,""]])
-  d.header("STYLESHEET", [[1,""]])
-  d.header("XEDIT", [[290,1]])
-  d.header("CEPSNTYPE", [[380,0]])
-  d.header("PSTYLEMODE", [[290,1]])
-  d.header("EXTNAMES", [[290,1]])
-  d.header("PSVPSCALE", [[40,1]])
-  d.header("OLESTARTUP", [[290,0]])
-  d.header("SORTENTS", [[280,127]])
-  d.header("INDEXCTL", [[280,0]])
-  d.header("HIDETEXT", [[280,1]])
-  d.header("XCLIPFRAME", [[290,0]])
-  d.header("HALOGAP", [[280,0]])
-  d.header("OBSCOLOR", [[70,257]])
-  d.header("OBSLTYPE", [[280,0]])
-  d.header("INTERSECTIONDISPLAY", [[280,0]])
-  d.header("INTERSECTIONCOLOR", [[70,257]])
-  d.header("DIMASSOC", [[280,1]])
-  d.header("PROJECTNAME", [[1,""]])
-  d.header("CAMERADISPLAY", [[290,0]])
-  d.header("LENSLENGTH", [[40,50]])
-  d.header("CAMERAHEIGHT", [[40,0]])
-  d.header("STEPSPERSEC", [[40,2]])
-  d.header("STEPSIZE", [[40,50]])
-  d.header("3DDWFPREC", [[40,2]])
-  d.header("PSOLWIDTH", [[40,5]])
-  d.header("PSOLHEIGHT", [[40,80]])
-  d.header("LOFTANG1", [[40,1.570796326794897]])
-  d.header("LOFTANG2", [[40,1.570796326794897]])
-  d.header("LOFTMAG1", [[40,0]])
-  d.header("LOFTMAG2", [[40,0]])
-  d.header("LOFTPARAM", [[70,7]])
-  d.header("LOFTNORMALS", [[280,1]])
-  d.header("LATITUDE", [[40,1]])
-  d.header("LONGITUDE", [[40,1]])
-  d.header("NORTHDIRECTION", [[40,0]])
-  d.header("TIMEZONE", [[70,-8000]])
-  d.header("LIGHTGLYPHDISPLAY", [[280,1]])
-  d.header("TILEMODELIGHTSYNCH", [[280,1]])
-  d.header("SOLIDHIST", [[280,1]])
-  d.header("SHOWHIST", [[280,1]])
-  d.header("DWFFRAME", [[280,2]])
-  d.header("DGNFRAME", [[280,0]])
-  d.header("REALWORLDSCALE", [[290,1]])
-  d.header("INTERFERECOLOR", [[62,1]])
-  d.header("CSHADOW", [[280,0]])
-  d.header("SHADOWPLANELOCATION", [[40,0]])
+  d.add("$ACADVER"    , {1:"AC1021"})
+  d.add("$DWGCODEPAGE", {3:"ANSI_1252"})
+  d.add("$INSBASE"    , {10:0, 20:0, 30:0})
+  d.add("$EXTMIN"     , {10:-0.25,20:-0.5,30:0})
+//  d.addVariable("$EXTMAX", [[10,300.75],[20,107.7194881156377],[30,0]])
+//  d.addVariable("$LIMMIN", [[10,0],[20,0]])
+//  d.addVariable("$LIMMAX", [[10,420],[20,297]])
+//  d.addVariable("$ORTHOMODE", [[70,0]])
+//  d.addVariable("$REGENMODE", [[70,1]])
+//  d.addVariable("$FILLMODE", [[70,1]])
+//  d.addVariable("$QTEXTMODE", [[70,0]])
+//  d.addVariable("$MIRRTEXT", [[70,0]])
+//  d.addVariable("$LTSCALE", [[40,1]])
+//  d.addVariable("$ATTMODE", [[70,0]])
+//  d.addVariable("$TEXTSIZE", [[40,2.5]])
+//  d.addVariable("$TRACEWID", [[40,15.68]])
+//  d.addVariable("$TEXTSTYLE", [[7,"STANDARD"]])
+//  d.addVariable("$CLAYER", [[8,0]])
+//  d.addVariable("$CELTYPE", [[6,"BYLAYER"]])
+//  d.addVariable("$CECOLOR", [[62,256]])
+//  d.addVariable("$CELTSCALE", [[40,1]])
+//  d.addVariable("$DISPSILH", [[70,0]])
+  d.add("$DIMSCALE", {40:100})
+//  d.addVariable("$DIMASZ", [[40,2.5]])
+//  d.addVariable("$DIMEXO", [[40,0.625]])
+//  d.addVariable("$DIMDLI", [[40,3.75]])
+//  d.addVariable("$DIMRND", [[40,0]])
+//  d.addVariable("$DIMDLE", [[40,0]])
+//  d.addVariable("$DIMEXE", [[40,1.25]])
+//  d.addVariable("$DIMTP", [[40,0]])
+//  d.addVariable("$DIMTM", [[40,0]])
+//  d.addVariable("$DIMTXT", [[40,2.5]])
+//  d.addVariable("$DIMCEN", [[40,2.5]])
+//  d.addVariable("$DIMTSZ", [[40,0]])
+//  d.addVariable("$DIMTOL", [[70,0]])
+//  d.addVariable("$DIMLIM", [[70,0]])
+  d.add("$DIMTIH",{70:0})
+  d.add("$DIMTOH",{70:0})
+//  d.addVariable("$DIMSE1", [[70,0]])
+//  d.addVariable("$DIMSE2", [[70,0]])
+//  d.addVariable("$DIMTAD", [[70,1]])
+//  d.addVariable("$DIMZIN", [[70,8]])
+//  d.addVariable("$DIMBLK", [[1,""]])
+//  d.addVariable("$DIMASO", [[70,1]])
+//  d.addVariable("$DIMSHO", [[70,1]])
+//  d.addVariable("$DIMPOST", [[1,""]])
+//  d.addVariable("$DIMAPOST", [[1,""]])
+//  d.addVariable("$DIMALT", [[70,0]])
+//  d.addVariable("$DIMALTD", [[70,3]])
+//  d.addVariable("$DIMALTF", [[40,0.03937]])
+//  d.addVariable("$DIMLFAC", [[40,1]])
+//  d.addVariable("$DIMTOFL", [[70,1]])
+//  d.addVariable("$DIMTVP", [[40,0]])
+//  d.addVariable("$DIMTIX", [[70,0]])
+//  d.addVariable("$DIMSOXD", [[70,0]])
+//  d.addVariable("$DIMSAH", [[70,0]])
+//  d.addVariable("$DIMBLK1", [[1,""]])
+//  d.addVariable("$DIMBLK2", [[1,""]])
+//  d.addVariable("$DIMSTYLE", [[2,"STANDARD"]])
+//  d.addVariable("$DIMCLRD", [[70,0]])
+//  d.addVariable("$DIMCLRE", [[70,0]])
+//  d.addVariable("$DIMCLRT", [[70,0]])
+//  d.addVariable("$DIMTFAC", [[40,1]])
+//  d.addVariable("$DIMGAP", [[40,0.625]])
+//  d.addVariable("$DIMJUST", [[70,0]])
+//  d.addVariable("$DIMSD1", [[70,0]])
+//  d.addVariable("$DIMSD2", [[70,0]])
+//  d.addVariable("$DIMTOLJ", [[70,0]])
+//  d.addVariable("$DIMTZIN", [[70,8]])
+//  d.addVariable("$DIMALTZ", [[70,0]])
+//  d.addVariable("$DIMALTTZ", [[70,0]])
+//  d.addVariable("$DIMUPT", [[70,0]])
+//  d.addVariable("$DIMDEC", [[70,2]])
+//  d.addVariable("$DIMTDEC", [[70,2]])
+//  d.addVariable("$DIMALTU", [[70,2]])
+//  d.addVariable("$DIMALTTD", [[70,3]])
+//  d.addVariable("$DIMTXSTY", [[7,"STANDARD"]])
+//  d.addVariable("$DIMAUNIT", [[70,0]])
+//  d.addVariable("$DIMADEC", [[70,0]])
+//  d.addVariable("$DIMALTRND", [[40,0]])
+//  d.addVariable("$DIMAZIN", [[70,0]])
+//  d.addVariable("$DIMDSEP", [[70,44]])
+//  d.addVariable("$DIMATFIT", [[70,3]])
+//  d.addVariable("$DIMFRAC", [[70,0]])
+//  d.addVariable("$DIMLDRBLK", [[1,"STANDARD"]])
+//  d.addVariable("$DIMLUNIT", [[70,2]])
+//  d.addVariable("$DIMLWD", [[70,-2]])
+//  d.addVariable("$DIMLWE", [[70,-2]])
+//  d.addVariable("$DIMTMOVE", [[70,0]])
+//  d.addVariable("$DIMFXL", [[40,1]])
+//  d.addVariable("$DIMFXLON", [[70,0]])
+//  d.addVariable("$DIMJOGANG", [[40,0.7854]])
+//  d.addVariable("$DIMTFILL", [[70,0]])
+//  d.addVariable("$DIMTFILLCLR", [[70,0]])
+//  d.addVariable("$DIMARCSYM", [[70,0]])
+//  d.addVariable("$DIMLTYPE", [[6,""]])
+//  d.addVariable("$DIMLTEX1", [[6,""]])
+//  d.addVariable("$DIMLTEX2", [[6,""]])
+//  d.addVariable("$LUNITS", [[70,2]])
+//  d.addVariable("$LUPREC", [[70,4]])
+//  d.addVariable("$SKETCHINC", [[40,1]])
+//  d.addVariable("$FILLETRAD", [[40,0]])
+//  d.addVariable("$AUNITS", [[70,0]])
+//  d.addVariable("$AUPREC", [[70,2]])
+//  d.addVariable("$MENU", [[1,"."]])
+//  d.addVariable("$ELEVATION", [[40,0]])
+//  d.addVariable("$PELEVATION", [[40,0]])
+//  d.addVariable("$THICKNESS", [[40,0]])
+//  d.addVariable("$LIMCHECK", [[70,0]])
+//  d.addVariable("$CHAMFERA", [[40,0]])
+//  d.addVariable("$CHAMFERB", [[40,0]])
+//  d.addVariable("$CHAMFERC", [[40,0]])
+//  d.addVariable("$CHAMFERD", [[40,0]])
+//  d.addVariable("$SKPOLY", [[70,0]])
+//  d.addVariable("$USRTIMER", [[70,1]])
+//  d.addVariable("$ANGBASE", [[50,0]])
+//  d.addVariable("$ANGDIR", [[70,0]])
+//  d.addVariable("$PDMODE", [[70,34]])
+//  d.addVariable("$PDSIZE", [[40,0]])
+//  d.addVariable("$PLINEWID", [[40,0]])
+//  d.addVariable("$SPLFRAME", [[70,0]])
+//  d.addVariable("$SPLINETYPE", [[70,2]])
+//  d.addVariable("$SPLINESEGS", [[70,8]])
+//  d.addVariable("$HANDSEED", [[5,20000]])
+//  d.addVariable("$SURFTAB1", [[70,6]])
+//  d.addVariable("$SURFTAB2", [[70,6]])
+//  d.addVariable("$SURFTYPE", [[70,6]])
+//  d.addVariable("$SURFU", [[70,6]])
+//  d.addVariable("$SURFV", [[70,6]])
+//  d.addVariable("$UCSBASE", [[2,""]])
+//  d.addVariable("$UCSNAME", [[2,""]])
+//  d.addVariable("$UCSORG", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$UCSXDIR", [[10,1],[20,0],[30,0]])
+//  d.addVariable("$UCSYDIR", [[10,0],[20,1],[30,0]])
+//  d.addVariable("$UCSORTHOREF", [[2,""]])
+//  d.addVariable("$UCSORTHOVIEW", [[70,0]])
+//  d.addVariable("$UCSORGTOP", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$UCSORGBOTTOM", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$UCSORGLEFT", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$UCSORGRIGHT", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$UCSORGFRONT", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$UCSORGBACK", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PUCSBASE", [[2,""]])
+//  d.addVariable("$PUCSNAME", [[2,""]])
+//  d.addVariable("$PUCSORG", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PUCSXDIR", [[10,1],[20,0],[30,0]])
+//  d.addVariable("$PUCSYDIR", [[10,0],[20,1],[30,0]])
+//  d.addVariable("$PUCSORTHOREF", [[2,""]])
+//  d.addVariable("$PUCSORTHOVIEW", [[70,0]])
+//  d.addVariable("$PUCSORGTOP", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PUCSORGBOTTOM", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PUCSORGLEFT", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PUCSORGRIGHT", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PUCSORGFRONT", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PUCSORGBACK", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$USERI1", [[70,0]])
+//  d.addVariable("$USERI2", [[70,0]])
+//  d.addVariable("$USERI3", [[70,0]])
+//  d.addVariable("$USERI4", [[70,0]])
+//  d.addVariable("$USERI5", [[70,0]])
+//  d.addVariable("$USERR1", [[40,0]])
+//  d.addVariable("$USERR2", [[40,0]])
+//  d.addVariable("$USERR3", [[40,0]])
+//  d.addVariable("$USERR4", [[40,0]])
+//  d.addVariable("$USERR5", [[40,0]])
+//  d.addVariable("$WORLDVIEW", [[70,1]])
+//  d.addVariable("$SHADEDGE", [[70,3]])
+//  d.addVariable("$SHADEDIF", [[70,70]])
+//  d.addVariable("$TILEMODE", [[70,1]])
+//  d.addVariable("$MAXACTVP", [[70,64]])
+//  d.addVariable("$PINSBASE", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PLIMCHECK", [[70,0]])
+//  d.addVariable("$PEXTMIN", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$PEXTMAX", [[10,0],[20,0],[30,0]])
+//  d.addVariable("$SNAPSTYLE", [[70,0]])
+//  d.addVariable("$PLIMMIN", [[10,0],[20,0]])
+//  d.addVariable("$PLIMMAX", [[10,210],[20,297]])
+//  d.addVariable("$UNITMODE", [[70,0]])
+//  d.addVariable("$VISRETAIN", [[70,1]])
+//  d.addVariable("$PLINEGEN", [[70,0]])
+//  d.addVariable("$PSLTSCALE", [[70,1]])
+//  d.addVariable("$TREEDEPTH", [[70,3020]])
+//  d.addVariable("$CMLSTYLE", [[2,"Standard"]])
+//  d.addVariable("$CMLJUST", [[70,0]])
+//  d.addVariable("$CMLSCALE", [[40,20]])
+//  d.addVariable("$PROXYGRAPHICS", [[70,1]])
+//  d.addVariable("$MEASUREMENT", [[70,1]])
+//  d.addVariable("$CELWEIGHT", [[370,-1]])
+//  d.addVariable("$ENDCAPS", [[280,0]])
+//  d.addVariable("$JOINSTYLE", [[280,0]])
+//  d.addVariable("$LWDISPLAY", [[290,0]])
+//  d.addVariable("$INSUNITS", [[70,4]])
+//  d.addVariable("$HYPERLINKBASE", [[1,""]])
+//  d.addVariable("$STYLESHEET", [[1,""]])
+//  d.addVariable("$XEDIT", [[290,1]])
+//  d.addVariable("$CEPSNTYPE", [[380,0]])
+//  d.addVariable("$PSTYLEMODE", [[290,1]])
+//  d.addVariable("$EXTNAMES", [[290,1]])
+//  d.addVariable("$PSVPSCALE", [[40,1]])
+//  d.addVariable("$OLESTARTUP", [[290,0]])
+//  d.addVariable("$SORTENTS", [[280,127]])
+//  d.addVariable("$INDEXCTL", [[280,0]])
+//  d.addVariable("$HIDETEXT", [[280,1]])
+//  d.addVariable("$XCLIPFRAME", [[290,0]])
+//  d.addVariable("$HALOGAP", [[280,0]])
+//  d.addVariable("$OBSCOLOR", [[70,257]])
+//  d.addVariable("$OBSLTYPE", [[280,0]])
+//  d.addVariable("$INTERSECTIONDISPLAY", [[280,0]])
+//  d.addVariable("$INTERSECTIONCOLOR", [[70,257]])
+//  d.addVariable("$DIMASSOC", [[280,1]])
+//  d.addVariable("$PROJECTNAME", [[1,""]])
+//  d.addVariable("$CAMERADISPLAY", [[290,0]])
+//  d.addVariable("$LENSLENGTH", [[40,50]])
+//  d.addVariable("$CAMERAHEIGHT", [[40,0]])
+//  d.addVariable("$STEPSPERSEC", [[40,2]])
+//  d.addVariable("$STEPSIZE", [[40,50]])
+//  d.addVariable("$3DDWFPREC", [[40,2]])
+//  d.addVariable("$PSOLWIDTH", [[40,5]])
+//  d.addVariable("$PSOLHEIGHT", [[40,80]])
+//  d.addVariable("$LOFTANG1", [[40,1.570796326794897]])
+//  d.addVariable("$LOFTANG2", [[40,1.570796326794897]])
+//  d.addVariable("$LOFTMAG1", [[40,0]])
+//  d.addVariable("$LOFTMAG2", [[40,0]])
+//  d.addVariable("$LOFTPARAM", [[70,7]])
+//  d.addVariable("$LOFTNORMALS", [[280,1]])
+//  d.addVariable("$LATITUDE", [[40,1]])
+//  d.addVariable("$LONGITUDE", [[40,1]])
+//  d.addVariable("$NORTHDIRECTION", [[40,0]])
+//  d.addVariable("$TIMEZONE", [[70,-8000]])
+//  d.addVariable("$LIGHTGLYPHDISPLAY", [[280,1]])
+//  d.addVariable("$TILEMODELIGHTSYNCH", [[280,1]])
+//  d.addVariable("$SOLIDHIST", [[280,1]])
+//  d.addVariable("$SHOWHIST", [[280,1]])
+//  d.addVariable("$DWFFRAME", [[280,2]])
+//  d.addVariable("$DGNFRAME", [[280,0]])
+//  d.addVariable("$REALWORLDSCALE", [[290,1]])
+//  d.addVariable("$INTERFERECOLOR", [[62,1]])
+//  d.addVariable("$CSHADOW", [[280,0]])
+//  d.addVariable("$SHADOWPLANELOCATION", [[40,0]])
 
 }
 
 const addLineTypeTemplate = (d) =>{
-  d.addLineType("CENTER", "____ _ ____",[31.75, -6.35, 6.35, -6.35])
-  d.addLineType("CENTER2", "____ _ ____",[19.05, -3.175, 3.175, -3.175])
-  d.addLineType("CENTERX2", "____ _ ____",[63.5, -12.7, 12.7, -12.7])
-  d.addLineType("DASHED", "__  __",[5, -5])
-  d.addLineType("DASHED2", "__  __",[6.35, -3.175])
-  d.addLineType("DASHEDX2", "__  __",[25.4, -12.7])
-  d.addLineType("PHANTOM", "____ _ _ ____",[31.75, -6.35, 6.35, -6.35, 6.35, -6.35])
-  d.addLineType("PHANTOM2", "____ _ _ ____",[15.875, -3.175, 3.175, -3.175, 3.175, -3.175])
-  d.addLineType("PHANTOMX2", "____ _ _ ____",[63.5, -12.7, 12.7, -12.7, 12.7, -12.7])
-  d.addLineType("DASHDOT", "__ . __ . __",[12.7, -6.35, 0.1, -6.35])
-  d.addLineType("DASHDOT2", "__ . __ . __",[6.35, -3.175, 0.1, -3.175])
-  d.addLineType("DASHDOTX2", "__ . __ . __",[25.4, -12.7, 0.1, -12.7])
-  d.addLineType("DOT", ".  . .",[0.1, -6.35])
-  d.addLineType("DOT2", ".  . .",[0.1, -3.175])
-  d.addLineType("DOTX2", ".  . .",[0.1, -12.7])
-  d.addLineType("DIVIDE", "__ . . __",[12.7, -6.35, 0.1, -6.35, 0.1, -6.35])
-  d.addLineType("DIVIDE2", "__ . . __",[6.35, -3.175, 0.1, -3.175, 0.1, -3.175])
-  d.addLineType("DIVIDEX2", "__ . . __",[25.4, -12.7, 0.1, -12.7, 0.1, -12.7])
+  d.add({name: "CENTER"   , descriptive: "____ _ ____"   , elements:[31.75, -6.35, 6.35, -6.35]                   })
+  d.add({name: "CENTER2"  , descriptive: "____ _ ____"   , elements:[19.05, -3.175, 3.175, -3.175]                })
+  d.add({name: "CENTERX2" , descriptive: "____ _ ____"   , elements:[63.5, -12.7, 12.7, -12.7]                    })
+  d.add({name: "DASHED"   , descriptive: "__  __"        , elements:[5, -5]                                       })
+  d.add({name: "DASHED2"  , descriptive: "__  __"        , elements:[6.35, -3.175]                                })
+  d.add({name: "DASHEDX2" , descriptive: "__  __"        , elements:[25.4, -12.7]                                 })
+  d.add({name: "PHANTOM"  , descriptive: "____ _ _ ____" , elements:[31.75, -6.35, 6.35, -6.35, 6.35, -6.35]      })
+  d.add({name: "PHANTOM2" , descriptive: "____ _ _ ____" , elements:[15.875, -3.175, 3.175, -3.175, 3.175, -3.175]})
+  d.add({name: "PHANTOMX2", descriptive: "____ _ _ ____" , elements:[63.5, -12.7, 12.7, -12.7, 12.7, -12.7]       })
+  d.add({name: "DASHDOT"  , descriptive: "__ . __ . __"  , elements:[12.7, -6.35, 0.1, -6.35]                     })
+  d.add({name: "DASHDOT2" , descriptive: "__ . __ . __"  , elements:[6.35, -3.175, 0.1, -3.175]                   })
+  d.add({name: "DASHDOTX2", descriptive: "__ . __ . __"  , elements:[25.4, -12.7, 0.1, -12.7]                     })
+  d.add({name: "DOT"      , descriptive: ".  . ."        , elements:[0.1, -6.35]                                  })
+  d.add({name: "DOT2"     , descriptive: ".  . ."        , elements:[0.1, -3.175]                                 })
+  d.add({name: "DOTX2"    , descriptive: ".  . ."        , elements:[0.1, -12.7]                                  })
+  d.add({name: "DIVIDE"   , descriptive: "__ . . __"     , elements:[12.7, -6.35, 0.1, -6.35, 0.1, -6.35]         })
+  d.add({name: "DIVIDE2"  , descriptive: "__ . . __"     , elements:[6.35, -3.175, 0.1, -3.175, 0.1, -3.175]      })
+  d.add({name: "DIVIDEX2" , descriptive: "__ . . __"     , elements:[25.4, -12.7, 0.1, -12.7, 0.1, -12.7]         })
+}
+
+export const getDxfTmp = (param) => {
+  const writer = new Writer();
+  const modelSpace = writer.document.modelSpace;
+  
+  // Add entites to the model space
+  modelSpace.addLine({
+    start: point(),
+    end: point(100, 100),
+    // Other options...
+  });
+  
+  // To get the dxf content just call the stringify() method
+  const content = writer.stringify();
+  return content
 }
 
 
 export const getDxf = (param) => {
-  const d = new Drawing()
-  addHeader(d)
-  addLineTypeTemplate(d)
+  const writer = new Writer()
+  console.log({writer})
+  const modelSpace = writer.document.modelSpace
+  const paperSpace = writer.document.paperSpace
+ 
+//  const d = new DxfWriter()
+  console.log({paperSpace})
+  console.log({modelSpace})
+  //addHeader(writer.document.header)
+  addLineTypeTemplate(writer.document.tables.ltype)
 
-  const screenStroke = "white"
+  const screenStroke = "black"
 
-  param.forEach(v=>{
-    const sheetId = v[0]
-    const sheetParams = v[1]
+  param.forEach((pv,pi)=>{
+    const sheetId = pv[0]
+    const sheetParams = pv[1]
 
-    if(sheetParams.figs.length>0){
-      const lineType = sheetParams.figsAttr?.lineType || "CONTINUOUS"
-      const stroke = sheetParams.figsAttr?.stroke || screenStroke
-      const colorId = autocadColorMap.get(stroke)
-      d.addLayer(sheetId, colorId, lineType)
-      d.setActiveLayer(sheetId)
+    const lineType = sheetParams.figsAttr?.lineType //|| "CONTINUOUS"
+    const sheetColor = sheetParams.figsAttr?.stroke
+    console.log({sheetColor})
+    const colorId =autocadColorMap.get(sheetColor)
+    //modelSpace.addLayer(sheetId, colorId, lineType)
+    writer.document.tables.layer.add({name:sheetId, colorNumber:colorId, lineTypeName:lineType})
 
-      const figs = sheetParams.figs
-      figs.forEach(v=>{
-        const type = v.type
-        const param = v.param
-        const attr = v.attr
-        const lineTypeName = attr?.lineTypeName
-        const lineColor = attr?.stroke 
-        const colorIndex =autocadColorMap.get(lineColor)
-        switch(type){
-          case "line":{
-            const points = [].concat(...param.points)
-            d.drawLine(...points, lineTypeName, colorIndex)
-            break
-          }
-          case "polyline":
-          case "lines":{
-            const points = param.points
-            points.forEach((v,i,arr)=>{
-              if(i>0){
-                d.drawLine(arr[i-1][0], arr[i-1][1],v[0],v[1], lineTypeName, colorIndex)
-              }
-            })
-            break
-          }
-          case "circle":{
-            const center = param.center
-            const radius = param.radius
-            d.drawCircle(center[0], center[1], radius, lineTypeName, colorIndex)
-            break
-          }
-          case "arc":{
-            const center = param.center
-            const radius = param.radius
-            const start = param.start
-            const end = param.end
-            d.drawArc(center[0], center[1], radius, start, end, lineTypeName, colorIndex)
-            break
-          }
-          case "bspline":{
-            const points  = param.points
-            const knots = param.knots
-            const degree = param.degree
-            d.drawSpline(8, degree, points, knots, [], lineTypeName, colorIndex )
-            break
-          }
+    const figs = sheetParams.figs
+    figs.forEach(fv=>{
+      const type = fv.type
+      const param = fv.param
+      const attr = fv.attr
+      const lineTypeName = attr?.lineTypeName
+      const lineColor = attr?.stroke 
+      //const lineWeight = attr?.["stroke-width"] 
+      const colorIndex =autocadColorMap.get(lineColor)
+      const option = {
+        lineTypeName: lineTypeName, 
+        colorNumber:colorIndex,
+        layerName: sheetId,
+       // lineWeight,
+      }
+
+      switch(type){
+        case "line":{
+          const start = point(...param.points[0])
+          const end   = point(...param.points[1])
+          const parameters = {start,end,...option} 
+          modelSpace.addLine(parameters)
+          break
         }
-      })
-
-      const dimensions = sheetParams.dimensions
-      dimensions.forEach(v=>{
-        const type = v.type
-        const param = v.param
-        const attr = v.attr
-        const lineTypeName = attr?.lineTypeName
-        const lineColor = attr?.stroke 
-        const colorIndex =autocadColorMap.get(lineColor)
-
-        const [x1, y1] = param.points[0]
-        const [x2, y2] = param.points[1]
-        const distance = param.distance
-        switch(type){
-          case "length" :{
-            const length = Math.sqrt((x2-x1)**2+(y2-y1)**2)
-            const dx = distance/length*(y2-y1)
-            const dy =  -distance/length*(x2-x1)
-            const Dx1 = x1+dx
-            const Dy1 = y1+dy
-            const Dx2 = x2+dx
-            const Dy2 = y2+dy
-            const tx = (Dx1 + Dx2)/2
-            const ty = (Dy1 + Dy2)/2
- 
-            const x3 = Dx2
-            const y3 = Dy2
-            const x4 = tx
-            const y4 = ty
-
-            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
-            break
-          }
-          case "horizontal" :{
-            const yAve = (y1+y2)/2
-            const Dx1 = x1
-            const Dy1 = yAve - distance
-            const Dx2 = x2 
-            const Dy2 = yAve - distance
- 
-            const tx = (Dx1 + Dx2)/2
-            const ty = (Dy1 + Dy2)/2
- 
-            const x3 = Dx2
-            const y3 = Dy2
-            const x4 = tx
-            const y4 = ty
-
-            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
-            break
-          }
-          case "vertical" :{
-            const xAve = (x1+x2)/2
-            const Dx1 = xAve + distance
-            const Dy1 = y1
-            const Dx2 = xAve + distance
-            const Dy2 = y2
- 
-            const tx = (Dx1 + Dx2)/2
-            const ty = (Dy1 + Dy2)/2
- 
-            const x3 = Dx2
-            const y3 = Dy2
-            const x4 = tx
-            const y4 = ty
-
-            d.drawDimension(x1, y1, x2, y2, x3, y3, x4, y4, type, lineTypeName, colorIndex )
-            break
-          }
+        case "lines":{
+          const points = param.points.map(v=>point(...v))
+          points.forEach((v,i,arr)=>{
+            if(i>0){
+              const start = arr[i-1] 
+              const end   = v 
+              const parameters = {start,end,...option} 
+              modelSpace.addLine(parameters)
+            }
+          })
+          break
         }
-      })
-    }
-    if(sheetParams.texts.length>0){
-
-      const textStroke = sheetParams.textsAttr?.stroke || screenStroke
-      const textColorId = autocadColorMap.get(textStroke)
-      const textSheetId = sheetId + "_text"
-      d.addLayer(textSheetId, textColorId, "CONTINUOUS")
-      d.setActiveLayer(textSheetId)
-
-      const texts = sheetParams.texts
-      texts.forEach(v=>{
-
-        const param = v.param
-        const attr = v.attr
-
-        const lineTypeName = attr?.lineTypeName
-        const lineColor = attr?.stroke 
-        const colorIndex =autocadColorMap.get(lineColor)
-
-        const position = param.position
-        const font = param.font
-        const text = param.text
-        const theta = param?.theta || 0
-        const size = font?.size || 24
-        const height = size /1.6
-        if(position.length>1){
-          d.drawText(position[0], position[1], height, theta, text, "left", "baseline", lineTypeName, colorIndex)  
+        case "polyline": {
+          const vertices = param.points.map(v=>point(...v))
+          const parameters = {vertices,...option} 
+          modelSpace.addLWPolyline(parameters);
+          break
         }
-      })
-    }
+        case "circle":{
+          const center = point(...param.center)
+          const radius = param.radius
+          const parameters = {center,radius,...option} 
+          modelSpace.addCircle(parameters)
+          break
+        }
+        case "ellipse":{
+          const center = point(...param.center)
+          const [rx,ry] = param.radius
+          const ratio = rx>=ry ?  ry/rx : rx/ry
+          const rotation = rx>=ry  ? (param.rotation || 0):(param.rotation || 0)+90 
+          const endpointX = rx*Math.cos(rotation/180*Math.PI)
+          const endpointY = rx*Math.sin(rotation/180*Math.PI)
+          const endpoint = point(endpointX,endpointY,0)
+          const start = 0
+          const end = 2*Math.PI
+          const parameters = {center, endpoint, ratio, start, end,...option}
+          console.log("ellipse",{parameters})
+          modelSpace.addEllipse(parameters)
+          break
+        }
+        case "arc":{
+          const center = point(...param.center)
+          const radius = param.radius
+          const startAngle = param.start
+          const endAngle = param.end
+          const parameters = {center, radius, startAngle, endAngle, ...option}
+          modelSpace.addArc(parameters)
+          break
+        }
+        case "ellipticalArc":{
+          const center = point(...param.center)
+          const [rx,ry] = param.radius
+          const ratio = rx>=ry ?  ry/rx : rx/ry
+          const rotation = rx>=ry  >1 ? (param.rotation || 0) :(param.rotation || 0)+90
+          const endpointX = rx*Math.cos(rotation/180*Math.PI)
+          const endpointY = rx*Math.sin(rotation/180*Math.PI)
+          const endpoint = point(endpointX,endpointY,0)
+
+
+          const start = rx >=ry ?  param.start/180*Math.PI: param.start/180*Math.PI - Math.PI/2
+          const end   = rx>=ry  ?  param.end/180*Math.PI  : param.end/180*Math.PI   - Math.PI/2
+
+          const parameters = {center, endpoint, ratio, start, end,...option}
+          console.log("ellipse",{parameters})
+          modelSpace.addEllipse(parameters)
+          break
+        }
+
+        case "bspline":{
+          const controls = param.points.map(v=>point(...v))
+          const knots = param.knots
+          const degree = param.degree
+          const weights= []
+          const parameters = {
+            controls ,
+            knots,
+            degree,
+            weights,
+            ...option
+          }
+          modelSpace.addSpline(parameters)
+          break
+        }
+      }
+    })
+
+    const dimensions = sheetParams.dimensions
+    dimensions.forEach((dv,di)=>{
+      const type = dv.type
+      const param = dv.param
+      const dimStyle = dv.dimStyle
+      const attr = dv.attr
+      const lineTypeName = attr?.lineTypeName
+      const lineColor = attr?.stroke 
+      const colorIndex =autocadColorMap.get(lineColor)
+      const prefix = dimStyle?.prefix
+      const surffix = dimStyle?.surffix
+      const decimalPlaces =  dimStyle.decimalPlaces
+
+      const options = {
+        lineType: lineTypeName, 
+        colorNumber:colorIndex,
+        layerName: sheetId,
+      }
+
+      switch(type){
+        case "aligned" :{
+          const [x1, y1] = param.points[0]
+          const [x2, y2] = param.points[1]
+          const distance = param.distance
+          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+          const size = font?.["font-size"] || 20
+
+
+          const start      = point(x1,y1,0)
+          const end        = point(x2,y2,0)
+
+          const dimStyleName = `dim_${pi}_${di}`
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
+          writer.document.tables.dimStyle.add(dimParams)
+
+          options.offset = distance
+          options.dimStyleName = dimStyleName
+          //options.textRotation = 45
+          const parameters = {start,end, ...options}
+          modelSpace.addAlignedDim(parameters)
+          break
+        }
+        case "horizontal" :{
+          const [x1, y1] = param.points[0]
+          const [x2, y2] = param.points[1]
+          const distance = param.distance
+          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+          const size = font?.["font-size"] || 20
+
+          const start  = point(x1,y1,0)
+          const end    = point(x2,y2,0)
+          //const definitionPoint= {x:x3,y:y3,z:0}
+          //const middlePoint= {x:x4,y:y4,z:0}
+
+
+          const dimStyleName = `dim_${pi}_${di}`
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
+          writer.document.tables.dimStyle.add(dimParams)
+
+          options.angle = 0
+          options.offset = distance
+          options.dimStyleName = dimStyleName
+          const parameters = {start, end, ...options}
+          modelSpace.addLinearDim(parameters)
+          break
+        }
+        case "vertical" :{
+          const [x1, y1] = param.points[0]
+          const [x2, y2] = param.points[1]
+          const distance = param.distance
+          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+          const size = font?.["font-size"] || 20
+
+
+          const start  = point(x1,y1,0)
+          const end    = point(x2,y2,0)
+
+
+          const dimStyleName = `dim_${pi}_${di}`
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
+          writer.document.tables.dimStyle.add(dimParams)
+
+          options.angle = 90
+          options.offset = distance
+          options.dimStyleName = dimStyleName
+          const parameters = {start, end, ...options}
+          modelSpace.addLinearDim(parameters)
+
+          break
+        }
+        case "diameter" :{
+          const [x1, y1] = param.center
+          const radius   = param.radius
+          const angle    = param.angle
+          const firstX = x1+radius*Math.cos(angle/180*Math.PI)
+          const firstY = y1+radius*Math.sin(angle/180*Math.PI)
+          const first = point(firstX,firstY,0)
+          const defX = x1-radius*Math.cos(angle/180*Math.PI)
+          const defY = y1-radius*Math.sin(angle/180*Math.PI)
+          const definition = point(defX,defY,0)
+          const middle = point(...param.center)
+          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+          const size = font?.["font-size"] || 20
+
+          const dimStyleName = `dim_${pi}_${di}`
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
+          writer.document.tables.dimStyle.add(dimParams)
+
+          options.dimStyleName = dimStyleName
+          const parameters = {first,middle,definition, ...options}
+
+          modelSpace.addDiameterDim(parameters)
+
+          break
+        }
+        case "radius" :{
+          const [x1, y1] = param.center
+          const radius   = param.radius
+          const angle    = param.angle
+          const firstX = x1+radius*Math.cos(angle/180*Math.PI)
+          const firstY = y1+radius*Math.sin(angle/180*Math.PI)
+          const first = point(firstX,firstY,0)
+          const defX = x1-radius*Math.cos(angle/180*Math.PI)
+          const defY = y1-radius*Math.sin(angle/180*Math.PI)
+          //const definition = point(defX,defY,0)
+          const definition = point(...param.center)
+          const middle = point(...param.center)
+          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+          const size = font?.["font-size"] || 20
+          const decimalPlaces =  dimStyle.decimalPlaces
+
+          const dimStyleName = `dim_${pi}_${di}`
+          //const dimParams = {name:dimStyleName, DIMSCALE:1,DIMTXT:size,DIMASZ:size}
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
+          writer.document.tables.dimStyle.add(dimParams)
+
+          options.dimStyleName = dimStyleName
+          const parameters = {first,middle,definition, ...options}
+
+          modelSpace.addRadialDim(parameters)
+
+
+          break
+        }
+        case "angle" :{
+//          const [x1, y1] = param.center
+//          const center = point(...param.center)
+//          const radius   = param.radius
+//          const start    = param.start
+//          const end    = param.end
+//          const startAngle = start/180*Math.PI
+//          const endAngle   = end/180*Math.PI
+//          const midAngle = (startAngle+endAngle)/2
+//          const sX = x1+radius*Math.cos(startAngle)
+//          const sY = y1+radius*Math.sin(startAngle)
+//          const mX = x1+radius*Math.cos(midAngle)
+//          const mY = y1+radius*Math.sin(midAngle)
+//          const eX = x1+radius*Math.cos(endAngle)
+//          const eY = y1+radius*Math.sin(endAngle)
+//          const startPoint = point(sX,sY,0)
+//          const midPoint = point(mX,mY,0)
+//          const endPoint = point(eX,eY,0)
+//          console.log({center},{startPoint},{endPoint})
+//          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+//          const size = font?.["font-size"] || 20
+//          const decimalPlaces =  dimStyle.decimalPlaces
+//
+//          const dimStyleName = `dim_${pi}_${di}`
+//          const dimParams = {name:dimStyleName, DIMSCALE:1,DIMTXT:size,DIMASZ:size}
+//          writer.document.tables.dimStyle.add(dimParams)
+//
+//          options.dimStyleName = dimStyleName
+//          const parameters = {center, startAngle,endAngle,firstLeaderPoint:midPoint, ...options}
+//
+//          modelSpace.addArcDim(parameters)
+
+
+          break
+        }
+
+      }
+    })
+    const texts = sheetParams.texts
+    texts.forEach((tv,ti)=>{
+
+      const param = tv.param
+      const attr = tv.attr
+
+      const lineTypeName = attr?.lineTypeName
+
+      const firstAlignmentPoint = point(...param.position)
+      const value = param.text
+
+      const font = param.font
+      const size = font?.size || 24
+      const height = size /1.6
+      const textColor = font?.stroke 
+      const colorIndex =autocadColorMap.get(textColor)
+
+      const rotation= param?.theta || 0
+      const horizontalJustification= 0//TextHorizontalAlignment.Center,
+      const verticalJustification= 0  //TextVerticalAlignment.Middle,
+        //secondAlignmentPoint: point3d(20, 20),
+
+      const option = {
+        lineTypeName: lineTypeName, 
+        colorNumber:colorIndex,
+        layerName: sheetId,
+      }
+
+      
+      const parameters = {
+        firstAlignmentPoint,value,height,rotation,
+        colorIndex,
+        horizontalJustification, verticalJustification,
+        ...option,
+      }
+      
+      modelSpace.addText(parameters)
+    })
   })
  
 
-  const string = d.toDxfString()
+  const string = writer.stringify()
   return string
 } 

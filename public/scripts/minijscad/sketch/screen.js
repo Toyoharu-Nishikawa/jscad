@@ -7,6 +7,7 @@ export const Screen  = class {
     this.backgroundColor = backgroundColor
     this.figs = parentObj.group() 
     this.sheetsData = new DataClass.DataManager()
+    this.parentObj = parentObj
  
   }
   setBackgroundColor(backgroundColor){
@@ -15,6 +16,26 @@ export const Screen  = class {
   setAttr(attr){
     const figs = this.figs
     figs.attr(attr)
+  }
+  setScreenSize(param){
+    const draw = this.parentObj
+    const originX = param?.originX || 0
+    const originY = param?.originY || 0
+    const direction = param?.direction || "x" 
+    const length = param?.length ||500 
+
+    const widthS  = draw.width()
+    const heightS =draw.height()
+    if(direction=="x"){
+      const width  = length 
+      const height = width * heightS/widthS
+      draw.viewbox(originX,originY,width, height)
+    }
+    else{
+      const height = length 
+      const width  = height * widhtS/heightS
+      draw.viewbox(originX,originY,width, height)
+    }
   }
   addSheet(sheetId, attrFigs,attrDimensions, attrTexts){
     const flag = this.sheetsData.hasData(sheetId)
