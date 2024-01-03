@@ -94,8 +94,8 @@ const initialDraw = () =>{
 
   /*** sheet2 sample of dimensions ***/
   const sheet2 = miniJscad.sketch.screen.addSheet("sheet2")
-  const text2_0 = sheet1.addText({text:"sheet2 samples of dimensions", position:[410,210],font: {size: 10,"stroke-width":0.1}})
-  const outline2_0 = sheet1.addFig("polyline", {points:[[400,0],[550,0],[550,230],[400,230],[400,0]]},{stroke:"green", "stroke-width":2})
+  const text2_0 = sheet2.addText({text:"sheet2 samples of dimensions", position:[410,210],font: {size: 10,"stroke-width":0.1}})
+  const outline2_0 = sheet2.addFig("polyline", {points:[[400,0],[550,0],[550,230],[400,230],[400,0]]},{stroke:"green", "stroke-width":2})
 
 
   const fig2_1 = sheet2.addFig("line", {points:[[430,160],[460,190]]})
@@ -189,93 +189,10 @@ const initialDraw = () =>{
     }
   )
 
- //   const prefix = dimStyle?.prefixText || ""
- //   const suffix = dimStyle?.suffixText || ""
- //   const showAuxiliaryLines = dimStyle?.showAuxiliaryLines || true
- //   const showStartSideArrow = dimStyle?.showStartSideArrow || true
- //   const showTerminalSideArrow = dimStyle?.showTerminalSideArrow || true
- //   const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
- //   const size = font?.["font-size"] || 20
- //   const decimalPlaces = dimStyle.decimalPlaces || 2
-
-//  const line0_1     = sheet0.addFig("line", {points:[[100,0],[100,100]]}, {stroke:"red", lineTypeName:"DASHED"})
-//
-//  const arc1  = sheet0.addFig("arc", {center:[150,100], radius:50, start:90, end:180})
-//  
-//  const ellipse1 =sheet0.addFig("ellipse", {center:[350,100], radius:[100,50], rotation: 45})
-//  const rec1 =sheet0.addFig("rectangle", {width: 100, height: 500, center:[0,100], rotation: 30})
-//  const polygon1 =sheet0.addFig("polygon", {points:[[0,0],[45,45],[-100,45],[-100,0]]})
-//
-//  const rotAngle = 45 
-//  const rotAngleRad = rotAngle*Math.PI/180
-//  const line3 =sheet0.addFig("line", {points:[[0,0],[300*Math.cos(rotAngleRad), 300*Math.sin(rotAngleRad)]]})
-//  const line4 =sheet0.addFig("line", {points:[[0,0],[-100*Math.sin(rotAngleRad), 100*Math.cos(rotAngleRad)]]})
-//  const ellipticalArc1 =sheet0.addFig("ellipticalArc", {center:[0,0],radius:[300,100],rotation:rotAngle,start:0,end:90})
-//
-//  const lineTmp1 = sheet0.addFig("line", {points:[[0,0],[200,200]]})
-//  const lineTmp2 = sheet0.addFig("line", {points:[[0,0],[300,200]]})
-//  const lineTmp3 = sheet0.addFig("line", {points:[[0,0],[400,200]]})
-//  sheet0.removeFig(lineTmp1)
-//  sheet0.removeFig(lineTmp2.id)
-//  lineTmp3.hide()
-//  lineTmp3.show()
-//
-//  sheet0.hideAllFigs()
-//  sheet0.showAllFigs()
 
 
 
   
-//  const dim1 =  sheet0.addDimension("horizontal", {points:[[150, 150], [2000, 500]], distance:300, font:{"font-size":100}, digit:2, auxiliary:true}, {},"1850.00mm")
-//  const dim2 =  sheet0.addDimension("vertical", {points:[[100, 0], [100, 100]], distance:30, fontSize:30, digit:2, offset:-10,auxiliary:true})
-//  const dim3 =  sheet0.addDimension("length", {points:[[150, 100], [150-25*Math.sqrt(2), 100+25*Math.sqrt(2)]], distance:0,  digit:3, auxiliary:false})
-//
-//  const lines1 = sheet0.addFig("lines", {points:[[2000,500],[2000,600],[1500,600],[1500,500] ]}, {stroke:"black", lineTypeName:"CONTINUOUS"})
-//  const polyline1 = sheet0.addFig("polyline", {points:[[1500,500],[1000,500],[1000,600],[500,500] ]}, {stroke:"#FF00FF", lineTypeName:"DOT"})
-//  //const circle1 = sheet0.addFig("circle", {center:[1500,500], radius: 200}, {stroke:"#10AA05", lineTypeName:"DIVIDE"})
-//  const circle1 = sheet0.addFig("circle", {center:[1500,500], radius: 200}, {stroke:"green", lineTypeName:"DIVIDE"})
-//  //const circle2 = sheet0.addFig("circle", {center:[1000,900], radius: 100},{"stroke-width":1})
-//  const circle2 = sheet0.addFig("circle", {center:[1000,900], radius: 100})
-//  const ellipse2 = sheet0.addFig("ellipse", {center:[1000,900], radius: [200,100]})
-////  const dimCircle =  sheet0.addDimension("diameter", {points:[1000,900], distance:50, font:{"font-size":100, "stroke-width":0.001}, digit:3, auxiliary:true}, {fill:"green"})
-//
-//  const lineTmp5 = sheet0.addFig("line", {points:[[400,0],[400,200]]})
-
-//  /*** sheet1 ***/
-//  const sheet1 = miniJscad.sketch.screen.addSheet("sheet1", {stroke: "#FFBF00", "stroke-dasharray": "DIVIDE"})
-//  const arc2 = sheet1.addFig("arc", {center:[250,100], radius:50, start:180, end:90}, {stroke:"orange",fill:"green", lineTypeName:"PHANTOM"})
-//
-//  const arc3 = sheet1.addFig("arc", {center:[350,100], radius:50, start:0, end:180})
-//  const arc4 = sheet1.addFig("arc", {center:[450,100], radius:50, start:180, end:0})
-//  const arc5 = sheet1.addFig("arc", {center:[550,100], radius:50, start:0, end:270})
-//  const arc6 = sheet1.addFig("arc", {center:[650,100], radius:50, start:270, end:0})
-//
-//  /*** sheet2 ***/
-//  const sheet2 = miniJscad.sketch.screen.addSheet("sheet2" )
-//  const bspline1 = sheet2.addFig("bspline", {points: [[0,0],[0,100],[100,-100], [200,0]], degree:3, knots:[0,0,0,0,1,1,1,1],segments:100})
-//
-//
-//  /*** sheet3 ***/
-//  const sheet3 = miniJscad.sketch.screen.addSheet("sheet3",  {}, {stroke: "orange", fill:"red"}, {} )
-//  const lineTmp10 = sheet3.addFig("line", {points:[[-100,0],[-100,500]]})
-//  const dim4 =  sheet3.addDimension("length", {points:[[-100, 0], [-100, 500]], distance:-100,  digit:3, auxiliary:true})
-//
-//  const dim5 =  sheet3.addDimension("length", {points:[[4, 0], [4, 2]], distance:-10, font:{"font-size":0.1, "stroke-width":0.001}, digit:3, auxiliary:true}, {fill:"green"},"5mm")
-//
-//  sheet3.hideAllDimensions()
-//  sheet3.showAllDimensions()
-//
-//  
-//  /*** sheet4 ***/
-//  const sheet4 = miniJscad.sketch.screen.addSheet("sheet4",  {}, {}, {stroke:"fuchsia", fill:"fuchsia"} )
-//  const text1 = sheet4.addText({text:"minijscad", position:[500,100], theta: 45, font: {size: 40}})
-//  const text2 = sheet4.addText({text:"hello world", position:[1000,0], theta: 0, font: {size: 15}}, {stroke: "red", fill: "red"})
-//  const text3 = sheet4.addText({text:"style test", position:[0,0], theta: 0, font: {size: 20}}, {stroke: "red", fill: "red"})
-//
-//
-//  
-//  sheet4.hideAllTexts()
-//  sheet4.showAllTexts()
 }
 
 const clearSheets = () =>{

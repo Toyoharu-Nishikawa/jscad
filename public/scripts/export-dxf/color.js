@@ -7,6 +7,7 @@ export const autocadColorMap = new Map([
   ["blue", 5],
   ["fuchsia", 6],
   ["white", 7],
+  ["orange", 30],
   ["#000000",   0 ], 
   ["#FF0000",   1 ],
   ["#FFFF00",   2 ],
