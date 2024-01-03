@@ -1,4 +1,3 @@
-//import {DxfWriter,point3d} from "../@tarikjabiri/writer/index.js"
 import {autocadColorMap} from "./color.js"
 
 import { Writer, point } from "../@tarikjabiri/writer/index.js";
@@ -431,7 +430,7 @@ export const getDxf = (param) => {
       const colorIndex =autocadColorMap.get(lineColor)
       const prefix = dimStyle?.prefix
       const surffix = dimStyle?.surffix
-
+      const decimalPlaces =  dimStyle.decimalPlaces
 
       const options = {
         lineType: lineTypeName, 
@@ -452,7 +451,9 @@ export const getDxf = (param) => {
           const end        = point(x2,y2,0)
 
           const dimStyleName = `dim_${pi}_${di}`
-          const dimParams = {name:dimStyleName, DIMSCALE:1,DIMTXT:size,DIMASZ:size}
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
           writer.document.tables.dimStyle.add(dimParams)
 
           options.offset = distance
@@ -476,7 +477,9 @@ export const getDxf = (param) => {
 
 
           const dimStyleName = `dim_${pi}_${di}`
-          const dimParams = {name:dimStyleName, DIMSCALE:1,DIMTXT:size,DIMASZ:size}
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
           writer.document.tables.dimStyle.add(dimParams)
 
           options.angle = 0
@@ -499,7 +502,9 @@ export const getDxf = (param) => {
 
 
           const dimStyleName = `dim_${pi}_${di}`
-          const dimParams = {name:dimStyleName, DIMSCALE:1,DIMTXT:size,DIMASZ:size}
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
           writer.document.tables.dimStyle.add(dimParams)
 
           options.angle = 90
@@ -511,12 +516,96 @@ export const getDxf = (param) => {
           break
         }
         case "diameter" :{
+          const [x1, y1] = param.center
+          const radius   = param.radius
+          const angle    = param.angle
+          const firstX = x1+radius*Math.cos(angle/180*Math.PI)
+          const firstY = y1+radius*Math.sin(angle/180*Math.PI)
+          const first = point(firstX,firstY,0)
+          const defX = x1-radius*Math.cos(angle/180*Math.PI)
+          const defY = y1-radius*Math.sin(angle/180*Math.PI)
+          const definition = point(defX,defY,0)
+          const middle = point(...param.center)
+          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+          const size = font?.["font-size"] || 20
+
+          const dimStyleName = `dim_${pi}_${di}`
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
+          writer.document.tables.dimStyle.add(dimParams)
+
+          options.dimStyleName = dimStyleName
+          const parameters = {first,middle,definition, ...options}
+
+          modelSpace.addDiameterDim(parameters)
+
           break
         }
         case "radius" :{
+          const [x1, y1] = param.center
+          const radius   = param.radius
+          const angle    = param.angle
+          const firstX = x1+radius*Math.cos(angle/180*Math.PI)
+          const firstY = y1+radius*Math.sin(angle/180*Math.PI)
+          const first = point(firstX,firstY,0)
+          const defX = x1-radius*Math.cos(angle/180*Math.PI)
+          const defY = y1-radius*Math.sin(angle/180*Math.PI)
+          //const definition = point(defX,defY,0)
+          const definition = point(...param.center)
+          const middle = point(...param.center)
+          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+          const size = font?.["font-size"] || 20
+          const decimalPlaces =  dimStyle.decimalPlaces
+
+          const dimStyleName = `dim_${pi}_${di}`
+          //const dimParams = {name:dimStyleName, DIMSCALE:1,DIMTXT:size,DIMASZ:size}
+          const dimParams = {name:dimStyleName, 
+            DIMSCALE:1,DIMTXT:size,DIMASZ:size,DIMDEC:decimalPlaces
+          }
+          writer.document.tables.dimStyle.add(dimParams)
+
+          options.dimStyleName = dimStyleName
+          const parameters = {first,middle,definition, ...options}
+
+          modelSpace.addRadialDim(parameters)
+
+
           break
         }
         case "angle" :{
+//          const [x1, y1] = param.center
+//          const center = point(...param.center)
+//          const radius   = param.radius
+//          const start    = param.start
+//          const end    = param.end
+//          const startAngle = start/180*Math.PI
+//          const endAngle   = end/180*Math.PI
+//          const midAngle = (startAngle+endAngle)/2
+//          const sX = x1+radius*Math.cos(startAngle)
+//          const sY = y1+radius*Math.sin(startAngle)
+//          const mX = x1+radius*Math.cos(midAngle)
+//          const mY = y1+radius*Math.sin(midAngle)
+//          const eX = x1+radius*Math.cos(endAngle)
+//          const eY = y1+radius*Math.sin(endAngle)
+//          const startPoint = point(sX,sY,0)
+//          const midPoint = point(mX,mY,0)
+//          const endPoint = point(eX,eY,0)
+//          console.log({center},{startPoint},{endPoint})
+//          const font = dimStyle?.font || {"font-size": 20, "stroke-width":0.1}
+//          const size = font?.["font-size"] || 20
+//          const decimalPlaces =  dimStyle.decimalPlaces
+//
+//          const dimStyleName = `dim_${pi}_${di}`
+//          const dimParams = {name:dimStyleName, DIMSCALE:1,DIMTXT:size,DIMASZ:size}
+//          writer.document.tables.dimStyle.add(dimParams)
+//
+//          options.dimStyleName = dimStyleName
+//          const parameters = {center, startAngle,endAngle,firstLeaderPoint:midPoint, ...options}
+//
+//          modelSpace.addArcDim(parameters)
+
+
           break
         }
 
