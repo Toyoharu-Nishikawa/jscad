@@ -1,20 +1,22 @@
 import {Svg} from "./sketch/svg.js"
-//import {Sketch} from "./sketch/index.js"
 import {version} from "./version.js"
 
 "use strict"
 
 export const MiniJscad = class{
-  constructor(element, width=300, height=300){
+  constructor(element, option){
+    const width  = option?.width  ?? 300
+    const height = option?.height ?? 300
     this.version = version
     this.element = element
+    this.elementDOM 
     this.sketch = this.setup(element, width, height)
   }
 
   resize(width, height){
-    const element = this.element
+    const elementDOM = this.elementDOM
     const sketch = this.sketch
-    const minijscadFrame = document.getElementById(element+"-minijscad-frame")
+    const minijscadFrame = elementDOM.querySelector(".minijscad-frame")
     minijscadFrame.style.width = String(width)+"px"
     minijscadFrame.style.height = String(height)+"px"
 
@@ -28,11 +30,13 @@ export const MiniJscad = class{
   }
 
   setup(element="drawing", width=300, height=300, eventFlag=false){
-    setDOM(element)
-    setCSS(element,width, height)
-    const coordinateDOM = document.querySelector("#"+element +"-minijscad-footer > small:nth-child(2)")
-    const minijscadFrame = document.getElementById(element+"-minijscad-frame")
-    const main = document.getElementById(element+"-minijscad-main")
+    const elementDOM = setDOM(element)
+    this.elementDOM = elementDOM
+    setCSS(elementDOM,width, height)
+    const coordinateDOM  = elementDOM.querySelector(".minijscad-footer > small:nth-child(2)")
+    const minijscadFrame = elementDOM.querySelector(".minijscad-frame")
+    const main           = elementDOM.querySelector(".minijscad-main")
+
     const elWidth = main.getBoundingClientRect().width || width 
     //const elHeight = main.getBoundingClientRect().height || (height-40)
     const elHeight = height-40
@@ -41,7 +45,8 @@ export const MiniJscad = class{
     const sketchHeight = elHeight//-6
     //console.log("height",height, "elHeight", elHeight,"sketchHeight", sketchHeight)
     //sketch.setScreenSize(sketchWidth, sketchHeight)
-    const sketch = new Svg(element+"-minijscad-main",sketchWidth, sketchHeight)
+    //const sketch = new Svg(element+"-minijscad-main",sketchWidth, sketchHeight)
+    const sketch = new Svg(main,sketchWidth, sketchHeight)
 
     main.addEventListener("sketch.mouse.move",(e)=>{
       const coord = e.detail
@@ -53,103 +58,105 @@ export const MiniJscad = class{
 }
 
 const setDOM = (element)=>{
- const elementDOM = (element instanceof HTMLElement) ? element: document.getElementById(element) 
- const minijscadFrame = document.createElement("div")
- const minijscadTitle = document.createElement("div")
- const minijscadMiddle = document.createElement("div")
- const minijscadSidebar = document.createElement("div")
- const ul = document.createElement("ul")
- const liM = document.createElement("li")
- const liA = document.createElement("li")
- const liS = document.createElement("li")
- const minijscadMain = document.createElement("div")
- const minijscadFooter = document.createElement("div")
- const minijscadCopyright = document.createElement("small")
- const minijscadCoordinate = document.createElement("small")
+  const elementDOM = (element instanceof HTMLElement) ? element: document.getElementById(element) 
+  const minijscadFrame = document.createElement("div")
+  const minijscadTitle = document.createElement("div")
+  const minijscadMiddle = document.createElement("div")
+  const minijscadSidebar = document.createElement("div")
+  const ul = document.createElement("ul")
+  const liM = document.createElement("li")
+  const liA = document.createElement("li")
+  const liS = document.createElement("li")
+  const minijscadMain = document.createElement("div")
+  const minijscadFooter = document.createElement("div")
+  const minijscadCopyright = document.createElement("small")
+  const minijscadCoordinate = document.createElement("small")
+ 
+  minijscadFrame.className   = "minijscad-frame"
+  minijscadTitle.className   = "minijscad-title"
+  minijscadMiddle.className  = "minijscad-middle"
+  minijscadSidebar.className = "minijscad-sidebar"
+  minijscadMain.className    = "minijscad-main"
+  minijscadFooter.className  = "minijscad-footer"
+  
+ 
+  minijscadTitle.textContent= "mini jscad"
+  liM.textContent= "M"
+  liA.textContent= "A"
+  liS.textContent= "S"
+ 
+  minijscadCopyright.textContent = "version" + String(version)
+  minijscadCoordinate.textContent = "x: 0.00 ,y: 0.00"
+ 
+  ul.appendChild(liM)
+  ul.appendChild(liA)
+  ul.appendChild(liS)
+ 
+  minijscadSidebar.appendChild(ul)
+ 
+  minijscadMiddle.appendChild(minijscadSidebar)
+  minijscadMiddle.appendChild(minijscadMain)
+ 
+  minijscadFooter.appendChild(minijscadCopyright)
+  minijscadFooter.appendChild(minijscadCoordinate)
+ 
+  minijscadFrame.appendChild(minijscadTitle)
+  minijscadFrame.appendChild(minijscadMiddle)
+  minijscadFrame.appendChild(minijscadFooter)
+  elementDOM.appendChild(minijscadFrame)
 
- minijscadFrame.id = element+"-minijscad-frame"
- minijscadTitle.id = element+"-minijscad-title"
- minijscadMiddle.id = element+"-minijscad-middle"
- minijscadSidebar.id = element+"-minijscad-sidebar"
- minijscadMain.id = element+"-minijscad-main"
- minijscadFooter.id = element+"-minijscad-footer"
-
- minijscadTitle.textContent= "mini jscad"
- liM.textContent= "M"
- liA.textContent= "A"
- liS.textContent= "S"
-
- minijscadCopyright.textContent = "version" + String(version)
- minijscadCoordinate.textContent = "x: 0.00 ,y: 0.00"
-
- ul.appendChild(liM)
- ul.appendChild(liA)
- ul.appendChild(liS)
-
- minijscadSidebar.appendChild(ul)
-
- minijscadMiddle.appendChild(minijscadSidebar)
- minijscadMiddle.appendChild(minijscadMain)
-
- minijscadFooter.appendChild(minijscadCopyright)
- minijscadFooter.appendChild(minijscadCoordinate)
-
- minijscadFrame.appendChild(minijscadTitle)
- minijscadFrame.appendChild(minijscadMiddle)
- minijscadFrame.appendChild(minijscadFooter)
- elementDOM.appendChild(minijscadFrame)
-
+  return elementDOM
 }
 
-const setCSS = (element, width ,height)=>{
+const setCSS = (elementDOM, width ,height)=>{
     const style = document.createElement("style")
     style.id = "minijscad-style"
     style.type = "text/css"
-    document.head.appendChild(style)
+    elementDOM.appendChild(style)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main  line {
+    .minijscad-main  line {
       vector-effect: non-scaling-stroke; 
     }`,0) 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main  circle {
+    .minijscad-main  circle {
       vector-effect: non-scaling-stroke; 
     }`,0) 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main  ellipse {
+    .minijscad-main  ellipse {
       vector-effect: non-scaling-stroke; 
     }`,0) 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main  rect {
+    .minijscad-main  rect {
       vector-effect: non-scaling-stroke; 
     }`,0) 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main  polygon {
+    .minijscad-main  polygon {
       vector-effect: non-scaling-stroke; 
     }`,0) 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main  path {
+    .minijscad-main  path {
       vector-effect: non-scaling-stroke; 
     }`,0) 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main  polyline {
+    .minijscad-main  polyline {
       vector-effect: non-scaling-stroke; 
     }`,0) 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main  text {
+    .minijscad-main  text {
       dominant-baseline: text-after-edge ; 
     }`,0) 
 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-frame {
+    .minijscad-frame {
       width: ${width}px;
       height: ${height}px;
       display:flex;
@@ -160,7 +167,7 @@ const setCSS = (element, width ,height)=>{
     }`,0) 
 
     style.sheet.insertRule(`
-    #${element}-minijscad-title {
+    .minijscad-title {
       height: 20px;
       background: #d9dfe1;
       color:#3e5358;
@@ -169,7 +176,7 @@ const setCSS = (element, width ,height)=>{
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-middle {
+    .minijscad-middle {
       display:flex;
       flex:1;
       padding: 0;
@@ -178,7 +185,7 @@ const setCSS = (element, width ,height)=>{
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-sidebar {
+    .minijscad-sidebar {
       display: none;
       width: 100px;
       padding: 0;
@@ -187,7 +194,7 @@ const setCSS = (element, width ,height)=>{
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-sidebar > ul {
+    .minijscad-sidebar > ul {
       display: grid;
       grid-template-rows: 50px 50px;
       grid-template-columns: 50px 50px;
@@ -198,7 +205,7 @@ const setCSS = (element, width ,height)=>{
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-sidebar > ul > li{
+    .minijscad-sidebar > ul > li{
       border:1px solid #3e5358;
       color:  #3e5358;
       border-radius: 6px 6px 6px 6px;
@@ -209,32 +216,32 @@ const setCSS = (element, width ,height)=>{
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-sidebar > ul > li:hover{
+    .minijscad-sidebar > ul > li:hover{
       background: #F0FFF0;
       border: 1px solid #7FFFD4;
       border-radius: 6px 6px 6px 6px;
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-sidebar > ul > li:first-child{
+    .minijscad-sidebar > ul > li:first-child{
       grid-row: 1 / 2;
       grid-column: 1 / 2;
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-sidebar > ul > li:nth-child(2){
+    .minijscad-sidebar > ul > li:nth-child(2){
       grid-row: 1 / 2;
       grid-column: 2 / 3;
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-sidebar > ul > li:nth-child(3){
+    .minijscad-sidebar > ul > li:nth-child(3){
       grid-row: 2 / 3;
       grid-column: 1 / 2;
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-main {
+    .minijscad-main {
       width: ${width}px;
       height: ${height-40}px;
       
@@ -243,7 +250,7 @@ const setCSS = (element, width ,height)=>{
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-footer {
+    .minijscad-footer {
       height:20px;
       padding: 0;
       margin: 0;
@@ -253,14 +260,14 @@ const setCSS = (element, width ,height)=>{
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-footer > small:first-child {
+    .minijscad-footer > small:first-child {
       flex: 0 0 65%; 
       text-align: center;
       border-right: 1px solid #708090;
     }`,style.sheet.cssRules.length)
 
     style.sheet.insertRule(`
-    #${element}-minijscad-footer > small:nth-child(2) {
+    .minijscad-footer > small:nth-child(2) {
       flex: 1 0 auto; 
       padding: 0 0 0 10px;
       margin: 0;
