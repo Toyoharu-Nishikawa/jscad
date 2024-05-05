@@ -69,10 +69,10 @@ export const Svg = class{
   resize(width, height){
     this.draw.width(width)
     this.draw.height(height)
+    this.draw.viewbox(0, 0, width,height).flip('y')
   }
   setEvent(){
     const elementDOM = this.elementDOM
-    //const dom = document.getElementById(elem)
     const draw = this.draw
     draw.mousemove(function(e){
       const point = this.point()

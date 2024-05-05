@@ -1,6 +1,6 @@
 {
   "name": "minijscad",
-  "version": "2.7.1",
+  "version": "2.8.0",
   "type": "module",
   "description": "minijscad is web cad",
   "main": "index.js",
