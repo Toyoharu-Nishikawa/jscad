@@ -1,14 +1,17 @@
+import * as SVGALL from '../@svgdotjs/svg.js/dist/svg.esm.js'
+import '../@svgdotjs/svg.panzoom.js/dist/svg.panzoom.esm.js'
+
 import {addExtendElements} from "./extra.js"
 import {Base} from "./base.js"
 import {Screen} from "./screen.js"
 
 export const Svg = class{
   constructor(elementDOM, width=500, height=500){
-    addExtendElements()
-
+    addExtendElements(SVGALL)
 
     const backgroundColor = "default"
-    const draw = SVG(elementDOM).panZoom({zoomMode:"exponential", zoomFactor:1.1})
+    //const draw = SVGALL.SVG().addTo(elementDOM).panZoom({zoomMode:"exponential", zoomFactor:1.1})
+    const draw = SVGALL.SVG().addTo(elementDOM).panZoom({zoomFactor:0.1})
     const screen = new Screen(draw, backgroundColor) 
     const base = new Base(draw) 
 
@@ -69,7 +72,7 @@ export const Svg = class{
   resize(width, height){
     this.draw.width(width)
     this.draw.height(height)
-    this.draw.viewbox(0, 0, width,height).flip('y')
+    this.draw.viewbox(0, 0, width,height)
   }
   setEvent(){
     const elementDOM = this.elementDOM
