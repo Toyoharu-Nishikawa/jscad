@@ -3,17 +3,17 @@ import {Base} from "./base.js"
 import {Screen} from "./screen.js"
 
 export const Svg = class{
-  constructor(elem, width=500, height=500){
+  constructor(elementDOM, width=500, height=500){
     addExtendElements()
 
 
     const backgroundColor = "default"
-    const draw = SVG(elem).panZoom({zoomMode:"exponential", zoomFactor:1.1})
+    const draw = SVG(elementDOM).panZoom({zoomMode:"exponential", zoomFactor:1.1})
     const screen = new Screen(draw, backgroundColor) 
     const base = new Base(draw) 
 
 
-    this.element = elem
+    this.elementDOM = elementDOM 
     this.backgroundColor = backgroundColor
     this.draw = draw
     this.screen = screen 
@@ -33,6 +33,7 @@ export const Svg = class{
     this.draw.attr("style" ,style)
 
     this.draw.viewbox(0, 0, width,height).flip('y')
+    this.draw.transform({a: 1, b: 0, c: 0, d: -1, e: 0, f: 0})
   }
  
   setBackgroundColor(color){
@@ -68,10 +69,10 @@ export const Svg = class{
   resize(width, height){
     this.draw.width(width)
     this.draw.height(height)
+    this.draw.viewbox(0, 0, width,height).flip('y')
   }
   setEvent(){
-    const elem = this.element
-    const dom = document.getElementById(elem)
+    const elementDOM = this.elementDOM
     const draw = this.draw
     draw.mousemove(function(e){
       const point = this.point()
@@ -80,7 +81,7 @@ export const Svg = class{
         y: point.y-e.clientY/draw.zoom()
       }
       const ev = new CustomEvent("sketch.mouse.move", {detail:coord})
-      dom.dispatchEvent(ev)
+      elementDOM.dispatchEvent(ev)
     })
   }
 }
