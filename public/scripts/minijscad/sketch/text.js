@@ -51,7 +51,8 @@ export const Text = class {
       add.tspan(string)
     })
     text.font(font).attr(att)
-      .flip("y",0).rotate(-theta+180,0,0).translate(x, y)
+      //.flip("y",0).rotate(-theta+180,0,0).translate(x, y)
+      .flip("y",0).translate(x, y)
     text.attr(attr)
  
     return text
