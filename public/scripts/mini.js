@@ -16,7 +16,8 @@ const setUpMiniJscad = () => {
   minijscadTest.style.width = (width-50) + "px"
   minijscadTest.style.height = (height-50) + "px"
   
-  miniJscad = new MiniJscad("minijscad-test", width-50, height-50)
+  const option = {width: width-50, height:height-50}
+  miniJscad = new MiniJscad("minijscad-test", option)
   const version = miniJscad.version
   console.log("version", version)
   
