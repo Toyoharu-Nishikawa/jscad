@@ -38,14 +38,14 @@ export const MiniJscad = class{
     const main           = elementDOM.querySelector(".minijscad-main")
 
     const elWidth = main.getBoundingClientRect().width || width 
-    //const elHeight = main.getBoundingClientRect().height || (height-40)
     const elHeight = height-40
 
     const sketchWidth = elWidth//-2
     const sketchHeight = elHeight//-6
-    //console.log("height",height, "elHeight", elHeight,"sketchHeight", sketchHeight)
-    //sketch.setScreenSize(sketchWidth, sketchHeight)
-    //const sketch = new Svg(element+"-minijscad-main",sketchWidth, sketchHeight)
+
+    minijscadFrame.style.width = String(width)+"px"
+    minijscadFrame.style.height = String(height)+"px"
+
     const sketch = new Svg(main,sketchWidth, sketchHeight)
 
     main.addEventListener("sketch.mouse.move",(e)=>{
@@ -157,11 +157,10 @@ const setCSS = (elementDOM, width ,height)=>{
 
     style.sheet.insertRule(`
     .minijscad-frame {
-      width: ${width}px;
-      height: ${height}px;
       display:flex;
       flex-direction:column;
       outline: 2px solid #708090;
+      box-sizing: border-box;
       padding: 0;
       margin: 0;
     }`,0) 
@@ -242,9 +241,6 @@ const setCSS = (elementDOM, width ,height)=>{
 
     style.sheet.insertRule(`
     .minijscad-main {
-      width: ${width}px;
-      height: ${height-40}px;
-      
       padding: 0;
       margin: 0;
     }`,style.sheet.cssRules.length)
@@ -256,6 +252,7 @@ const setCSS = (elementDOM, width ,height)=>{
       margin: 0;
       border-top: 1px solid #708090;
       background: #d9dfe1;
+      box-sizing: border-box;
       display: flex;
     }`,style.sheet.cssRules.length)
 
