@@ -99,12 +99,12 @@ export const Dimension = class {
     const thetaDeg = theta*180/Math.PI
     const l = size/5
     if(showStartSideArrow){
-      const a1 = arrow.line(0, 0, l, l).rotate(thetaDeg).translate(Dx1, Dy1)
-      const a2 = arrow.line(0, 0, l, -l).rotate(thetaDeg).translate(Dx1, Dy1)
+      const a1 = arrow.line(0, 0, l, l).rotate(thetaDeg,0,0).translate(Dx1, Dy1)
+      const a2 = arrow.line(0, 0, l, -l).rotate(thetaDeg,0,0).translate(Dx1, Dy1)
     }
     if(showTerminalSideArrow){
-      const a3 = arrow.line(0, 0, -l, l).rotate(thetaDeg).translate(Dx2, Dy2)
-      const a4 = arrow.line(0, 0, -l, -l).rotate(thetaDeg).translate(Dx2, Dy2)
+      const a3 = arrow.line(0, 0, -l, l).rotate(thetaDeg,0,0).translate(Dx2, Dy2)
+      const a4 = arrow.line(0, 0, -l, -l).rotate(thetaDeg,0,0).translate(Dx2, Dy2)
     }
     return arrow 
   }
@@ -126,12 +126,12 @@ export const Dimension = class {
     arrow.arc(cx,cy,radius,start,end).fill("none")
     const l = size/5
     if(showStartSideArrow){
-      const a1 = arrow.line(0, 0, -l , l).rotate(start).translate(Dx1, Dy1)
-      const a2 = arrow.line(0, 0,  l,  l).rotate(start).translate(Dx1, Dy1)
+      const a1 = arrow.line(0, 0, -l , l).rotate(start,0,0).translate(Dx1, Dy1)
+      const a2 = arrow.line(0, 0,  l,  l).rotate(start,0,0).translate(Dx1, Dy1)
     }
     if(showTerminalSideArrow){
-      const a3 = arrow.line(0, 0, -l, -l).rotate(end).translate(Dx2, Dy2)
-      const a4 = arrow.line(0, 0,  l, -l).rotate(end).translate(Dx2, Dy2)
+      const a3 = arrow.line(0, 0, -l, -l).rotate(end,0,0).translate(Dx2, Dy2)
+      const a4 = arrow.line(0, 0,  l, -l).rotate(end,0,0).translate(Dx2, Dy2)
     }
     return arrow 
   }
@@ -156,8 +156,7 @@ export const Dimension = class {
     const fontSize = font["font-size"]  
     const height = -fontSize/2
     const text = obj.text(valueText).attr(font).center(0, height)
-      .flip("y",0).rotate(-textAngle+180,0,0).translate(tx, ty)
-    
+      .flip("y",0).rotate(textAngle,0,0).translate(tx, ty)
     return text
   }
 
@@ -451,7 +450,6 @@ export const Dimension = class {
       offsetX, offsetY,
       alternativeText
     }
-    console.log(textParams)
     const arrow = this.makeDimArc(label,dimLineParams)
     const text = this.makeDimText(arrow, textParams)
  
